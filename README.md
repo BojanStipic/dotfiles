@@ -20,3 +20,13 @@ stow */ # Trailing slash is important to expand only directories
 **WARNING:** Don't blindly use these dotfiles without carefully reviewing each file.
 These dotfiles are created specifically for my own use and can contain stuff you don't want.
 Use at your own risk!
+
+## Additional setup
+
+### atom
+
+Install packages:
+
+```bash
+apm install --packages-file ~/.atom/my-packages.txt
+```
