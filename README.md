@@ -30,3 +30,11 @@ Install packages:
 ```bash
 apm install --packages-file ~/.atom/my-packages.txt
 ```
+
+### cmus
+
+Import your music collection:
+
+1. Switch to view (5) Directory browser.
+2. Navigate to your music directory.
+3. Press `a` to import music to the library.
