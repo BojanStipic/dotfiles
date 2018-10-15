@@ -38,3 +38,12 @@ Import your music collection:
 1. Switch to view (5) Directory browser.
 2. Navigate to your music directory.
 3. Press `a` to import music to the library.
+
+### git
+
+Set your username and email address:
+
+```bash
+git config --global user.name 'username'
+git config --global user.email 'email'
+```
