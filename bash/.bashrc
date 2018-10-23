@@ -21,9 +21,15 @@ shopt -s globasciiranges
 
 export VISUAL=vim
 export BROWSER=chromium
-# Add the gem install directory to the `$PATH`
-PATH=$PATH:$(ruby -e 'print Gem.user_dir')/bin:~/.bin
-export GEM_HOME=$HOME/.gem
+
+#
+# PATH
+#
+PATH=$PATH:~/.bin
+if type ruby &> /dev/null; then
+	PATH=$PATH:$(ruby -e 'print Gem.user_dir')/bin
+	export GEM_HOME=$HOME/.gem
+fi
 
 #
 # PS1
