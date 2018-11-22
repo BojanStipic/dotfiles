@@ -32,17 +32,16 @@ alias mute='pactl set-source-mute @DEFAULT_SOURCE@ toggle'
 alias osmc='ssh osmc@192.168.1.110'
 
 # Bookmarks
-alias storage='cd /media/storage'
-alias library='cd /media/storage/Library/'
-alias projects='cd /media/storage/Library/Projects/'
+alias storage='cd /mnt/storage'
+alias projects='cd /mnt/storage/Projects/'
 stash() {
 	if [[ ! -b /dev/mapper/stash ]]; then
 		sudo cryptsetup open /dev/disk/by-uuid/4a33339a-9eac-4ebe-93fa-064b201a9524 stash
-		sudo mount /dev/mapper/stash /media/stash
+		sudo mount /dev/mapper/stash /mnt/stash
 	fi
-	cd /media/stash/personal
+	cd /mnt/stash/personal
 }
-alias ustash='cd && sudo umount /media/stash && sudo cryptsetup close stash'
+alias ustash='cd && sudo umount /mnt/stash && sudo cryptsetup close stash'
 
 # List all active daemons
 alias ls-services='systemctl --type=service'
