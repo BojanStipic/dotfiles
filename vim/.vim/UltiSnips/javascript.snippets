@@ -1,0 +1,22 @@
+# vim: set foldmethod=marker foldlevel=0 :
+
+# Angular {{{1
+snippet ngmodule
+'use strict';
+
+angular.module('${1:moduleName}', [
+	$0
+]);
+endsnippet
+
+snippet ngcomponent
+'use strict';
+
+angular.module('${1:moduleName}')
+	.component('${1/./my\u$0/}', {
+		templateUrl: '/part/${1/[A-Z]/-\l$0/g}/${1/[A-Z]/-\l$0/g}.template.html',
+		controller: function(${2:dependencies}) {
+			$0
+		}
+	});
+endsnippet
