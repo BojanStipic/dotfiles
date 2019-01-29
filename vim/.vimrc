@@ -1,5 +1,4 @@
-" Vim 8 defaults
-source $VIMRUNTIME/defaults.vim
+" vim: set foldmethod=marker foldlevel=0 :
 
 " SETTINGS {{{1
 
@@ -7,16 +6,16 @@ source $VIMRUNTIME/defaults.vim
 set tabstop=4
 " Indent with tabs
 set noexpandtab
-" Don't change unless insane
+" Use the value of 'tabstop' to indent
 set softtabstop=-1 shiftwidth=0
 " English and Serbian language for spell check
-" Toggle with `set spell!`
+" Toggle with `:set spell!`
 set spelllang=en,sr@latin
 " Copy indent from the current line when starting a new line
 set autoindent
 " When a file is changed outside of Vim, automatically read it again
 set autoread
-" Always show the line numbers
+" Show line numbers
 set number
 " Display a vertical line at the 80th character
 set colorcolumn=80
@@ -30,20 +29,38 @@ set laststatus=2
 set noshowmode
 " Minimal number of lines to keep above and below cursor
 set scrolloff=15
-" Search recursively with :find
-set path=.,,**
-" Ignore case in search patterns, when using lowercase pattern only.
+" Search recursively with `:find`
+set path+=**
+" Ignore case in search patterns, when using lowercase pattern only
 set ignorecase smartcase
 " Highlight all search pattern matches
 "set hlsearch
-" Disable hlsearch
+" Temporarily disable hlsearch
 "nmap <silent> <Esc><Esc> :nohlsearch<CR>
+" Don't wrap around the end of the file when searching
+set nowrapscan
 " Show invisible characters
 set listchars=tab:\|\ ,trail:·
 set list
+" Allow backspacing over everything in insert mode
+set backspace=indent,eol,start
+" Display incomplete commands
+set showcmd
+" Display completion matches in a status line
+set wildmenu
+" No timeout for escape sequences, but timeout for mappings
+set timeoutlen=2000 ttimeoutlen=0
+" Show @@@ in the last line if it is truncated
+set display=truncate
+" Do incremental searching
+set incsearch
+" Do not recognize octal numbers for Ctrl-A and Ctrl-X
+set nrformats-=octal
+" Enable the mouse controls
+set mouse=a
 " No bell sound
 set belloff=all
-" Split to the right and below with :vsplit and :split
+" Split to the right and below with `:vsplit` and `:split`
 set splitright
 set splitbelow
 " Auto folds based on syntax
@@ -51,7 +68,7 @@ set foldmethod=syntax
 set foldlevelstart=99
 " Highlight the line with the cursor
 set cursorline
-" Different cursor for different modes
+" Different cursor shapes for different modes
 if &term =~ "xterm"
 	" Insert mode - line
 	let &t_SI = "\<Esc>[5 q"
@@ -59,9 +76,24 @@ if &term =~ "xterm"
 	let &t_SR = "\<Esc>[3 q"
 	" Common - block
 	let &t_EI = "\<Esc>[2 q"
-	" Reset on exit
-	autocmd VimLeave * silent! !echo -ne "\e[ q"
+	" t_ti (put in termcap mode) - first sequence sent to the terminal when entering Vim.
+	" Prepend to this sequence to change the cursor shape on startup.
+	let &t_ti = &t_EI . &t_ti
+	" t_te (out of termcap) - last sequence emitted to the terminal before exiting Vim.
+	" Prepend to this sequence to change the cursor shape on exit.
+	let &t_te = "\<Esc>[ q" . &t_te
 endif
+"
+set swapfile undofile nobackup
+set directory=~/.vim/cache/swap//
+set undodir=~/.vim/cache/undo//
+set backupdir=~/.vim/cache/backup//
+set viminfo+=n~/.vim/cache/viminfo
+let g:netrw_home="~/.vim/cache/"
+" Create directories if they don't already exist
+silent! call mkdir(expand(&directory), 'p', 0700)
+silent! call mkdir(expand(&undodir), 'p', 0700)
+silent! call mkdir(expand(&backupdir), 'p', 0700)
 
 " MAPPINGS {{{1
 
@@ -74,12 +106,18 @@ nmap Q @q
 nmap ZZ <nop>
 " Clipboard register
 map \ "+
+" Paste from the most recent yank register
+map gp "0p
+map gP "0P
+" Adjust indent to current line on paste
+nmap p ]p
+nmap P ]P
 " Auto close an XML tag
 imap <lt>/ </<c-x><c-o><esc>==A
 " Very magic search regex
 map g/ /\v
 map g? ?\v
-" TextObject for entire buffer
+" TextObject for the entire buffer
 onoremap ie :<c-u>normal! meggVG<cr>`e
 onoremap ae :<c-u>normal! meggVG<cr>`e
 " Change the focus between windows
@@ -87,6 +125,32 @@ map <c-h> <c-w>h
 map <c-j> <c-w>j
 map <c-k> <c-w>k
 map <c-l> <c-w>l
+tmap <c-h> <c-w>h
+tmap <c-j> <c-w>j
+tmap <c-k> <c-w>k
+tmap <c-l> <c-w>l
+" Mappings for tabs
+map <f1> gT
+map <f2> gt
+map <f3> :tab sp<cr>
+map <f4> <c-w>T
+nmap <leader>1 1gt
+nmap <leader>2 2gt
+nmap <leader>3 3gt
+nmap <leader>4 4gt
+nmap <leader>5 5gt
+nmap <leader>6 6gt
+nmap <leader>7 7gt
+nmap <leader>8 8gt
+nmap <leader>9 9gt
+nmap <leader>0 1gT
+nmap <leader>- gT
+nmap <leader>= gt
+" Change to the directory of the current file
+map <silent> <leader>c :cd %:h<cr>:pwd<cr>
+" Sessions
+nmap <leader>O :Obsession<cr>
+nmap <leader>o :source Session.vim<cr>
 
 " PLUGINS {{{1
 
@@ -98,31 +162,42 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/bundle')
+Plug 'vim-airline/vim-airline'
+Plug 'sheerun/vim-polyglot'
+Plug 'joshdick/onedark.vim'
 Plug 'w0rp/ale'
 Plug 'jiangmiao/auto-pairs'
 Plug 'mattn/emmet-vim'
-Plug 'joshdick/onedark.vim'
+Plug 'SirVer/ultisnips'
+Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-abolish'
-Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-commentary'
-Plug 'ap/vim-css-color'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-surround'
+Plug 'ap/vim-css-color'
 call plug#end()
 
 " PLUGIN CONFIGURATION {{{1
 
-" emmet-vim
-let g:user_emmet_leader_key='<c-e>'
-" vim-airline
+" VIM-AIRLINE {{{2
 let g:airline_powerline_fonts=1
 " Certain number of spaces are allowed after tabs, but not in between.
 " This algorithm works well for /** */ style comments in a tab-indented file
 let g:airline#extensions#whitespace#mixed_indent_algo=1
 let g:airline#extensions#ale#show_line_numbers=0
-" ale
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_tabs = 1
+let g:airline#extensions#tabline#tab_min_count = 2
+let g:airline#extensions#tabline#show_splits = 0
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#show_tab_type = 0
+let g:airline#extensions#tabline#tab_nr_type = 2
+let g:airline#extensions#tabline#left_sep = '|'
+let g:airline#extensions#tabline#left_alt_sep = '|'
+" ALE {{{2
 let g:ale_linters_explicit=1
 let g:ale_linters = {
 \	'sh': ['shellcheck'],
@@ -143,16 +218,25 @@ let g:ale_fixers = {
 let g:ale_fix_on_save=1
 let g:ale_sign_column_always=1
 let g:ale_completion_enabled=1
-map <leader>lo :lopen<cr>
-map <leader>lc :lclose<cr>
-nmap <silent> [e <plug>(ale_previous_wrap)
-nmap <silent> ]e <plug>(ale_next_wrap)
-" vim-gitgutter
+let g:ale_set_balloons=1
+nmap <leader>l :lopen<cr>
+nmap <leader>L :lclose<cr>
+map <silent> [e <plug>(ale_previous_wrap)
+map <silent> ]e <plug>(ale_next_wrap)
+" EMMET-VIM {{{2
+let g:user_emmet_leader_key='<c-e>'
+" ULTISNIPS {{{2
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsSnippetsDir="~/.vim/UltiSnips"
+nmap <leader>s :UltiSnipsEdit<cr>
+" VIM-GITGUTTER {{{2
 set updatetime=1000
-" fzf
-map <silent> <c-p> :FZF<cr>
-map <silent> <leader>p :FZF<cr>
-map <silent> <leader>c :cd %:h<cr>
+" FZF {{{2
+nmap <silent> <c-p> :FZF<cr>
+nmap <silent> <leader>p :FZF<cr>
 let g:fzf_action = {
 \	'ctrl-t': 'tab split',
 \	'ctrl-s': 'split',
@@ -174,6 +258,23 @@ let g:fzf_colors = {
 \	'spinner': ['fg', 'Label'],
 \	'header':  ['fg', 'Comment']
 \}
+" TERMDEBUG {{{2
+packadd! termdebug
+map <leader>dd :Termdebug<space>
+map <silent> <leader>dD :call TermDebugSendCommand('quit')<cr>:Gdb<cr>y<cr>
+map <leader>dr :Run<cr>
+map <leader>dR :Stop<cr>
+map <leader>db :Break<cr>
+map <leader>dB :Clear<cr>
+map <leader>ds :Step<cr>
+map <leader>dn :Over<cr>
+map <leader>df :Finish<cr>
+map <leader>dc :Continue<cr>
+map <leader>dp :Evaluate<cr>
+map <leader>de :Evaluate<space>
+map <leader>dl :call TermDebugSendCommand('info locals')<cr>
+map <leader>da :call TermDebugSendCommand('info args')<cr>
+let g:termdebug_wide = 1
 
 " COLORSCHEME {{{1
 
@@ -184,5 +285,3 @@ highlight Comment guifg=#8690A3
 highlight Folded guifg=#8690A3
 highlight SpecialKey guifg=#646D7A
 "colorscheme morning
-
-" vim: set foldmethod=marker foldlevel=0 nomodeline:
