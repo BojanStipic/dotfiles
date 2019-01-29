@@ -3,6 +3,8 @@
 #
 
 alias vim='vim -p'
+alias vimp='vim -i NONE'
+alias view='vim -R'
 alias push='pushd .'
 alias pop='popd'
 alias ls='ls --color=auto --human-readable --group-directories-first --classify'
@@ -23,6 +25,8 @@ alias scan-300='scanimage --progress --format=jpeg --resolution=300 >'
 alias mount.iso='gnome-disk-image-mounter'
 # List duplicate files in multiple directories
 dupl() { find "$@" -maxdepth 1 | sort | uniq -di;}
+# Scan all number types, not just int
+alias scanmem='sudo scanmem --command="option scan_data_type number"'
 # Mute/Unmute microphone
 # to list all cards: `pactl list short sources`
 # use @DEFAULT_SOURCE@ to mute the currently default source
@@ -56,10 +60,9 @@ alias ls-samba='sudo pdbedit -L'
 # -a	Both listening and non-listening sockets
 # -t	TCP protocol
 # -p	Show process pid/name
-# -4	IPv4 only
-alias ls-tcp='sudo ss -natp4'
+alias ls-tcp='sudo ss -natp'
 # -u	UDP protocol
-alias ls-udp='sudo ss -naup4'
+alias ls-udp='sudo ss -naup'
 
 # Update
 alias up='sudo pacman -Syuu && yay -Su --aur --devel && gem update'
@@ -68,7 +71,9 @@ alias rm-orphans='sudo pacman -Rns $(pacman -Qdtq)'
 # Remove pacman cache
 alias rm-cache='sudo paccache -r; sudo paccache -ruk0'
 # List modified configuration files
-alias ls-modified-files='sudo pacman -Qii | awk "/^MODIFIED/ {print \$2}"'
+alias ls-modified-files='sudo pacman -Qii | sed -nE "s/^MODIFIED\s*(.*)/\1/p"'
+# List installed native packages not in `base` and `base-devel`
+alias ls-installed='comm -23 <(pacman -Qqen | sort) <(pacman -Qqg base base-devel | sort)'
 
 # rsync
 # Copy files if mod-time or size is different
@@ -83,7 +88,7 @@ alias rsync-simple='\rsync --ignore-existing -avh --delete'
 # curl
 # Default METHOD is GET. Use -X to change
 alias curl='curl -i'
-alias curl-json='curl --data @- -H "Content-Type: application/json"'
+alias curl-json='curl -H "Content-Type: application/json"'
 
 # cmus daemon
 # screen: -q quiet, -d detach elsewhere, -R reattach or create new
