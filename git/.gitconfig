@@ -10,6 +10,8 @@
 [merge]
 	tool = vimdiff
 	conflictStyle = diff3
+[mergetool]
+	keepBackup = false
 [alias]
 	timeline = log --all --graph --oneline
 	stat = log --stat
