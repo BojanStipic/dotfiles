@@ -94,7 +94,8 @@
   "line-ending-selector":
     defaultLineEnding: "LF"
   "linter-eslint":
-    useGlobalEslint: true
+    global:
+      useGlobalEslint: true
   "linter-spell":
     defaultLanguages: [
       "en-US"
