@@ -46,7 +46,7 @@ fi
 # \[ \] - Begin a sequence of non-printing characters
 # \e - ASCII escape character 033. Begins an ANSI escape sequence
 # \e[ - CSI Control Sequence
-# Nm - where N is 30-37 (foreground) or 40-47 (background) color [1 bit colors]
+# Nm - where N is 30-37 (foreground) or 40-47 (background) color [4 bit colors]
 # 38;5;Nm - where N is 0..255 color from xterm-color chart [8 bit colors]
 # 38;2;R;G;Bm - where R, G and B are 0..255 colors [24 bit truecolor]
 # 48;5;Nm and 48;2;R;G;Bm - same as above, but for background colors
