@@ -14,7 +14,7 @@ That way, they are neatly organized, and it is also possible to
 git clone 'https://github.com/BojanStipic/dotfiles' ~/.dotfiles
 cd ~/.dotfiles
 … # Review and modify all the files you want to use
-stow */ # Trailing slash is important to expand only directories
+stow --no-folding -v */ # Trailing slash is important to expand only directories
 ```
 
 **WARNING:** Don't blindly use these dotfiles without carefully reviewing each file.
