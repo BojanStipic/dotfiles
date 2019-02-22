@@ -20,7 +20,7 @@ shopt -s globasciiranges
 [[ $DISPLAY ]] && shopt -s checkwinsize
 
 export VISUAL=vim
-export BROWSER=chromium
+export BROWSER=firefox
 
 #
 # PATH
@@ -93,7 +93,7 @@ fi
 # fzf
 #
 if [[ -f /usr/share/fzf/key-bindings.bash ]]; then
-	FZF_BASE_COMMAND='fd --follow --hidden --exclude .git'
+	FZF_BASE_COMMAND='fd --follow --hidden --exclude .git --exclude node_modules'
 	export FZF_DEFAULT_COMMAND="$FZF_BASE_COMMAND --type f"
 	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 	export FZF_ALT_C_COMMAND="$FZF_BASE_COMMAND --type d"
