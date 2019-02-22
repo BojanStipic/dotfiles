@@ -68,6 +68,8 @@ set foldmethod=syntax
 set foldlevelstart=99
 " Highlight the line with the cursor
 set cursorline
+" Only insert the longest common text of the matches
+set completeopt+=longest
 " Different cursor shapes for different modes
 if &term =~ "xterm"
 	" Insert mode - line
@@ -120,7 +122,7 @@ map g? ?\v
 " TextObject for the entire buffer
 onoremap ie :<c-u>normal! meggVG<cr>`e
 onoremap ae :<c-u>normal! meggVG<cr>`e
-" Change the focus between windows
+" Mappings for windows
 map <c-h> <c-w>h
 map <c-j> <c-w>j
 map <c-k> <c-w>k
@@ -132,25 +134,33 @@ tmap <c-l> <c-w>l
 " Mappings for tabs
 map <f1> gT
 map <f2> gt
-map <f3> :tab sp<cr>
+map <c-w>t :tab split<cr>
+map <f3> :tab split<cr>
 map <f4> <c-w>T
-nmap <leader>1 1gt
-nmap <leader>2 2gt
-nmap <leader>3 3gt
-nmap <leader>4 4gt
-nmap <leader>5 5gt
-nmap <leader>6 6gt
-nmap <leader>7 7gt
-nmap <leader>8 8gt
-nmap <leader>9 9gt
-nmap <leader>0 1gT
-nmap <leader>- gT
-nmap <leader>= gt
-" Change to the directory of the current file
-map <silent> <leader>c :cd %:h<cr>:pwd<cr>
+map <leader>1 1gt
+map <leader>2 2gt
+map <leader>3 3gt
+map <leader>4 4gt
+map <leader>5 5gt
+map <leader>6 6gt
+map <leader>7 7gt
+map <leader>8 8gt
+map <leader>9 9gt
+map <leader>0 1gT
+map <leader>- gT
+map <leader>= gt
+" Mappings for file browsing
+let g:netrw_banner=0
+nmap <cr> :edit %:h<cr>
+nmap <leader>o :edit .<cr>
+nmap <leader>O :edit %:h<cr>
+nmap <leader>e :!xdg-open .<cr><cr>
+nmap <leader>E :!xdg-open %:h<cr><cr>
 " Sessions
-nmap <leader>O :Obsession<cr>
-nmap <leader>o :source Session.vim<cr>
+nmap <leader>q :source Session.vim<cr>
+nmap <leader>Q :Obsession<cr>
+set sessionoptions-=curdir
+set sessionoptions+=sesdir
 
 " PLUGINS {{{1
 
@@ -163,8 +173,8 @@ endif
 
 call plug#begin('~/.vim/bundle')
 Plug 'vim-airline/vim-airline'
-Plug 'sheerun/vim-polyglot'
 Plug 'joshdick/onedark.vim'
+Plug 'sheerun/vim-polyglot'
 Plug 'w0rp/ale'
 Plug 'jiangmiao/auto-pairs'
 Plug 'mattn/emmet-vim'
@@ -197,6 +207,7 @@ let g:airline#extensions#tabline#show_tab_type = 0
 let g:airline#extensions#tabline#tab_nr_type = 2
 let g:airline#extensions#tabline#left_sep = '|'
 let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#formatter = 'unique_tail'
 " ALE {{{2
 let g:ale_linters_explicit=1
 let g:ale_linters = {
@@ -237,6 +248,7 @@ set updatetime=1000
 " FZF {{{2
 nmap <silent> <c-p> :FZF<cr>
 nmap <silent> <leader>p :FZF<cr>
+nmap <silent> <leader>P :FZF %:h<cr>
 let g:fzf_action = {
 \	'ctrl-t': 'tab split',
 \	'ctrl-s': 'split',
@@ -260,20 +272,20 @@ let g:fzf_colors = {
 \}
 " TERMDEBUG {{{2
 packadd! termdebug
-map <leader>dd :Termdebug<space>
-map <silent> <leader>dD :call TermDebugSendCommand('quit')<cr>:Gdb<cr>y<cr>
-map <leader>dr :Run<cr>
-map <leader>dR :Stop<cr>
-map <leader>db :Break<cr>
-map <leader>dB :Clear<cr>
-map <leader>ds :Step<cr>
-map <leader>dn :Over<cr>
-map <leader>df :Finish<cr>
-map <leader>dc :Continue<cr>
-map <leader>dp :Evaluate<cr>
-map <leader>de :Evaluate<space>
-map <leader>dl :call TermDebugSendCommand('info locals')<cr>
-map <leader>da :call TermDebugSendCommand('info args')<cr>
+nmap <leader>dd :Termdebug<space>
+nmap <silent> <leader>dD :call TermDebugSendCommand('quit')<cr>:Gdb<cr>y<cr>
+nmap <leader>dr :Run<cr>
+nmap <leader>dR :Stop<cr>
+nmap <leader>db :Break<cr>
+nmap <leader>dB :Clear<cr>
+nmap <leader>ds :Step<cr>
+nmap <leader>dn :Over<cr>
+nmap <leader>df :Finish<cr>
+nmap <leader>dc :Continue<cr>
+nmap <leader>dp :Evaluate<cr>
+nmap <leader>de :Evaluate<space>
+nmap <leader>dl :call TermDebugSendCommand('info locals')<cr>
+nmap <leader>da :call TermDebugSendCommand('info args')<cr>
 let g:termdebug_wide = 1
 
 " COLORSCHEME {{{1
