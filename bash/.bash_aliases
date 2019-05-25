@@ -7,6 +7,7 @@ alias vimp='vim -i NONE'
 alias view='vim -R'
 alias push='pushd .'
 alias pop='popd'
+export LS_COLORS="ow="
 alias ls='ls --color=auto --human-readable --group-directories-first --classify'
 export GREP_COLOR='38;5;203'
 alias grep='grep --color=auto --perl-regexp'
