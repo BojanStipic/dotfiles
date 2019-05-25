@@ -67,7 +67,7 @@ set splitbelow
 set foldmethod=syntax
 set foldlevelstart=99
 " Highlight the line with the cursor
-set cursorline
+"set cursorline
 " Only insert the longest common text of the matches
 set completeopt+=longest
 " Different cursor shapes for different modes
@@ -151,9 +151,9 @@ map <leader>- gT
 map <leader>= gt
 " Mappings for file browsing
 let g:netrw_banner=0
-nmap <cr> :edit %:h<cr>
+nmap <cr> :edit %:p:h<cr>
 nmap <leader>o :edit .<cr>
-nmap <leader>O :edit %:h<cr>
+nmap <leader>O :edit %:p:h<cr>
 nmap <leader>e :!xdg-open .<cr><cr>
 nmap <leader>E :!xdg-open %:h<cr><cr>
 " Sessions
@@ -180,6 +180,7 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'mattn/emmet-vim'
 Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-obsession'
+Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
@@ -215,6 +216,7 @@ let g:ale_linters = {
 \	'asm': ['gcc'],
 \	'c': ['clangd'],
 \	'cpp': ['clangd'],
+\	'rust': ['rls'],
 \	'java': ['javac'],
 \	'javascript': ['eslint'],
 \	'html': 'all',
@@ -232,8 +234,12 @@ let g:ale_completion_enabled=1
 let g:ale_set_balloons=1
 nmap <leader>l :lopen<cr>
 nmap <leader>L :lclose<cr>
-map <silent> [e <plug>(ale_previous_wrap)
-map <silent> ]e <plug>(ale_next_wrap)
+map <silent> [e <plug>(ale_previous)
+map <silent> ]e <plug>(ale_next)
+nmap <silent> K <plug>(ale_hover)
+nmap <silent> gd <plug>(ale_go_to_definition)
+nmap <silent> gD <plug>(ale_go_to_type_definition)
+nmap <silent> gr <plug>(ale_find_references)
 " EMMET-VIM {{{2
 let g:user_emmet_leader_key='<c-e>'
 " ULTISNIPS {{{2
