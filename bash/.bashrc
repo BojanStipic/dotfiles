@@ -12,6 +12,8 @@ HISTIGNORE='mpv*:youtube-dl*'
 # Increase the history size from the default 500
 HISTSIZE=1000
 
+# Append to the history file, don't overwrite it
+shopt -s histappend
 # Pattern `**` used in a pathname expansion context will match paths recursively
 shopt -s globstar
 # Range expressions behave as if in the traditional C locale
@@ -25,9 +27,10 @@ export BROWSER=firefox
 #
 # PATH
 #
-PATH=$PATH:~/.bin
+PATH="$PATH:$HOME/.local/bin"
+PATH="$PATH:$HOME/.cargo/bin"
 if type ruby &> /dev/null; then
-	PATH=$PATH:$(ruby -e 'print Gem.user_dir')/bin
+	PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin"
 	export GEM_HOME=$HOME/.gem
 fi
 
