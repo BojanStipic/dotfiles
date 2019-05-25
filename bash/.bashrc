@@ -64,12 +64,19 @@ ST_OK=$'\u2713'
 ST_ERR=$'\u2717'
 STATUS='$((( $? == 0 )) && echo $ST_OK || echo $ST_ERR)'
 # If running in a GNU Screen session
-if [ "$STY" ]; then
+if [[ "$STY" ]]; then
 	STATUS+=' S'
 fi
 # Git status when the working directory is in a git repository
-if [ -f /usr/share/git/git-prompt.sh ]; then
+if [[ -f /usr/share/git/git-prompt.sh ]]; then
 	. /usr/share/git/git-prompt.sh
+	GIT='1'
+fi
+if [[ -f /usr/lib/git-core/git-sh-prompt ]]; then
+	. /usr/lib/git-core/git-sh-prompt
+	GIT='1'
+fi
+if [[ "$GIT" ]]; then
 	export GIT_PS1_SHOWDIRTYSTATE=1
 	export GIT_PS1_SHOWSTASHSTATE=1
 	export GIT_PS1_SHOWUNTRACKEDFILES=1
@@ -96,7 +103,7 @@ fi
 # fzf
 #
 if [[ -f /usr/share/fzf/key-bindings.bash ]]; then
-	FZF_BASE_COMMAND='fd --follow --hidden --exclude .git --exclude node_modules'
+	FZF_BASE_COMMAND='fd --follow --hidden --exclude .git'
 	export FZF_DEFAULT_COMMAND="$FZF_BASE_COMMAND --type f"
 	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 	export FZF_ALT_C_COMMAND="$FZF_BASE_COMMAND --type d"
