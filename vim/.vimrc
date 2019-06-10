@@ -114,6 +114,10 @@ map gP "0P
 " Adjust indent to current line on paste
 nmap p ]p
 nmap P ]P
+" Auto insert multiline pairs
+imap {<cr> {<cr>}<esc>O
+imap [<cr> [<cr>]<esc>O
+imap (<cr> (<cr>)<esc>O
 " Auto close an XML tag
 imap <lt>/ </<c-x><c-o><esc>==A
 " Very magic search regex
@@ -122,6 +126,9 @@ map g? ?\v
 " TextObject for the entire buffer
 onoremap ie :<c-u>normal! meggVG<cr>`e
 onoremap ae :<c-u>normal! meggVG<cr>`e
+" Jump to the beginning/end of line
+map H ^
+map L $
 " Mappings for windows
 map <c-h> <c-w>h
 map <c-j> <c-w>j
@@ -176,7 +183,6 @@ Plug 'vim-airline/vim-airline'
 Plug 'joshdick/onedark.vim'
 Plug 'sheerun/vim-polyglot'
 Plug 'w0rp/ale'
-Plug 'jiangmiao/auto-pairs'
 Plug 'mattn/emmet-vim'
 Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-obsession'
@@ -189,6 +195,7 @@ Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 Plug 'ap/vim-css-color'
+Plug 'wellle/targets.vim'
 call plug#end()
 
 " PLUGIN CONFIGURATION {{{1
