@@ -67,6 +67,8 @@ STATUS='$((( $? == 0 )) && echo $ST_OK || echo $ST_ERR)'
 if [[ "$STY" ]]; then
 	STATUS+=' S'
 fi
+# Number of background jobs
+STATUS+='$([[ $(jobs) ]] && echo -n " " && jobs | wc -l)'
 # Git status when the working directory is in a git repository
 if [[ -f /usr/share/git/git-prompt.sh ]]; then
 	. /usr/share/git/git-prompt.sh
