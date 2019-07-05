@@ -1,4 +1,6 @@
-" vim: set foldmethod=marker foldlevel=0 :
+"
+" ~/.vimrc
+"
 
 " SETTINGS {{{1
 
@@ -8,68 +10,68 @@ set tabstop=4
 set noexpandtab
 " Use the value of 'tabstop' to indent
 set softtabstop=-1 shiftwidth=0
+
+" Modelines have historically been a source of security/resource vulnerabilities
+set nomodeline
 " English and Serbian language for spell check
-" Toggle with `:set spell!`
 set spelllang=en,sr@latin
-" Copy indent from the current line when starting a new line
+" Minimal automatic indenting for any filetype
 set autoindent
 " When a file is changed outside of Vim, automatically read it again
 set autoread
-" Show line numbers
-set number
-" Display a vertical line at the 80th character
-set colorcolumn=80
-" Use true colors
-if $COLORTERM == 'truecolor' && !$STY
-	set termguicolors
-endif
-" Always show the status bar
-set laststatus=2
-" Hide default mode indicator, because vim-airline shows it
-set noshowmode
+" Allow backspacing over everything in insert mode
+set backspace=indent,eol,start
 " Minimal number of lines to keep above and below cursor
 set scrolloff=15
 " Search recursively with `:find`
 set path+=**
-" Ignore case in search patterns, when using lowercase pattern only
-set ignorecase smartcase
-" Highlight all search pattern matches
-"set hlsearch
-" Temporarily disable hlsearch
-"nmap <silent> <Esc><Esc> :nohlsearch<CR>
-" Don't wrap around the end of the file when searching
-set nowrapscan
-" Show invisible characters
-set listchars=tab:\|\ ,trail:·
-set list
-" Allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-" Display incomplete commands
-set showcmd
-" Display completion matches in a status line
-set wildmenu
-" No timeout for escape sequences, but timeout for mappings
-set timeoutlen=2000 ttimeoutlen=0
-" Show @@@ in the last line if it is truncated
-set display=truncate
-" Do incremental searching
-set incsearch
-" Do not recognize octal numbers for Ctrl-A and Ctrl-X
-set nrformats-=octal
-" Enable the mouse controls
-set mouse=a
-" No bell sound
-set belloff=all
 " Split to the right and below with `:vsplit` and `:split`
 set splitright
 set splitbelow
 " Auto folds based on syntax
 set foldmethod=syntax
 set foldlevelstart=99
-" Highlight the line with the cursor
-"set cursorline
+
+" Always show the status bar
+set laststatus=2
+" Hide default mode indicator, because vim-airline shows it
+set noshowmode
+" Display incomplete commands
+set showcmd
+" Display completion matches in a status line
+set wildmenu
 " Only insert the longest common text of the matches
 set completeopt+=longest
+
+" Do incremental searching
+set incsearch
+" Ignore case when searching for lowercase patterns
+set ignorecase smartcase
+" Don't wrap around the end of the file when searching
+set nowrapscan
+
+" No timeout for escape sequences, but timeout for mappings
+set timeoutlen=2000 ttimeoutlen=0
+" Do not recognize octal numbers for Ctrl-A and Ctrl-X
+set nrformats-=octal
+" Enable the mouse controls
+set mouse=a
+" No bell sound
+set belloff=all
+
+" Show line numbers
+set number
+" Display a vertical ruler
+set colorcolumn=81
+" Show invisible characters
+set listchars=tab:\¦\ ,trail:·
+set list
+" Show @@@ in the last line if it is truncated
+set display=truncate
+" Use true colors on supported terminals
+if $COLORTERM == 'truecolor' && !$STY
+	set termguicolors
+endif
 " Different cursor shapes for different modes
 if &term =~ "xterm"
 	" Insert mode - line
@@ -85,7 +87,8 @@ if &term =~ "xterm"
 	" Prepend to this sequence to change the cursor shape on exit.
 	let &t_te = "\<Esc>[ q" . &t_te
 endif
-"
+
+" Put temporary files in ~/.vim/cache directory
 set swapfile undofile nobackup
 set directory=~/.vim/cache/swap//
 set undodir=~/.vim/cache/undo//
@@ -99,9 +102,13 @@ silent! call mkdir(expand(&backupdir), 'p', 0700)
 
 " MAPPINGS {{{1
 
+map <space> <nop>
 let mapleader=' '
 " Not vi compatible, but more logical. Works like C and D
 map Y y$
+" Move by display lines
+nmap j gj
+nmap k gk
 " Quickly execute the temporary macro
 nmap Q @q
 " Prevent the accidental ZZ command
@@ -114,10 +121,20 @@ map gP "0P
 " Adjust indent to current line on paste
 nmap p ]p
 nmap P ]P
-" Auto insert multiline pairs
-imap {<cr> {<cr>}<esc>O
-imap [<cr> [<cr>]<esc>O
-imap (<cr> (<cr>)<esc>O
+" Toggle spell checking
+nmap <silent> <leader>z :set spell!<cr>
+" Highlight all search pattern matches
+nmap <silent> <leader>/ :set hlsearch! hlsearch?<cr>
+" Expand multiline pairs
+inoremap (<cr> (<cr>)<esc>O
+inoremap (;    (<cr>);<esc>O
+inoremap (,    (<cr>),<esc>O
+inoremap [<cr> [<cr>]<esc>O
+inoremap [;    [<cr>];<esc>O
+inoremap [,    [<cr>],<esc>O
+inoremap {<cr> {<cr>}<esc>O
+inoremap {;    {<cr>};<esc>O
+inoremap {,    {<cr>},<esc>O
 " Auto close an XML tag
 imap <lt>/ </<c-x><c-o><esc>==A
 " Very magic search regex
@@ -144,6 +161,10 @@ map <f2> gt
 map <c-w>t :tab split<cr>
 map <f3> :tab split<cr>
 map <f4> <c-w>T
+imap <f1> <nop>
+imap <f2> <nop>
+imap <f3> <nop>
+imap <f4> <nop>
 map <leader>1 1gt
 map <leader>2 2gt
 map <leader>3 3gt
@@ -156,18 +177,35 @@ map <leader>9 9gt
 map <leader>0 1gT
 map <leader>- gT
 map <leader>= gt
-" Mappings for file browsing
+" Expand %% to the current file's directory
+cmap %% <c-r>=fnameescape(expand("%:p:h")) . "/"<cr>
+" Opening files
 let g:netrw_banner=0
-nmap <cr> :edit %:p:h<cr>
-nmap <leader>o :edit .<cr>
-nmap <leader>O :edit %:p:h<cr>
-nmap <leader>e :!xdg-open .<cr><cr>
-nmap <leader>E :!xdg-open %:h<cr><cr>
+nmap <leader>e :edit ./
+nmap <leader>E :edit %%
+nmap <leader>s :split ./
+nmap <leader>S :split %%
+nmap <leader>v :vsplit ./
+nmap <leader>V :vsplit %%
+nmap <leader>t :tabedit ./
+nmap <leader>T :tabedit %%
+nmap <bs> :edit %:p:h<cr>
+nmap <leader>f :!xdg-open .<cr><cr>
+nmap <leader>F :!xdg-open %:p:h<cr><cr>
 " Sessions
 nmap <leader>q :source Session.vim<cr>
 nmap <leader>Q :Obsession<cr>
+" Don't save CWD to make session files portable
 set sessionoptions-=curdir
 set sessionoptions+=sesdir
+
+" AUTOCOMMANDS {{{1
+
+augroup vimrc
+	autocmd!
+	autocmd BufRead ~/.vimrc setlocal foldmethod=marker foldlevel=0
+	autocmd FileType gitcommit setlocal spell
+augroup END
 
 " PLUGINS {{{1
 
@@ -213,6 +251,7 @@ let g:airline#extensions#tabline#show_buffers = 0
 let g:airline#extensions#tabline#show_tab_type = 0
 let g:airline#extensions#tabline#tab_nr_type = 2
 let g:airline#extensions#tabline#formatter = 'unique_tail'
+
 " ALE {{{2
 let g:ale_linters_explicit=1
 let g:ale_linters = {
@@ -244,6 +283,7 @@ nmap <silent> K <plug>(ale_hover)
 nmap <silent> gd <plug>(ale_go_to_definition)
 nmap <silent> gD <plug>(ale_go_to_type_definition)
 nmap <silent> gr <plug>(ale_find_references)
+
 " EMMET-VIM {{{2
 let g:user_emmet_leader_key='<c-e>'
 " ULTISNIPS {{{2
@@ -252,13 +292,15 @@ let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 let g:UltiSnipsEditSplit="vertical"
 let g:UltiSnipsSnippetsDir="~/.vim/UltiSnips"
-nmap <leader>s :UltiSnipsEdit<cr>
+nmap <leader>n :UltiSnipsEdit<cr>
+
 " VIM-GITGUTTER {{{2
 set updatetime=1000
+
 " FZF {{{2
 nmap <silent> <c-p> :FZF<cr>
 nmap <silent> <leader>p :FZF<cr>
-nmap <silent> <leader>P :FZF %:h<cr>
+nmap <silent> <leader>P :FZF %:p:h<cr>
 let g:fzf_action = {
 \	'ctrl-t': 'tab split',
 \	'ctrl-s': 'split',
@@ -280,6 +322,7 @@ let g:fzf_colors = {
 \	'spinner': ['fg', 'Label'],
 \	'header':  ['fg', 'Comment']
 \}
+
 " TERMDEBUG {{{2
 packadd! termdebug
 nmap <leader>dd :Termdebug<space>
