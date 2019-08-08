@@ -6,6 +6,8 @@
 	lineNumber = true
 	patternType = perl
 [diff]
+	algorithm = patience
+	indentHeuristic = true
 	tool = vimdiff
 [merge]
 	tool = vimdiff
