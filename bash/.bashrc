@@ -29,6 +29,8 @@ export BROWSER=firefox
 #
 PATH="$PATH:$HOME/.local/bin"
 PATH="$PATH:$HOME/.cargo/bin"
+PATH="$PATH:$HOME/.npm/bin"
+export npm_config_prefix=~/.npm
 if type ruby &> /dev/null; then
 	PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin"
 	export GEM_HOME=$HOME/.gem
