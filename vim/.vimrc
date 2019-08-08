@@ -58,6 +58,11 @@ set nrformats-=octal
 set mouse=a
 " No bell sound
 set belloff=all
+" Get rid of unnecessary GUI elements in gvim
+set guioptions=
+" Make vimdiff better: https://vimways.org/2018/the-power-of-diff/
+set diffopt+=algorithm:patience
+set diffopt+=indent-heuristic
 
 " Show line numbers
 set number
