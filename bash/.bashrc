@@ -72,14 +72,8 @@ fi
 # Number of background jobs
 STATUS+='$([[ $(jobs) ]] && echo -n " " && jobs | wc -l)'
 # Git status when the working directory is in a git repository
-if [[ -f /usr/share/git/git-prompt.sh ]]; then
-	. /usr/share/git/git-prompt.sh
-	GIT='1'
-fi
-if [[ -f /usr/lib/git-core/git-sh-prompt ]]; then
-	. /usr/lib/git-core/git-sh-prompt
-	GIT='1'
-fi
+. /usr/share/git/git-prompt.sh &> /dev/null && GIT=1
+. /usr/lib/git-core/git-sh-prompt &> /dev/null && GIT=1
 if [[ "$GIT" ]]; then
 	export GIT_PS1_SHOWDIRTYSTATE=1
 	export GIT_PS1_SHOWSTASHSTATE=1
@@ -106,13 +100,15 @@ fi
 #
 # fzf
 #
-if [[ -f /usr/share/fzf/key-bindings.bash ]]; then
+if type fzf &> /dev/null; then
 	FZF_BASE_COMMAND='fd --follow --hidden --exclude .git'
 	export FZF_DEFAULT_COMMAND="$FZF_BASE_COMMAND --type f"
 	export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 	export FZF_ALT_C_COMMAND="$FZF_BASE_COMMAND --type d"
-	. /usr/share/fzf/completion.bash
-	. /usr/share/fzf/key-bindings.bash
+	. /usr/share/fzf/completion.bash &> /dev/null
+	. /usr/share/fzf/key-bindings.bash &> /dev/null
+	. /usr/share/bash-completion/completions/fzf &> /dev/null
+	. /usr/share/doc/fzf/examples/key-bindings.bash &> /dev/null
 fi
 
 #
