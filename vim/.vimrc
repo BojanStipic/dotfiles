@@ -276,6 +276,11 @@ let g:ale_fixers = {
 \	'*': ['remove_trailing_lines', 'trim_whitespace'],
 \	'markdown': ['remove_trailing_lines'],
 \}
+let g:ale_rust_rls_config = {
+\	'rust': {
+\		'clippy_preference': 'on'
+\	}
+\}
 let g:ale_fix_on_save=1
 let g:ale_sign_column_always=1
 let g:ale_completion_enabled=1
@@ -291,6 +296,7 @@ nmap <silent> gr <plug>(ale_find_references)
 
 " EMMET-VIM {{{2
 let g:user_emmet_leader_key='<c-e>'
+
 " ULTISNIPS {{{2
 let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
