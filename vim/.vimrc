@@ -305,6 +305,11 @@ let g:UltiSnipsEditSplit="vertical"
 let g:UltiSnipsSnippetsDir="~/.vim/UltiSnips"
 nmap <leader>n :UltiSnipsEdit<cr>
 
+" VIM-SURROUND {{{2
+nmap s ys
+nmap S yS
+xmap s S
+
 " VIM-GITGUTTER {{{2
 set updatetime=1000
 
