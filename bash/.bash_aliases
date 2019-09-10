@@ -80,11 +80,11 @@ alias ls-installed='comm -23 <(pacman -Qqen | sort) <(pacman -Qqg base base-deve
 # Copy files if mod-time or size is different
 alias rsync='rsync -avh --delete'
 # Copy files if size is different
-alias rsync-size='\rsync --size-only -avh --delete'
+alias rsync-size='rsync --size-only'
 # Copy files if checksum is different
-alias rsync-checksum='\rsync --checksum -avh --delete'
+alias rsync-checksum='rsync --checksum'
 # Copy only files that do not already exist
-alias rsync-simple='\rsync --ignore-existing -avh --delete'
+alias rsync-simple='rsync --ignore-existing'
 
 # curl
 # Default METHOD is GET. Use -X to change
@@ -92,8 +92,8 @@ alias curl='curl -i'
 alias curl-json='curl -H "Content-Type: application/json"'
 
 # cmus daemon
-# screen: -q quiet, -d detach elsewhere, -R reattach or create new
-alias cmus='screen -q -d -R cmus -s cmus'
+# screen: -q quiet, -d detach elsewhere, -R reattach or create new, -S session name
+alias cmus='screen -q -d -R -S cmus -s cmus'
 alias cr='cmus-remote'
 
 # mpv
@@ -106,10 +106,12 @@ alias youtube-dl='youtube-dl --ignore-errors '\
 '--no-warnings '\
 '--restrict-filenames '\
 '--output="%(title)s.%(ext)s"'
+# youtube-dl for playlists
+alias youtube-dl-pl='youtube-dl --output="%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s"'
 # youtube-dl + convert to mp3
-alias yt2mp3='youtube-dl --format=bestaudio '\
+alias youtube-dl-audio='youtube-dl --format=bestaudio '\
 '--extract-audio '\
-'--audio-format mp3 --audio-quality 192K'
+'--audio-format mp3 --audio-quality 320K'
 
 # Astyle: Allman style; indent with tabs
 alias astyle='astyle --style=allman '\
