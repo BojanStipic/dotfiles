@@ -84,20 +84,6 @@ fi
 PS1="$RED$TOP\u$WHITE@$RED\h$WHITE $LSEP $RED$STATUS$GIT$WHITE $RSEP $RED\w\n$RED$BOT\$$WHITE "
 
 #
-# neofetch
-#
-if type neofetch &> /dev/null; then
-	neofetch()
-	{
-		command neofetch --colors 203 fg 203 203 203 fg \
-			--ascii_colors 203 203 \
-			--color_blocks off \
-			"$@"
-	}
-	neofetch
-fi
-
-#
 # fzf
 #
 if type fzf &> /dev/null; then

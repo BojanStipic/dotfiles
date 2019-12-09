@@ -172,3 +172,8 @@ man()
 	LESS_TERMCAP_ue=$'\E[0m' \
 	man "$@"
 }
+
+# Neofetch colors
+alias neofetch='neofetch --colors 203 fg 203 203 203 fg '\
+'--ascii_colors 203 203 '\
+'--color_blocks off'
