@@ -41,12 +41,12 @@ alias storage='cd /mnt/storage'
 alias projects='cd /mnt/storage/Projects/'
 stash() {
 	if [[ ! -b /dev/mapper/stash ]]; then
-		sudo cryptsetup open /dev/disk/by-uuid/4a33339a-9eac-4ebe-93fa-064b201a9524 stash
+		sudo systemctl start systemd-cryptsetup@stash
 		sudo mount /dev/mapper/stash /mnt/stash
 	fi
 	cd /mnt/stash/personal
 }
-alias ustash='cd && sudo umount /mnt/stash && sudo cryptsetup close stash'
+alias ustash='cd && sudo umount /mnt/stash && sudo systemctl stop systemd-cryptsetup@stash'
 
 # List all active daemons
 alias ls-services='systemctl --type=service'
