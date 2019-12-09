@@ -78,7 +78,7 @@ alias ls-installed='comm -23 <(pacman -Qqen | sort) <(pacman -Qqg base base-deve
 
 # rsync
 # Copy files if mod-time or size is different
-alias rsync='rsync -avh --delete'
+alias rsync='rsync -ah --info=progress2,stats --delete'
 # Copy files if size is different
 alias rsync-size='rsync --size-only'
 # Copy files if checksum is different

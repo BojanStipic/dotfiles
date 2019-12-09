@@ -21,6 +21,9 @@ shopt -s globasciiranges
 # Update the window size
 [[ $DISPLAY ]] && shopt -s checkwinsize
 
+#
+# Default applications
+#
 export VISUAL=vim
 export BROWSER=firefox
 
