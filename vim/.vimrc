@@ -25,12 +25,17 @@ set backspace=indent,eol,start
 set scrolloff=15
 " Search recursively with `:find`
 set path+=**
+" Do not recognize octal numbers for Ctrl-A and Ctrl-X
+set nrformats-=octal
 " Split to the right and below with `:vsplit` and `:split`
 set splitright
 set splitbelow
 " Auto folds based on syntax
 set foldmethod=syntax
 set foldlevelstart=99
+" Make vimdiff better: https://vimways.org/2018/the-power-of-diff/
+set diffopt+=algorithm:patience
+set diffopt+=indent-heuristic
 
 " Always show the status bar
 set laststatus=2
@@ -40,8 +45,8 @@ set noshowmode
 set showcmd
 " Display completion matches in a status line
 set wildmenu
-" Only insert the longest common text of the matches
-set completeopt+=longest
+" Completion menu
+set completeopt=menuone,longest,preview,popup
 
 " Do incremental searching
 set incsearch
@@ -49,20 +54,6 @@ set incsearch
 set ignorecase smartcase
 " Don't wrap around the end of the file when searching
 set nowrapscan
-
-" No timeout for escape sequences, but timeout for mappings
-set timeoutlen=2000 ttimeoutlen=0
-" Do not recognize octal numbers for Ctrl-A and Ctrl-X
-set nrformats-=octal
-" Enable the mouse controls
-set mouse=a
-" No bell sound
-set belloff=all
-" Get rid of unnecessary GUI elements in gvim
-set guioptions=
-" Make vimdiff better: https://vimways.org/2018/the-power-of-diff/
-set diffopt+=algorithm:patience
-set diffopt+=indent-heuristic
 
 " Show line numbers
 set number
@@ -73,6 +64,13 @@ set listchars=tab:\¦\ ,trail:·
 set list
 " Show @@@ in the last line if it is truncated
 set display=truncate
+
+" No timeout for escape sequences, but timeout for mappings
+set timeoutlen=2000 ttimeoutlen=0
+" Enable the mouse controls
+set mouse=a
+" No bell sound
+set belloff=all
 " Use true colors on supported terminals
 if $COLORTERM == 'truecolor' && !$STY
 	set termguicolors
@@ -231,7 +229,6 @@ Plug 'SirVer/ultisnips'
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-abolish'
-Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-sleuth'
@@ -291,8 +288,9 @@ map <silent> [e <plug>(ale_previous)
 map <silent> ]e <plug>(ale_next)
 nmap <silent> K <plug>(ale_hover)
 nmap <silent> gd <plug>(ale_go_to_definition)
-nmap <silent> gD <plug>(ale_go_to_type_definition)
-nmap <silent> gr <plug>(ale_find_references)
+nmap <silent> gD <plug>(ale_go_to_definition_in_vsplit)
+nmap <silent> ga <plug>(ale_find_references)
+nmap <silent> gr <plug>(ale_rename)
 
 " EMMET-VIM {{{2
 let g:user_emmet_leader_key='<c-e>'
@@ -302,7 +300,6 @@ let g:UltiSnipsExpandTrigger="<tab>"
 let g:UltiSnipsJumpForwardTrigger="<tab>"
 let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 let g:UltiSnipsEditSplit="vertical"
-let g:UltiSnipsSnippetsDir="~/.vim/UltiSnips"
 nmap <leader>n :UltiSnipsEdit<cr>
 
 " VIM-SURROUND {{{2
@@ -365,4 +362,7 @@ colorscheme onedark
 highlight Comment guifg=#8690A3
 highlight Folded guifg=#8690A3
 highlight SpecialKey guifg=#646D7A
-"colorscheme morning
+
+set guifont=Hack\ 14
+" Get rid of unnecessary GUI elements in gvim
+set guioptions=
