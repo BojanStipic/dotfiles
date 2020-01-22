@@ -3,7 +3,7 @@
 #
 
 alias vim='vim -p'
-alias vimp='vim -i NONE'
+alias vimp='vim -i NONE -c "set noswapfile" -c "set noundofile"'
 alias view='vim -R'
 alias push='pushd .'
 alias pop='popd'
@@ -78,13 +78,15 @@ alias ls-installed='comm -23 <(pacman -Qqen | sort) <(pacman -Qqg base base-deve
 
 # rsync
 # Copy files if mod-time or size is different
-alias rsync='rsync -ah --info=progress2,stats --delete'
+alias rsync='rsync -ah --partial --info=progress2,stats'
 # Copy files if size is different
 alias rsync-size='rsync --size-only'
 # Copy files if checksum is different
 alias rsync-checksum='rsync --checksum'
 # Copy only files that do not already exist
 alias rsync-simple='rsync --ignore-existing'
+# Delete extraneous files from destination
+alias rsync-backup='rsync --delete'
 
 # curl
 # Default METHOD is GET. Use -X to change
