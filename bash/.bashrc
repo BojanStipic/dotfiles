@@ -21,6 +21,9 @@ shopt -s globasciiranges
 # Update the window size
 [[ $DISPLAY ]] && shopt -s checkwinsize
 
+# Disable C-s suspend execution
+stty -ixon
+
 #
 # Default applications
 #
