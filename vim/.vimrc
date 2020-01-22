@@ -6,23 +6,21 @@
 
 " Tab width
 set tabstop=4
-" Indent with tabs
-set noexpandtab
+" Indent with spaces
+set expandtab
 " Use the value of 'tabstop' to indent
 set softtabstop=-1 shiftwidth=0
 
-" Modelines have historically been a source of security/resource vulnerabilities
-set nomodeline
 " English and Serbian language for spell check
 set spelllang=en,sr@latin
+" Minimal number of lines to keep above and below cursor
+set scrolloff=15
 " Minimal automatic indenting for any filetype
 set autoindent
 " When a file is changed outside of Vim, automatically read it again
 set autoread
 " Allow backspacing over everything in insert mode
 set backspace=indent,eol,start
-" Minimal number of lines to keep above and below cursor
-set scrolloff=15
 " Search recursively with `:find`
 set path+=**
 " Do not recognize octal numbers for Ctrl-A and Ctrl-X
@@ -37,26 +35,36 @@ set foldlevelstart=99
 set diffopt+=algorithm:patience
 set diffopt+=indent-heuristic
 
+" Do incremental searching
+set incsearch
+" Ignore case when searching for lowercase patterns
+set ignorecase smartcase
+" Ignore case when using file names and directories
+set fileignorecase
+" Don't wrap around the end of the file when searching
+set nowrapscan
+
+" Display completion matches in a status line
+set wildmenu
+set wildmode=longest:full,full
+" Completion menu
+set completeopt=menuone,longest,popup
+
+" Modelines have historically been a source of security/resource vulnerabilities
+set nomodeline
 " Always show the status bar
 set laststatus=2
 " Hide default mode indicator, because vim-airline shows it
 set noshowmode
 " Display incomplete commands
 set showcmd
-" Display completion matches in a status line
-set wildmenu
-" Completion menu
-set completeopt=menuone,longest,preview,popup
-
-" Do incremental searching
-set incsearch
-" Ignore case when searching for lowercase patterns
-set ignorecase smartcase
-" Don't wrap around the end of the file when searching
-set nowrapscan
-
 " Show line numbers
 set number
+" Highlight the text line of the cursor
+set cursorline
+set cursorlineopt=number
+" Always show signcolumn
+set signcolumn=yes
 " Display a vertical ruler
 set colorcolumn=81
 " Show invisible characters
@@ -109,6 +117,8 @@ map <space> <nop>
 let mapleader=' '
 " Not vi compatible, but more logical. Works like C and D
 map Y y$
+" Insert newline in normal mode
+nmap <cr> i<cr><esc>
 " Move by display lines
 nmap j gj
 nmap k gk
@@ -139,7 +149,7 @@ inoremap {<cr> {<cr>}<esc>O
 inoremap {;    {<cr>};<esc>O
 inoremap {,    {<cr>},<esc>O
 " Auto close an XML tag
-imap <lt>/ </<c-x><c-o><esc>==A
+inoremap <lt>/ </<c-x><c-o><esc>==A
 " Very magic search regex
 map g/ /\v
 map g? ?\v
@@ -192,7 +202,7 @@ nmap <leader>v :vsplit ./
 nmap <leader>V :vsplit %%
 nmap <leader>t :tabedit ./
 nmap <leader>T :tabedit %%
-nmap <bs> :edit %:p:h<cr>
+nmap - :edit %:p:h<cr>
 nmap <leader>f :!xdg-open .<cr><cr>
 nmap <leader>F :!xdg-open %:p:h<cr><cr>
 " Sessions
@@ -237,14 +247,15 @@ Plug 'airblade/vim-gitgutter'
 Plug 'ap/vim-css-color'
 Plug 'wellle/targets.vim'
 call plug#end()
+packadd! matchit
 
 " PLUGIN CONFIGURATION {{{1
 
 " VIM-AIRLINE {{{2
 " Certain number of spaces are allowed after tabs, but not in between.
 " This algorithm works well for /** */ style comments in a tab-indented file
-let g:airline#extensions#whitespace#mixed_indent_algo=1
-let g:airline#extensions#ale#show_line_numbers=0
+let g:airline#extensions#whitespace#mixed_indent_algo = 1
+let g:airline#extensions#ale#show_line_numbers = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_tabs = 1
 let g:airline#extensions#tabline#tab_min_count = 2
@@ -255,7 +266,11 @@ let g:airline#extensions#tabline#tab_nr_type = 2
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 " ALE {{{2
-let g:ale_linters_explicit=1
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
+let g:ale_lint_on_save = 0
+let g:ale_lint_on_enter = 0
+let g:ale_linters_explicit = 1
 let g:ale_linters = {
 \	'sh': ['shellcheck'],
 \	'asm': ['gcc'],
@@ -278,10 +293,9 @@ let g:ale_rust_rls_config = {
 \		'clippy_preference': 'on'
 \	}
 \}
-let g:ale_fix_on_save=1
-let g:ale_sign_column_always=1
-let g:ale_completion_enabled=1
-let g:ale_set_balloons=1
+let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 1
+let g:ale_set_balloons = 1
 nmap <leader>l :lopen<cr>
 nmap <leader>L :lclose<cr>
 map <silent> [e <plug>(ale_previous)
@@ -293,13 +307,13 @@ nmap <silent> ga <plug>(ale_find_references)
 nmap <silent> gr <plug>(ale_rename)
 
 " EMMET-VIM {{{2
-let g:user_emmet_leader_key='<c-e>'
+let g:user_emmet_leader_key = '<c-e>'
 
 " ULTISNIPS {{{2
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsExpandTrigger = "<tab>"
+let g:UltiSnipsJumpForwardTrigger = "<tab>"
+let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
+let g:UltiSnipsEditSplit = "vertical"
 nmap <leader>n :UltiSnipsEdit<cr>
 
 " VIM-SURROUND {{{2
@@ -356,8 +370,8 @@ let g:termdebug_wide = 1
 
 " COLORSCHEME {{{1
 
-let g:onedark_terminal_italics=1
-let g:airline_theme='onedark'
+let g:onedark_terminal_italics = 1
+let g:airline_theme = 'onedark'
 colorscheme onedark
 highlight Comment guifg=#8690A3
 highlight Folded guifg=#8690A3
