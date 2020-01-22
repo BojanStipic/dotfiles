@@ -8,7 +8,7 @@
 # Don't put duplicate lines or lines starting with a space in the history
 HISTCONTROL=ignoreboth
 # Colon-separated list of patterns not saved in the history
-HISTIGNORE='mpv*:youtube-dl*'
+HISTIGNORE='fg:cd:ls:mpv*:youtube-dl*'
 # Increase the history size from the default 500
 HISTSIZE=1000
 
