@@ -73,8 +73,8 @@ alias rm-orphans='sudo pacman -Rns $(pacman -Qdtq)'
 alias rm-cache='sudo paccache -r; sudo paccache -ruk0'
 # List modified configuration files
 alias ls-modified-files='sudo pacman -Qii | sed -nE "s/^MODIFIED\s*(.*)/\1/p"'
-# List installed native packages not in `base` and `base-devel`
-alias ls-installed='comm -23 <(pacman -Qqen | sort) <(pacman -Qqg base base-devel | sort)'
+# List installed native packages not in `base-devel`
+alias ls-installed='comm -23 <(pacman -Qqen | sort) <(pacman -Qqg base-devel | sort)'
 
 # rsync
 # Copy files if mod-time or size is different
