@@ -24,6 +24,7 @@ alias calc='python -ic "import math as m; import cmath as cm"'
 alias scan-150='scanimage --progress --format=jpeg >'
 alias scan-300='scanimage --progress --format=jpeg --resolution=300 >'
 alias mount.iso='gnome-disk-image-mounter'
+alias ffprobe='ffprobe -hide_banner'
 # List duplicate files in multiple directories
 dupl() { find "$@" -maxdepth 1 | sort | uniq -di;}
 # Scan all number types, not just int
@@ -32,9 +33,6 @@ alias scanmem='sudo scanmem --command="option scan_data_type number"'
 # to list all cards: `pactl list short sources`
 # use @DEFAULT_SOURCE@ to mute the currently default source
 alias mute='pactl set-source-mute @DEFAULT_SOURCE@ toggle'
-
-# SSH into OSMC
-alias osmc='ssh osmc@192.168.1.110'
 
 # Bookmarks
 alias storage='cd /mnt/storage'
@@ -66,7 +64,7 @@ alias ls-tcp='sudo ss -natp'
 alias ls-udp='sudo ss -naup'
 
 # Update
-alias up='sudo pacman -Syuu && yay -Su --aur --devel && gem update'
+alias up='sudo pacman -Syuu && yay -Su --aur --devel && gem update && rustup update'
 # Remove package orphans
 alias rm-orphans='sudo pacman -Rns $(pacman -Qdtq)'
 # Remove pacman cache
@@ -115,52 +113,47 @@ alias youtube-dl-audio='youtube-dl --format=bestaudio '\
 '--extract-audio '\
 '--audio-format mp3 --audio-quality 320K'
 
-# Astyle: Allman style; indent with tabs
-alias astyle='astyle --style=allman '\
-'--indent=tab '\
+# Screencast with audio using ffmpeg
+alias screencast='ffmpeg '\
+'-f x11grab -video_size 1920x1080 -framerate 25 -i $DISPLAY '\
+'-f pulse -ar 16000 -i default '\
+'-c:v libx264 -preset superfast -c:a aac'
+
+mime()
+{
+	TEMP=$(xdg-mime query filetype "$@")
+	echo "Mime type: $TEMP"
+	echo -n "Default open application: "
+	xdg-mime query default "$TEMP"
+	echo
+}
+
+img2pdf()
+{
+	TEMP="$(mktemp -d)"
+	for img in "$@"; do
+		convert -quality '85%' "$img" "$TEMP/${img%.*}.pdf"
+	done
+	pdfunite "$TEMP"/* out.pdf
+	rm -rf "$TEMP"
+}
+
+# Astyle: Java style; indent with spaces
+alias astyle='astyle --style=java '\
+'--indent=spaces '\
 '--break-blocks '\
 '--pad-oper '\
+'--pad-comma '\
 '--pad-header '\
 '--unpad-paren '\
 '--delete-empty-lines '\
 '--align-pointer=name '\
 '--align-reference=name '\
 '--break-one-line-headers '\
-'--remove-braces '\
+'--add-braces '\
+'--convert-tabs '\
 '--suffix=none'
 alias astyle-java='astyle --mode=java'
-
-mime()
-{
-	TEMP=$(xdg-mime query filetype "$@")
-	echo "Mime type:"
-	echo "$TEMP"
-	echo
-	echo "Default open application:"
-	xdg-mime query default "$TEMP"
-}
-
-jpg2pdf()
-{
-	tmp="$(mktemp -d)"
-	for img in "$@"; do
-		convert -quality '85%' "$img" "$tmp/${img%.*}.pdf"
-	done
-	pdfunite "$tmp"/* out.pdf
-	rm -rf "$tmp"
-}
-
-alias identify-image='exiftool'
-alias identify-audio='id3info'
-identify-video()
-{
-	if (( $# != 1 )); then
-		echo "Invalid number of arguments"
-		echo "USAGE: identify-video file"
-		return 1
-	fi
-	ffprobe -hide_banner "$1" 2>&1 | grep -E 'Stream|Input'
-}
 
 # Colored man pages
 man()
