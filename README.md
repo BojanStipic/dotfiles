@@ -21,15 +21,7 @@ stow --no-folding -v */ # Trailing slash is important to expand only directories
 These dotfiles are created specifically for my own use and can contain stuff you don't want.
 Use at your own risk!
 
-## Additional setup
-
-### atom
-
-Install packages:
-
-```bash
-apm install --packages-file ~/.atom/my-packages.txt
-```
+## Additional setup steps
 
 ### cmus
 
