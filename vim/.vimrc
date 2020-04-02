@@ -56,6 +56,8 @@ set nomodeline
 set laststatus=2
 " Hide default mode indicator, because vim-airline shows it
 set noshowmode
+" Hide ins-completion-menu messages
+set shortmess+=c
 " Display incomplete commands
 set showcmd
 " Show line numbers
@@ -75,6 +77,8 @@ set display=truncate
 
 " No timeout for escape sequences, but timeout for mappings
 set timeoutlen=2000 ttimeoutlen=0
+" Timeout for CursorHold autocommand
+set updatetime=300
 " Enable the mouse controls
 set mouse=a
 " No bell sound
@@ -233,9 +237,7 @@ call plug#begin('~/.vim/bundle')
 Plug 'vim-airline/vim-airline'
 Plug 'joshdick/onedark.vim'
 Plug 'sheerun/vim-polyglot'
-Plug 'w0rp/ale'
-Plug 'mattn/emmet-vim'
-Plug 'SirVer/ultisnips'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-eunuch'
 Plug 'tpope/vim-abolish'
@@ -244,7 +246,6 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'ap/vim-css-color'
 Plug 'wellle/targets.vim'
 call plug#end()
 packadd! matchit
@@ -265,64 +266,71 @@ let g:airline#extensions#tabline#show_tab_type = 0
 let g:airline#extensions#tabline#tab_nr_type = 2
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 
-" ALE {{{2
-let g:ale_lint_on_text_changed = 'normal'
-let g:ale_lint_on_insert_leave = 1
-let g:ale_lint_on_save = 0
-let g:ale_lint_on_enter = 0
-let g:ale_linters_explicit = 1
-let g:ale_linters = {
-\	'sh': ['shellcheck'],
-\	'asm': ['gcc'],
-\	'c': ['clangd'],
-\	'cpp': ['clangd'],
-\	'rust': ['rls'],
-\	'java': ['eclipselsp'],
-\	'javascript': ['tsserver'],
-\	'html': 'all',
-\	'css': 'all',
-\	'json': 'all',
-\	'xml': 'all',
-\}
-let g:ale_fixers = {
-\	'*': ['remove_trailing_lines', 'trim_whitespace'],
-\	'markdown': ['remove_trailing_lines'],
-\}
-let g:ale_rust_rls_config = {
-\	'rust': {
-\		'clippy_preference': 'on'
-\	}
-\}
-let g:ale_fix_on_save = 1
-let g:ale_completion_enabled = 1
-let g:ale_set_balloons = 1
+" COC {{{2
+
+let g:coc_data_home="~/.vim/coc/"
 nmap <leader>l :lopen<cr>
 nmap <leader>L :lclose<cr>
-map <silent> [e <plug>(ale_previous)
-map <silent> ]e <plug>(ale_next)
-nmap <silent> K <plug>(ale_hover)
-nmap <silent> gd <plug>(ale_go_to_definition)
-nmap <silent> gD <plug>(ale_go_to_definition_in_vsplit)
-nmap <silent> ga <plug>(ale_find_references)
-nmap <silent> gr <plug>(ale_rename)
+map <silent> [e <plug>(coc-diagnostic-prev)
+map <silent> ]e <plug>(coc-diagnostic-next)
+nmap <silent> K :call CocAction('doHover')<cr>
+nmap <silent> gd <plug>(coc-definition)
+nmap <silent> gD :call CocAction('jumpDefinition', 'vsplit')<cr>
+nmap <silent> ga <plug>(coc-references)
+nmap <silent> gr <plug>(coc-rename)
+autocmd CursorHold * silent call CocActionAsync('highlight')
+autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+" TextObject for a function
+xmap if <plug>(coc-funcobj-i)
+xmap af <plug>(coc-funcobj-a)
+omap if <plug>(coc-funcobj-i)
+omap af <plug>(coc-funcobj-a)
+" Organize imports
+nmap <silent> <f10> :call CocAction('runCommand', 'editor.action.organizeImport')<cr>
+" Symbol navigation
+nmap <silent> <f12> :CocList outline<cr>
+nmap <silent> <f12> :CocList symbols<cr>
+" Expand snippet or emmet expression
+imap <expr> <c-l> pumvisible() ? coc#_select_confirm() : ""
+" Edit snippets file of current document filetype
+nmap <leader>n :CocCommand snippets.editSnippets<cr>
 
-" EMMET-VIM {{{2
-let g:user_emmet_leader_key = '<c-e>'
+let g:coc_global_extensions = [
+\	'coc-highlight',
+\	'coc-snippets',
+\	'coc-emmet',
+\	'coc-rust-analyzer',
+\	'coc-java',
+\	'coc-tsserver',
+\	'coc-html',
+\	'coc-css',
+\	'coc-json',
+\]
 
-" ULTISNIPS {{{2
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-let g:UltiSnipsEditSplit = "vertical"
-nmap <leader>n :UltiSnipsEdit<cr>
+let g:coc_user_config = {
+\	'languageserver': {
+\		'bash': {
+\			'command': 'bash-language-server',
+\			'args': ['start'],
+\			'filetypes': ['sh']
+\		},
+\		'clangd': {
+\			'command': 'clangd',
+\			'filetypes': ['c', 'cpp']
+\		},
+\	}
+\}
+
+highlight link CocErrorSign ErrorMsg
+highlight link CocWarningSign WarningMsg
+highlight link CocInfoSign Todo
+highlight link CocHintSign Todo
+highlight link CocHighlightText Visual
 
 " VIM-SURROUND {{{2
 nmap s ys
 nmap S yS
 xmap s S
-
-" VIM-GITGUTTER {{{2
-set updatetime=1000
 
 " FZF {{{2
 nmap <silent> <c-p> :FZF<cr>
