@@ -121,8 +121,6 @@ map <space> <nop>
 let mapleader=' '
 " Not vi compatible, but more logical. Works like C and D
 map Y y$
-" Insert newline in normal mode
-nmap <cr> i<cr><esc>
 " Move by display lines
 nmap j gj
 nmap k gk
@@ -152,8 +150,6 @@ inoremap [,    [<cr>],<esc>O
 inoremap {<cr> {<cr>}<esc>O
 inoremap {;    {<cr>};<esc>O
 inoremap {,    {<cr>},<esc>O
-" Auto close an XML tag
-inoremap <lt>/ </<c-x><c-o><esc>==A
 " Very magic search regex
 map g/ /\v
 map g? ?\v
@@ -175,8 +171,8 @@ tmap <c-l> <c-w>l
 " Mappings for tabs
 map <f1> gT
 map <f2> gt
-map <c-w>t :tab split<cr>
-map <f3> :tab split<cr>
+map <silent> <c-w>t :tab split<cr>
+map <silent> <f3> :tab split<cr>
 map <f4> <c-w>T
 imap <f1> <nop>
 imap <f2> <nop>
@@ -195,20 +191,12 @@ map <leader>0 1gT
 map <leader>- gT
 map <leader>= gt
 " Expand %% to the current file's directory
-cmap %% <c-r>=fnameescape(expand("%:p:h")) . "/"<cr>
-" Opening files
+cmap %% <c-r>=fnameescape(expand("%:h")) . "/"<cr>
+" File browsing
 let g:netrw_banner=0
-nmap <leader>e :edit ./
-nmap <leader>E :edit %%
-nmap <leader>s :split ./
-nmap <leader>S :split %%
-nmap <leader>v :vsplit ./
-nmap <leader>V :vsplit %%
-nmap <leader>t :tabedit ./
-nmap <leader>T :tabedit %%
-nmap - :edit %:p:h<cr>
-nmap <leader>f :!xdg-open .<cr><cr>
-nmap <leader>F :!xdg-open %:p:h<cr><cr>
+nmap <silent> - :silent edit %:p:h<cr>
+nmap <silent> <leader>f :!xdg-open .<cr><cr>
+nmap <silent> <leader>F :!xdg-open %:p:h<cr><cr>
 " Sessions
 nmap <leader>q :source Session.vim<cr>
 nmap <leader>Q :Obsession<cr>
@@ -269,31 +257,47 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 " COC {{{2
 
 let g:coc_data_home="~/.vim/coc/"
-nmap <leader>l :lopen<cr>
-nmap <leader>L :lclose<cr>
+
+" Diagnostics
+nmap <silent> <leader>l :lopen<cr>
+nmap <silent> <leader>L :lclose<cr>
 map <silent> [e <plug>(coc-diagnostic-prev)
 map <silent> ]e <plug>(coc-diagnostic-next)
+
+" Symbol navigation
+nmap <silent> <c-t> :CocList symbols<cr>
+nmap <silent> <leader>t :CocList symbols<cr>
+nmap <silent> <leader>o :CocList outline<cr>
+
+" Symbol information
 nmap <silent> K :call CocAction('doHover')<cr>
 nmap <silent> gd <plug>(coc-definition)
 nmap <silent> gD :call CocAction('jumpDefinition', 'vsplit')<cr>
-nmap <silent> ga <plug>(coc-references)
-nmap <silent> gr <plug>(coc-rename)
+nmap <silent> gr <plug>(coc-references)
 autocmd CursorHold * silent call CocActionAsync('highlight')
 autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+
+" Code actions
+nmap <silent> <cr> <plug>(coc-codeaction)
+nmap <silent> <leader>r <plug>(coc-rename)
+nmap <silent> <leader>R <plug>(coc-refactor)
+nmap <silent> <leader>a <plug>(coc-fix-current)
+" Organize imports
+nmap <silent> <leader>i :call CocAction('runCommand', 'editor.action.organizeImport')<cr>
+" Format the current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Expand snippet or emmet expression
+"imap <expr> <c-l> pumvisible() ? coc#_select_confirm() : ""
+imap <expr> <cr> complete_info()["selected"] != "-1" ? "\<c-y>" : "\<cr>"
+" Edit snippets file of current document filetype
+nmap <leader>s :vsplit<cr>:CocCommand snippets.editSnippets<cr>
+
 " TextObject for a function
 xmap if <plug>(coc-funcobj-i)
 xmap af <plug>(coc-funcobj-a)
 omap if <plug>(coc-funcobj-i)
 omap af <plug>(coc-funcobj-a)
-" Organize imports
-nmap <silent> <f10> :call CocAction('runCommand', 'editor.action.organizeImport')<cr>
-" Symbol navigation
-nmap <silent> <f12> :CocList outline<cr>
-nmap <silent> <f12> :CocList symbols<cr>
-" Expand snippet or emmet expression
-imap <expr> <c-l> pumvisible() ? coc#_select_confirm() : ""
-" Edit snippets file of current document filetype
-nmap <leader>n :CocCommand snippets.editSnippets<cr>
 
 let g:coc_global_extensions = [
 \	'coc-highlight',
@@ -318,7 +322,13 @@ let g:coc_user_config = {
 \			'command': 'clangd',
 \			'filetypes': ['c', 'cpp']
 \		},
-\	}
+\	},
+\	'list.insertMappings': {
+\		'<c-t>': 'action:tabe',
+\		'<c-s>': 'action:split',
+\		'<c-v>': 'action:vsplit',
+\	},
+\	'snippets.convertToSnippetsAction': v:false,
 \}
 
 highlight link CocErrorSign ErrorMsg
@@ -341,6 +351,7 @@ let g:fzf_action = {
 \	'ctrl-s': 'split',
 \	'ctrl-v': 'vsplit'
 \}
+
 " Customize fzf colors to match the color scheme
 let g:fzf_colors = {
 \	'fg':      ['fg', 'Normal'],
