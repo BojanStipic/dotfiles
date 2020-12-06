@@ -9,8 +9,8 @@ alias push='pushd .'
 alias pop='popd'
 export LS_COLORS="ow="
 alias ls='ls --color=auto --human-readable --group-directories-first --classify'
-export GREP_COLOR='38;5;203'
 alias grep='grep --color=auto --perl-regexp'
+alias rg='rg --smart-case'
 alias diff='diff --color=auto'
 alias dd='dd status=progress'
 alias cp='cp --interactive'
@@ -87,8 +87,8 @@ alias rsync-simple='rsync --ignore-existing'
 alias rsync-backup='rsync --delete'
 
 # curl
-# Default METHOD is GET. Use -X to change
-alias curl='curl -i'
+# Default METHOD is GET. Use -X to change it
+# Use `-i` to show response headers
 alias curl-json='curl -H "Content-Type: application/json"'
 
 # cmus daemon
