@@ -109,7 +109,7 @@ set directory=~/.vim/cache/swap//
 set undodir=~/.vim/cache/undo//
 set backupdir=~/.vim/cache/backup//
 set viminfo+=n~/.vim/cache/viminfo
-let g:netrw_home="~/.vim/cache/"
+let g:netrw_home = "~/.vim/cache/"
 " Create directories if they don't already exist
 silent! call mkdir(expand(&directory), 'p', 0700)
 silent! call mkdir(expand(&undodir), 'p', 0700)
@@ -118,7 +118,7 @@ silent! call mkdir(expand(&backupdir), 'p', 0700)
 " MAPPINGS {{{1
 
 map <space> <nop>
-let mapleader=' '
+let mapleader = ' '
 " Not vi compatible, but more logical. Works like C and D
 map Y y$
 " Move by display lines
@@ -128,6 +128,8 @@ nmap k gk
 nmap Q @q
 " Prevent the accidental ZZ command
 nmap ZZ <nop>
+imap <c-j> <nop>
+imap <c-k> <nop>
 " Clipboard register
 map \ "+
 " Paste from the most recent yank register
@@ -193,7 +195,7 @@ map <leader>= gt
 " Expand %% to the current file's directory
 cmap %% <c-r>=fnameescape(expand("%:h")) . "/"<cr>
 " File browsing
-let g:netrw_banner=0
+let g:netrw_banner = 0
 nmap <silent> - :silent edit %:p:h<cr>
 nmap <silent> <leader>f :!xdg-open .<cr><cr>
 nmap <silent> <leader>F :!xdg-open %:p:h<cr><cr>
@@ -234,7 +236,6 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
-Plug 'wellle/targets.vim'
 call plug#end()
 packadd! matchit
 
@@ -256,7 +257,7 @@ let g:airline#extensions#tabline#formatter = 'unique_tail'
 
 " COC {{{2
 
-let g:coc_data_home="~/.vim/coc/"
+let g:coc_data_home = "~/.vim/coc/"
 
 " Diagnostics
 nmap <silent> <leader>l :lopen<cr>
@@ -270,40 +271,47 @@ nmap <silent> <leader>t :CocList symbols<cr>
 nmap <silent> <leader>o :CocList outline<cr>
 
 " Symbol information
-nmap <silent> K :call CocAction('doHover')<cr>
+nmap <silent> K :call CocActionAsync('doHover')<cr>
 nmap <silent> gd <plug>(coc-definition)
-nmap <silent> gD :call CocAction('jumpDefinition', 'vsplit')<cr>
+nmap <silent> gD :call CocActionAsync('jumpDefinition', 'vsplit')<cr>
+nmap <silent> gy <plug>(coc-type-definition)
+nmap <silent> gi <plug>(coc-implementation)
 nmap <silent> gr <plug>(coc-references)
 autocmd CursorHold * silent call CocActionAsync('highlight')
 autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 
 " Code actions
-nmap <silent> <cr> <plug>(coc-codeaction)
+nmap <silent> <expr> <cr> &buftype ==# 'quickfix' ? "\<cr>" : "\<plug>(coc-codeaction)"
 nmap <silent> <leader>r <plug>(coc-rename)
 nmap <silent> <leader>R <plug>(coc-refactor)
 nmap <silent> <leader>a <plug>(coc-fix-current)
 " Organize imports
-nmap <silent> <leader>i :call CocAction('runCommand', 'editor.action.organizeImport')<cr>
+nmap <silent> <leader>i :call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
 " Format the current buffer
-command! -nargs=0 Format :call CocAction('format')
+command! -nargs=0 Format :call CocActionAsync('format')
 
 " Expand snippet or emmet expression
-"imap <expr> <c-l> pumvisible() ? coc#_select_confirm() : ""
+imap <expr> <c-l> pumvisible() ? coc#_select_confirm() : ""
 imap <expr> <cr> complete_info()["selected"] != "-1" ? "\<c-y>" : "\<cr>"
 " Edit snippets file of current document filetype
 nmap <leader>s :vsplit<cr>:CocCommand snippets.editSnippets<cr>
 
 " TextObject for a function
 xmap if <plug>(coc-funcobj-i)
-xmap af <plug>(coc-funcobj-a)
 omap if <plug>(coc-funcobj-i)
+xmap af <plug>(coc-funcobj-a)
 omap af <plug>(coc-funcobj-a)
+xmap ic <plug>(coc-classobj-i)
+omap ic <plug>(coc-classobj-i)
+xmap ac <plug>(coc-classobj-a)
+omap ac <plug>(coc-classobj-a)
 
 let g:coc_global_extensions = [
 \	'coc-highlight',
 \	'coc-snippets',
 \	'coc-emmet',
 \	'coc-rust-analyzer',
+\	'coc-clangd',
 \	'coc-java',
 \	'coc-tsserver',
 \	'coc-html',
@@ -312,15 +320,12 @@ let g:coc_global_extensions = [
 \]
 
 let g:coc_user_config = {
+\	'coc.preferences.extensionUpdateCheck': 'never',
 \	'languageserver': {
 \		'bash': {
 \			'command': 'bash-language-server',
 \			'args': ['start'],
 \			'filetypes': ['sh']
-\		},
-\		'clangd': {
-\			'command': 'clangd',
-\			'filetypes': ['c', 'cpp']
 \		},
 \	},
 \	'list.insertMappings': {
@@ -329,13 +334,8 @@ let g:coc_user_config = {
 \		'<c-v>': 'action:vsplit',
 \	},
 \	'snippets.convertToSnippetsAction': v:false,
+\	'java.jdt.ls.vmargs': '-javaagent:/home/bojan/.lombok.jar',
 \}
-
-highlight link CocErrorSign ErrorMsg
-highlight link CocWarningSign WarningMsg
-highlight link CocInfoSign Todo
-highlight link CocHintSign Todo
-highlight link CocHighlightText Visual
 
 " VIM-SURROUND {{{2
 nmap s ys
@@ -386,6 +386,7 @@ nmap <leader>de :Evaluate<space>
 nmap <leader>dl :call TermDebugSendCommand('info locals')<cr>
 nmap <leader>da :call TermDebugSendCommand('info args')<cr>
 let g:termdebug_wide = 1
+let g:termdebugger = 'rust-gdb'
 
 " COLORSCHEME {{{1
 
@@ -395,6 +396,11 @@ colorscheme onedark
 highlight Comment guifg=#8690A3
 highlight Folded guifg=#8690A3
 highlight SpecialKey guifg=#646D7A
+highlight link CocErrorSign ErrorMsg
+highlight link CocWarningSign WarningMsg
+highlight link CocInfoSign Todo
+highlight link CocHintSign Todo
+highlight link CocHighlightText Visual
 
 set guifont=Hack\ 14
 " Get rid of unnecessary GUI elements in gvim
