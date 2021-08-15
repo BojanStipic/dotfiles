@@ -269,6 +269,7 @@ map <silent> ]e <plug>(coc-diagnostic-next)
 nmap <silent> <c-t> :CocList symbols<cr>
 nmap <silent> <leader>t :CocList symbols<cr>
 nmap <silent> <leader>o :CocList outline<cr>
+command! -nargs=1 Rg :CocSearch -S <args>
 
 " Symbol information
 nmap <silent> K :call CocActionAsync('doHover')<cr>
@@ -281,7 +282,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 
 " Code actions
-nmap <silent> <expr> <cr> &buftype ==# 'quickfix' ? "\<cr>" : "\<plug>(coc-codeaction)"
+nmap <silent> <expr> <cr> &buftype ==# 'quickfix' ? "\<cr>" : "\<plug>(coc-codeaction-cursor)"
+vmap <silent> <expr> <cr> &buftype ==# 'quickfix' ? "\<cr>" : "\<plug>(coc-codeaction-selected)"
 nmap <silent> <leader>r <plug>(coc-rename)
 nmap <silent> <leader>R <plug>(coc-refactor)
 nmap <silent> <leader>a <plug>(coc-fix-current)
@@ -333,6 +335,7 @@ let g:coc_user_config = {
 \		'<c-s>': 'action:split',
 \		'<c-v>': 'action:vsplit',
 \	},
+\	'suggest.removeDuplicateItems': v:true,
 \	'snippets.convertToSnippetsAction': v:false,
 \	'java.jdt.ls.vmargs': '-javaagent:/home/bojan/.lombok.jar',
 \}
