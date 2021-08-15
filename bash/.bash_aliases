@@ -64,7 +64,7 @@ alias ls-tcp='sudo ss -natp'
 alias ls-udp='sudo ss -naup'
 
 # Update
-alias up='sudo pacman -Syuu && yay -Su --aur --devel && rustup update'
+alias up='sudo pacman -Syuu && paru -Su --aur --devel && rustup update'
 # Remove package orphans
 alias rm-orphans='sudo pacman -Rns $(pacman -Qdtq)'
 # Remove pacman cache
