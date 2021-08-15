@@ -38,10 +38,6 @@ PATH="$PATH:$HOME/.cargo/bin"
 export RUSTUP_HOME="$HOME/.cargo/rustup"
 PATH="$PATH:$HOME/.npm/bin"
 export npm_config_prefix="$HOME/.npm"
-if type ruby &> /dev/null; then
-	PATH="$PATH:$(ruby -e 'print Gem.user_dir')/bin"
-	export GEM_HOME="$HOME/.gem"
-fi
 
 #
 # PS1
