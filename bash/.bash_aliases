@@ -88,7 +88,8 @@ alias rsync-backup='rsync --delete'
 
 # curl
 # Default METHOD is GET. Use -X to change it
-# Use `-i` to show response headers
+# Use '-d' to send request body
+alias curl='curl --silent --show-error --dump-header /dev/stderr'
 alias curl-json='curl -H "Content-Type: application/json"'
 
 # cmus daemon
