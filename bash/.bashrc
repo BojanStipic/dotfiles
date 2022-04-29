@@ -27,7 +27,7 @@ stty -ixon
 #
 # Default applications
 #
-export VISUAL=vim
+export VISUAL=nvim
 export BROWSER=firefox
 
 #
