@@ -8,9 +8,9 @@
 [diff]
 	algorithm = patience
 	indentHeuristic = true
-	tool = vimdiff
+	tool = nvimdiff
 [merge]
-	tool = vimdiff
+	tool = nvimdiff
 	conflictStyle = diff3
 [mergetool]
 	keepBackup = false
