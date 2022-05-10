@@ -152,6 +152,8 @@ require('packer').startup(function(use)
 
     use('ful1e5/onedark.nvim')
     use('nvim-lualine/lualine.nvim')
+    use('elihunter173/dirbuf.nvim')
+    use('lukas-reineke/indent-blankline.nvim')
 
     use({
         'nvim-telescope/telescope.nvim',
@@ -162,7 +164,7 @@ require('packer').startup(function(use)
     })
 
     use({ 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' })
-    use({ 'nvim-treesitter/nvim-treesitter-textobjects' })
+    use('nvim-treesitter/nvim-treesitter-textobjects')
 
     use('neovim/nvim-lspconfig')
     use({ 'williamboman/nvim-lsp-installer', run = ':LspInstallInfo' })
@@ -177,8 +179,6 @@ require('packer').startup(function(use)
             'hrsh7th/cmp-cmdline',
         },
     })
-
-    use "elihunter173/dirbuf.nvim"
 
     use('tpope/vim-obsession')
     use('tpope/vim-eunuch')
@@ -209,11 +209,49 @@ require('lualine').setup({
     },
 })
 
+-- File browser
+require('dirbuf').setup({
+    sort_order = 'directories_first',
+})
+
+-- Indent guides
+require('indent_blankline').setup({
+    show_current_context = true,
+    use_treesitter = true,
+})
+
+-- Fuzzy finder
+require('telescope').setup({
+    defaults = {
+        wrap_results = true,
+        mappings = {
+            i = {
+                ['<c-s>'] = require('telescope.actions').select_horizontal
+            },
+            n = {
+                ['<c-s>'] = require('telescope.actions').select_horizontal
+            },
+        },
+    },
+})
+require('telescope').load_extension('fzf')
+
+vim.keymap.set('n', '<c-p>', require('telescope.builtin').find_files)
+vim.keymap.set('n', '<space>p', require('telescope.builtin').find_files)
+vim.keymap.set('n', '<space>P', function()
+    require('telescope.builtin').find_files({
+        cwd = require('telescope.utils').buffer_dir()
+    })
+end)
+vim.keymap.set('n', '<space>g', require('telescope.builtin').live_grep)
+vim.keymap.set('n', '<space>c', require('telescope.builtin').git_status)
+
 -- Treesitter
 require('nvim-treesitter.configs').setup({
     ensure_installed = {
         'rust',
         'typescript',
+        'tsx',
         'javascript',
         'java',
         'bash',
@@ -325,14 +363,16 @@ local lsp_on_attach = function(_, bufnr)
     vim.keymap.set('n', 'gqie', vim.lsp.buf.formatting, opts)
     vim.api.nvim_buf_set_option(bufnr, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
 
-    vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-        buffer = bufnr,
-        callback = function() vim.lsp.buf.document_highlight() end
-    })
-    vim.api.nvim_create_autocmd('CursorMoved', {
-        buffer = bufnr,
-        callback = function() vim.lsp.buf.clear_references() end
-    })
+    if client.resolved_capabilities.document_highlight then
+        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+            buffer = bufnr,
+            callback = function() vim.lsp.buf.document_highlight() end
+        })
+        vim.api.nvim_create_autocmd('CursorMoved', {
+            buffer = bufnr,
+            callback = function() vim.lsp.buf.clear_references() end
+        })
+    end
 end
 
 local lsp_opts = {
@@ -342,7 +382,7 @@ local lsp_opts = {
     ),
 }
 
-require("nvim-lsp-installer").setup({
+require('nvim-lsp-installer').setup({
     automatic_installation = true
 })
 
@@ -452,31 +492,6 @@ require('gitsigns').setup({
         vim.keymap.set('n', '<space>hd', require('gitsigns').diffthis, opts)
     end
 })
-
--- Fuzzy finder
-require('telescope').setup({
-    defaults = {
-        mappings = {
-            i = {
-                ['<c-s>'] = require('telescope.actions').select_horizontal
-            },
-            n = {
-                ['<c-s>'] = require('telescope.actions').select_horizontal
-            },
-        },
-    },
-})
-require('telescope').load_extension('fzf')
-
-vim.keymap.set('n', '<c-p>', require('telescope.builtin').find_files)
-vim.keymap.set('n', '<space>p', require('telescope.builtin').find_files)
-vim.keymap.set('n', '<space>P', function()
-    require('telescope.builtin').find_files({
-        cwd = require('telescope.utils').buffer_dir()
-    })
-end)
-vim.keymap.set('n', '<space>g', require('telescope.builtin').live_grep)
-vim.keymap.set('n', '<space>c', require('telescope.builtin').git_status)
 
 -- Debug
 vim.cmd('packadd! termdebug')
