@@ -341,7 +341,7 @@ require('nvim-treesitter.configs').setup({
 })
 
 -- LSP
-local lsp_on_attach = function(_, bufnr)
+local lsp_on_attach = function(client, bufnr)
     local opts = { buffer = bufnr }
 
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
