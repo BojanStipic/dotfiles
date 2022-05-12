@@ -408,47 +408,47 @@ require('lspconfig').sumneko_lua.setup(vim.tbl_extend('force', lsp_opts, {
 }))
 
 -- Autocomplete
-local cmp = require('cmp')
-local luasnip = require('luasnip')
-cmp.setup({
+require('cmp').setup({
     snippet = {
         expand = function(args)
-            luasnip.lsp_expand(args.body)
+            require('luasnip').lsp_expand(args.body)
         end,
     },
 
     mapping = {
-        ['<c-space>'] = cmp.mapping.complete(),
-        ['<c-n>'] = cmp.mapping.select_next_item(),
-        ['<c-p>'] = cmp.mapping.select_prev_item(),
-        ['<c-j>'] = cmp.mapping(function()
-            luasnip.jump(1)
+        ['<c-space>'] = require('cmp').mapping.complete(),
+        ['<c-n>'] = require('cmp').mapping.select_next_item(),
+        ['<c-p>'] = require('cmp').mapping.select_prev_item(),
+        ['<c-j>'] = require('cmp').mapping(function()
+            require('luasnip').jump(1)
         end, { 'i', 's' }),
-        ['<c-k>'] = cmp.mapping(function()
-            luasnip.jump(-1)
+        ['<c-k>'] = require('cmp').mapping(function()
+            require('luasnip').jump(-1)
         end, { 'i', 's' }),
-        ['<c-f>'] = cmp.mapping.scroll_docs(4),
-        ['<c-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<cr>'] = cmp.mapping.confirm({ select = false }),
+        ['<c-e>'] = require('cmp').mapping.scroll_docs(1),
+        ['<c-y>'] = require('cmp').mapping.scroll_docs(-1),
+        ['<c-f>'] = require('cmp').mapping.scroll_docs(4),
+        ['<c-b>'] = require('cmp').mapping.scroll_docs(-4),
+        ['<cr>'] = require('cmp').mapping.confirm(),
     },
 
-    sources = cmp.config.sources({
+    sources = require('cmp').config.sources({
         { name = 'nvim_lsp' },
     }, {
         { name = 'buffer' },
     }),
 })
 
-cmp.setup.cmdline('/', {
-    mapping = cmp.mapping.preset.cmdline(),
+require('cmp').setup.cmdline('/', {
+    mapping = require('cmp').mapping.preset.cmdline(),
     sources = {
         { name = 'buffer' },
     },
 })
 
-cmp.setup.cmdline(':', {
-    mapping = cmp.mapping.preset.cmdline(),
-    sources = cmp.config.sources({
+require('cmp').setup.cmdline(':', {
+    mapping = require('cmp').mapping.preset.cmdline(),
+    sources = require('cmp').config.sources({
         { name = 'path' },
     }, {
         { name = 'cmdline' },
