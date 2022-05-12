@@ -11,6 +11,7 @@ vim.opt.splitbelow = true
 vim.opt.foldmethod = 'syntax'
 vim.opt.foldlevelstart = 99
 vim.opt.diffopt:append({ 'algorithm:patience', 'indent-heuristic', 'vertical' })
+vim.opt.hlsearch = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 vim.opt.fileignorecase = true
@@ -153,7 +154,6 @@ require('packer').startup(function(use)
     use('ful1e5/onedark.nvim')
     use('nvim-lualine/lualine.nvim')
     use('elihunter173/dirbuf.nvim')
-    use('lukas-reineke/indent-blankline.nvim')
 
     use({
         'nvim-telescope/telescope.nvim',
@@ -199,13 +199,13 @@ require('lualine').setup({
     options = {
         icons_enabled = false,
         always_divide_middle = false,
-        component_separators = { left = '', right = '' },
-        section_separators = { left = '', right = '' },
+        component_separators = '',
+        section_separators = '',
     },
     sections = {
         lualine_x = {},
         lualine_y = { 'filetype' },
-        lualine_z = { 'progress', 'location' },
+        lualine_z = { 'ObsessionStatus', 'progress', 'location' },
     },
 })
 
@@ -214,16 +214,11 @@ require('dirbuf').setup({
     sort_order = 'directories_first',
 })
 
--- Indent guides
-require('indent_blankline').setup({
-    show_current_context = true,
-    use_treesitter = true,
-})
-
 -- Fuzzy finder
 require('telescope').setup({
     defaults = {
         wrap_results = true,
+        layout_strategy = 'vertical',
         mappings = {
             i = {
                 ['<c-s>'] = require('telescope.actions').select_horizontal
