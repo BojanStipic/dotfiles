@@ -103,33 +103,45 @@ vim.keymap.set('n', 's', 'ys')
 vim.keymap.set('n', 'S', 'yS')
 
 -- Auto commands
+local init_augroup = vim.api.nvim_create_augroup('init.lua', {})
+
 vim.api.nvim_create_autocmd('BufWritePre', {
+    group = init_augroup,
     pattern = '*',
     command = '%s/\\s\\+$//e'
 })
 
 vim.api.nvim_create_autocmd('BufWritePre', {
+    group = init_augroup,
     pattern = '*',
     callback = function()
-        vim.fn.mkdir(vim.fn.expand('<afile>:p:h'), 'p')
+        local dir = vim.fn.expand('<afile>:p:h')
+
+        if vim.fn.isdirectory(dir) == 0 then
+            vim.fn.mkdir(dir, 'p')
+        end
     end
 })
 
 vim.api.nvim_create_autocmd('FileType', {
+    group = init_augroup,
     pattern = 'gitcommit',
     command = 'setlocal spell'
 })
 
 vim.api.nvim_create_autocmd('TextYankPost', {
+    group = init_augroup,
     pattern = '*',
     callback = function() vim.highlight.on_yank({ timeout = 300 }) end
 })
 
 vim.api.nvim_create_autocmd({ 'VimEnter', 'VimResume' }, {
+    group = init_augroup,
     pattern = '*',
     command = 'set guicursor&'
 })
 vim.api.nvim_create_autocmd({ 'VimLeave', 'VimSuspend' }, {
+    group = init_augroup,
     pattern = '*',
     command = 'set guicursor=a:ver25-blinkon500-blinkoff500'
 })
@@ -359,11 +371,16 @@ local lsp_on_attach = function(client, bufnr)
     vim.api.nvim_buf_set_option(bufnr, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
 
     if client.resolved_capabilities.document_highlight then
+        local lsp_augroup = vim.api.nvim_create_augroup('lsp', { clear = false })
+        vim.api.nvim_clear_autocmds({ group = lsp_augroup, buffer = bufnr })
+
         vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+            group = lsp_augroup,
             buffer = bufnr,
             callback = function() vim.lsp.buf.document_highlight() end
         })
-        vim.api.nvim_create_autocmd('CursorMoved', {
+        vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+            group = lsp_augroup,
             buffer = bufnr,
             callback = function() vim.lsp.buf.clear_references() end
         })
