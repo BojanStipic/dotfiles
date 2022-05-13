@@ -1,92 +1,53 @@
-"
-" ~/.vimrc
-"
-
-" SETTINGS {{{1
-
-" Tab width
+" Options
 set tabstop=4
-" Indent with spaces
 set expandtab
-" Use the value of 'tabstop' to indent
 set softtabstop=-1 shiftwidth=0
 
-" English and Serbian language for spell check
 set spelllang=en,sr@latin
-" Minimal number of lines to keep above and below cursor
 set scrolloff=15
-" Minimal automatic indenting for any filetype
 set autoindent
-" When a file is changed outside of Vim, automatically read it again
 set autoread
-" Allow backspacing over everything in insert mode
 set backspace=indent,eol,start
-" Search recursively with `:find`
-set path+=**
-" Do not recognize octal numbers for Ctrl-A and Ctrl-X
 set nrformats-=octal
-" Split to the right and below with `:vsplit` and `:split`
 set splitright
 set splitbelow
-" Auto folds based on syntax
 set foldmethod=syntax
 set foldlevelstart=99
-" Make vimdiff better: https://vimways.org/2018/the-power-of-diff/
 set diffopt+=algorithm:patience
 set diffopt+=indent-heuristic
-
-" Do incremental searching
+set diffopt+=vertical
 set incsearch
-" Ignore case when searching for lowercase patterns
 set ignorecase smartcase
-" Ignore case when using file names and directories
 set fileignorecase
-" Don't wrap around the end of the file when searching
 set nowrapscan
-
-" Display completion matches in a status line
 set wildmenu
 set wildmode=longest:full,full
-" Completion menu
 set completeopt=menuone,longest,popup
-
-" Modelines have historically been a source of security/resource vulnerabilities
 set nomodeline
-" Always show the status bar
-set laststatus=2
-" Hide default mode indicator, because vim-airline shows it
 set noshowmode
-" Hide ins-completion-menu messages
+set laststatus=2
 set shortmess+=c
-" Display incomplete commands
 set showcmd
-" Show line numbers
 set number
-" Highlight the text line of the cursor
 set cursorline
 set cursorlineopt=number
-" Always show signcolumn
 set signcolumn=yes
-" Display a vertical ruler
 set colorcolumn=81
-" Show invisible characters
-set listchars=tab:\¦\ ,trail:·
 set list
-" Show @@@ in the last line if it is truncated
+set listchars=tab:\¦\ ,trail:·
 set display=truncate
-
-" No timeout for escape sequences, but timeout for mappings
 set timeoutlen=2000 ttimeoutlen=0
-" Timeout for CursorHold autocommand
 set updatetime=300
-" Enable the mouse controls
 set mouse=a
-" No bell sound
 set belloff=all
+set sessionoptions-=curdir
+set sessionoptions+=sesdir
+
 " Use true colors on supported terminals
 if $COLORTERM == 'truecolor' && !$STY
 	set termguicolors
 endif
+
 " Different cursor shapes for different modes
 if &term =~ "xterm"
 	" Insert mode - line
@@ -115,34 +76,26 @@ silent! call mkdir(expand(&directory), 'p', 0700)
 silent! call mkdir(expand(&undodir), 'p', 0700)
 silent! call mkdir(expand(&backupdir), 'p', 0700)
 
-" MAPPINGS {{{1
-
+" Keymaps
 map <space> <nop>
-let mapleader = ' '
-" Not vi compatible, but more logical. Works like C and D
 map Y y$
-" Move by display lines
 nmap j gj
 nmap k gk
-" Quickly execute the temporary macro
 nmap Q @q
-" Prevent the accidental ZZ command
+
 nmap ZZ <nop>
 imap <c-j> <nop>
 imap <c-k> <nop>
-" Clipboard register
+
 map \ "+
-" Paste from the most recent yank register
 map gp "0p
 map gP "0P
-" Adjust indent to current line on paste
 nmap p ]p
 nmap P ]P
-" Toggle spell checking
-nmap <silent> <leader>z :set spell!<cr>
-" Highlight all search pattern matches
-nmap <silent> <leader>/ :set hlsearch! hlsearch?<cr>
-" Expand multiline pairs
+
+nmap <silent> <space>z :set spell!<cr>
+nmap <silent> <space>/ :set hlsearch! hlsearch?<cr>
+
 inoremap (<cr> (<cr>)<esc>O
 inoremap (;    (<cr>);<esc>O
 inoremap (,    (<cr>),<esc>O
@@ -152,16 +105,13 @@ inoremap [,    [<cr>],<esc>O
 inoremap {<cr> {<cr>}<esc>O
 inoremap {;    {<cr>};<esc>O
 inoremap {,    {<cr>},<esc>O
-" Very magic search regex
-map g/ /\v
-map g? ?\v
-" TextObject for the entire buffer
+
 onoremap ie :<c-u>normal! meggVG<cr>`e
 onoremap ae :<c-u>normal! meggVG<cr>`e
-" Jump to the beginning/end of line
+
 map H ^
 map L $
-" Mappings for windows
+
 map <c-h> <c-w>h
 map <c-j> <c-w>j
 map <c-k> <c-w>k
@@ -170,7 +120,7 @@ tmap <c-h> <c-w>h
 tmap <c-j> <c-w>j
 tmap <c-k> <c-w>k
 tmap <c-l> <c-w>l
-" Mappings for tabs
+
 map <f1> gT
 map <f2> gt
 map <silent> <c-w>t :tab split<cr>
@@ -180,43 +130,23 @@ imap <f1> <nop>
 imap <f2> <nop>
 imap <f3> <nop>
 imap <f4> <nop>
-map <leader>1 1gt
-map <leader>2 2gt
-map <leader>3 3gt
-map <leader>4 4gt
-map <leader>5 5gt
-map <leader>6 6gt
-map <leader>7 7gt
-map <leader>8 8gt
-map <leader>9 9gt
-map <leader>0 1gT
-map <leader>- gT
-map <leader>= gt
-" Expand %% to the current file's directory
+
 cmap %% <c-r>=fnameescape(expand("%:h")) . "/"<cr>
-" File browsing
 let g:netrw_banner = 0
 nmap <silent> - :silent edit %:p:h<cr>
-nmap <silent> <leader>f :!xdg-open .<cr><cr>
-nmap <silent> <leader>F :!xdg-open %:p:h<cr><cr>
-" Sessions
-nmap <leader>q :source Session.vim<cr>
-nmap <leader>Q :Obsession<cr>
-" Don't save CWD to make session files portable
-set sessionoptions-=curdir
-set sessionoptions+=sesdir
+nmap <silent> <space>f :!xdg-open .<cr><cr>
+nmap <silent> <space>F :!xdg-open %:p:h<cr><cr>
 
-" AUTOCOMMANDS {{{1
+nmap <space>q :source Session.vim<cr>
+nmap <space>Q :Obsession<cr>
 
+" Auto commands
 augroup vimrc
 	autocmd!
-	autocmd BufRead ~/.vimrc setlocal foldmethod=marker foldlevel=0
 	autocmd FileType gitcommit setlocal spell
 augroup END
 
-" PLUGINS {{{1
-
-" Automatically install vim-plug if not installed
+" Plugins
 if empty(glob('~/.vim/autoload/plug.vim'))
 	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
 	\	https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -239,11 +169,9 @@ Plug 'airblade/vim-gitgutter'
 call plug#end()
 packadd! matchit
 
-" PLUGIN CONFIGURATION {{{1
+" Plugin configuration
 
-" VIM-AIRLINE {{{2
-" Certain number of spaces are allowed after tabs, but not in between.
-" This algorithm works well for /** */ style comments in a tab-indented file
+" vim-airline
 let g:airline#extensions#whitespace#mixed_indent_algo = 1
 let g:airline#extensions#ale#show_line_numbers = 0
 let g:airline#extensions#tabline#enabled = 1
@@ -255,20 +183,20 @@ let g:airline#extensions#tabline#show_tab_type = 0
 let g:airline#extensions#tabline#tab_nr_type = 2
 let g:airline#extensions#tabline#formatter = 'unique_tail'
 
-" COC {{{2
+" coc.nvim
 
 let g:coc_data_home = "~/.vim/coc/"
 
 " Diagnostics
-nmap <silent> <leader>l :lopen<cr>
-nmap <silent> <leader>L :lclose<cr>
+nmap <silent> <space>l :lopen<cr>
+nmap <silent> <space>L :lclose<cr>
 map <silent> [e <plug>(coc-diagnostic-prev)
 map <silent> ]e <plug>(coc-diagnostic-next)
 
 " Symbol navigation
 nmap <silent> <c-t> :CocList symbols<cr>
-nmap <silent> <leader>t :CocList symbols<cr>
-nmap <silent> <leader>o :CocList outline<cr>
+nmap <silent> <space>t :CocList symbols<cr>
+nmap <silent> <space>o :CocList outline<cr>
 command! -nargs=1 Rg :CocSearch -S <args>
 
 " Symbol information
@@ -284,11 +212,11 @@ autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 " Code actions
 nmap <silent> <expr> <cr> &buftype ==# 'quickfix' ? "\<cr>" : "\<plug>(coc-codeaction-cursor)"
 vmap <silent> <expr> <cr> &buftype ==# 'quickfix' ? "\<cr>" : "\<plug>(coc-codeaction-selected)"
-nmap <silent> <leader>r <plug>(coc-rename)
-nmap <silent> <leader>R <plug>(coc-refactor)
-nmap <silent> <leader>a <plug>(coc-fix-current)
+nmap <silent> <space>r <plug>(coc-rename)
+nmap <silent> <space>R <plug>(coc-refactor)
+nmap <silent> <space>a <plug>(coc-fix-current)
 " Organize imports
-nmap <silent> <leader>i :call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
+nmap <silent> <space>i :call CocActionAsync('runCommand', 'editor.action.organizeImport')<cr>
 " Format the current buffer
 command! -nargs=0 Format :call CocActionAsync('format')
 
@@ -296,9 +224,9 @@ command! -nargs=0 Format :call CocActionAsync('format')
 imap <expr> <c-l> pumvisible() ? coc#_select_confirm() : ""
 imap <expr> <cr> complete_info()["selected"] != "-1" ? "\<c-y>" : "\<cr>"
 " Edit snippets file of current document filetype
-nmap <leader>s :vsplit<cr>:CocCommand snippets.editSnippets<cr>
+nmap <space>s :vsplit<cr>:CocCommand snippets.editSnippets<cr>
 
-" TextObject for a function
+" TextObjects
 xmap if <plug>(coc-funcobj-i)
 omap if <plug>(coc-funcobj-i)
 xmap af <plug>(coc-funcobj-a)
@@ -340,15 +268,15 @@ let g:coc_user_config = {
 \	'java.jdt.ls.vmargs': '-javaagent:/home/bojan/.lombok.jar',
 \}
 
-" VIM-SURROUND {{{2
+" vim-surround
 nmap s ys
 nmap S yS
 xmap s S
 
-" FZF {{{2
+" FZF
 nmap <silent> <c-p> :FZF<cr>
-nmap <silent> <leader>p :FZF<cr>
-nmap <silent> <leader>P :FZF %:p:h<cr>
+nmap <silent> <space>p :FZF<cr>
+nmap <silent> <space>P :FZF %:p:h<cr>
 let g:fzf_action = {
 \	'ctrl-t': 'tab split',
 \	'ctrl-s': 'split',
@@ -372,27 +300,26 @@ let g:fzf_colors = {
 \	'header':  ['fg', 'Comment']
 \}
 
-" TERMDEBUG {{{2
+" Termdebug
 packadd! termdebug
-nmap <leader>dd :Termdebug<space>
-nmap <silent> <leader>dD :call TermDebugSendCommand('quit')<cr>:Gdb<cr>y<cr>
-nmap <leader>dr :Run<cr>
-nmap <leader>dR :Stop<cr>
-nmap <leader>db :Break<cr>
-nmap <leader>dB :Clear<cr>
-nmap <leader>ds :Step<cr>
-nmap <leader>dn :Over<cr>
-nmap <leader>df :Finish<cr>
-nmap <leader>dc :Continue<cr>
-nmap <leader>dp :Evaluate<cr>
-nmap <leader>de :Evaluate<space>
-nmap <leader>dl :call TermDebugSendCommand('info locals')<cr>
-nmap <leader>da :call TermDebugSendCommand('info args')<cr>
+nmap <space>dd :Termdebug<space>
+nmap <silent> <space>dD :call TermDebugSendCommand('quit')<cr>:Gdb<cr>y<cr>
+nmap <space>dr :Run<cr>
+nmap <space>dR :Stop<cr>
+nmap <space>db :Break<cr>
+nmap <space>dB :Clear<cr>
+nmap <space>ds :Step<cr>
+nmap <space>dn :Over<cr>
+nmap <space>df :Finish<cr>
+nmap <space>dc :Continue<cr>
+nmap <space>dp :Evaluate<cr>
+nmap <space>de :Evaluate<space>
+nmap <space>dl :call TermDebugSendCommand('info locals')<cr>
+nmap <space>da :call TermDebugSendCommand('info args')<cr>
 let g:termdebug_wide = 1
 let g:termdebugger = 'rust-gdb'
 
-" COLORSCHEME {{{1
-
+" Colorscheme
 let g:onedark_terminal_italics = 1
 let g:airline_theme = 'onedark'
 colorscheme onedark
@@ -404,7 +331,3 @@ highlight link CocWarningSign WarningMsg
 highlight link CocInfoSign Todo
 highlight link CocHintSign Todo
 highlight link CocHighlightText Visual
-
-set guifont=Hack\ 14
-" Get rid of unnecessary GUI elements in gvim
-set guioptions=
