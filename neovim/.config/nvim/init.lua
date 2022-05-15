@@ -204,6 +204,13 @@ end)
 -- Colorscheme
 require('onedark').setup({
     dark_float = true,
+    overrides = function(colors)
+        return {
+            LspReferenceText = { bg = colors.bg_visual },
+            LspReferenceRead = { bg = colors.bg_visual },
+            LspReferenceWrite = { bg = colors.bg_visual },
+        }
+    end
 })
 
 -- Statusline
