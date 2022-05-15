@@ -59,14 +59,14 @@ export npm_config_prefix="$HOME/.npm"
 # 38;2;R;G;Bm - where R, G and B are 0..255 colors [24 bit truecolor]
 # 48;5;Nm and 48;2;R;G;Bm - same as above, but for background colors
 #
-RED='\[\e[38;5;203m\]'
+RED='\[\e[31m\]'
 WHITE='\[\e[00m\]'
 LSEP='['
 RSEP=']'
 TOP=$'\u256D'$'\U2500'$'\U2500'
 BOT=$'\u2570'\>
-ST_OK=$'\u2713'
-ST_ERR=$'\u2717'
+ST_OK=$'\u2714'
+ST_ERR=$'\u2718'
 STATUS='$((( $? == 0 )) && echo $ST_OK || echo $ST_ERR)'
 # If running in a GNU Screen session
 if [[ "$STY" ]]; then
