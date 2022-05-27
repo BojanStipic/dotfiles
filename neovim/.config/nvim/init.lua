@@ -8,6 +8,7 @@ vim.opt.spelllang = { 'en', 'sr@latin' }
 vim.opt.scrolloff = 10
 vim.opt.splitright = true
 vim.opt.splitbelow = true
+vim.opt.foldlevelstart = 99
 vim.opt.diffopt:append({ 'algorithm:patience', 'indent-heuristic', 'vertical' })
 vim.opt.hlsearch = false
 vim.opt.ignorecase = true
@@ -165,6 +166,7 @@ require('packer').startup(function(use)
 
     use('ful1e5/onedark.nvim')
     use('nvim-lualine/lualine.nvim')
+    use('stevearc/dressing.nvim')
     use('elihunter173/dirbuf.nvim')
 
     use({
