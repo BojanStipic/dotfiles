@@ -8,8 +8,6 @@ vim.opt.spelllang = { 'en', 'sr@latin' }
 vim.opt.scrolloff = 10
 vim.opt.splitright = true
 vim.opt.splitbelow = true
-vim.opt.foldmethod = 'syntax'
-vim.opt.foldlevelstart = 99
 vim.opt.diffopt:append({ 'algorithm:patience', 'indent-heuristic', 'vertical' })
 vim.opt.hlsearch = false
 vim.opt.ignorecase = true
@@ -21,6 +19,7 @@ vim.opt.completeopt = { 'menuone', 'noselect', 'preview' }
 vim.opt.modeline = false
 vim.opt.showmode = false
 vim.opt.number = true
+vim.opt.showtabline = 2
 vim.opt.cursorline = true
 vim.opt.cursorlineopt = 'number'
 vim.opt.signcolumn = 'yes:2'
@@ -31,6 +30,7 @@ vim.opt.timeoutlen = 2000
 vim.opt.ttimeoutlen = 0
 vim.opt.updatetime = 300
 vim.opt.mouse = 'a'
+vim.opt.shortmess:append({ A = true })
 vim.opt.sessionoptions:remove({ 'curdir' })
 vim.opt.sessionoptions:append({ 'sesdir' })
 
@@ -217,7 +217,6 @@ require('onedark').setup({
 require('lualine').setup({
     options = {
         icons_enabled = false,
-        always_divide_middle = false,
         component_separators = '',
         section_separators = '',
     },
@@ -226,6 +225,11 @@ require('lualine').setup({
         lualine_y = { 'filetype' },
         lualine_z = { 'ObsessionStatus', 'progress', 'location' },
     },
+    tabline = {
+        lualine_a = {
+            { 'tabs', max_length = vim.o.columns, mode = 2 },
+        },
+    }
 })
 
 -- File browser
@@ -238,6 +242,7 @@ require('telescope').setup({
     defaults = {
         wrap_results = true,
         layout_strategy = 'vertical',
+        layout_config = { preview_cutoff = 0 },
         mappings = {
             i = {
                 ['<c-s>'] = require('telescope.actions').select_horizontal
@@ -354,6 +359,9 @@ require('nvim-treesitter.configs').setup({
     },
 })
 
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+
 -- LSP
 local lsp_on_attach = function(client, bufnr)
     local opts = { buffer = bufnr }
@@ -364,7 +372,10 @@ local lsp_on_attach = function(client, bufnr)
     vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, opts)
     vim.keymap.set('n', 'gi', require('telescope.builtin').lsp_implementations, opts)
     vim.keymap.set('n', 'gy', require('telescope.builtin').lsp_type_definitions, opts)
-    vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, opts)
+    vim.keymap.set('n', 'gr', function()
+        require('telescope.builtin').lsp_references({ include_declaration = false })
+    end, opts)
+    vim.keymap.set('n', 'gR', require('telescope.builtin').lsp_references, opts)
 
     vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, opts)
     vim.keymap.set('n', '<cr>', vim.lsp.buf.code_action, opts)
