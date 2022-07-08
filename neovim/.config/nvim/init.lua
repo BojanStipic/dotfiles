@@ -43,13 +43,12 @@ vim.diagnostic.config({ virtual_text = false })
 
 -- Keymaps
 vim.keymap.set({ 'n', 'v', 'o' }, '<space>', '<nop>')
-vim.keymap.set({ 'n', 'v' }, 'j', 'gj', { silent = true })
-vim.keymap.set({ 'n', 'v' }, 'k', 'gk', { silent = true })
-vim.keymap.set('n', 'Q', '@q')
-
 vim.keymap.set('n', 'ZZ', '<nop>')
 vim.keymap.set('i', '<c-j>', '<nop>')
 vim.keymap.set('i', '<c-k>', '<nop>')
+
+vim.keymap.set({ 'n', 'v' }, 'j', 'gj', { silent = true })
+vim.keymap.set({ 'n', 'v' }, 'k', 'gk', { silent = true })
 
 vim.keymap.set({ 'n', 'v' }, '\\', '"+')
 vim.keymap.set({ 'n', 'v' }, 'gp', '"0p=`]')
@@ -81,6 +80,8 @@ vim.keymap.set({ 'n', 'v' }, '<c-j>', '<c-w>j')
 vim.keymap.set({ 'n', 'v' }, '<c-k>', '<c-w>k')
 vim.keymap.set({ 'n', 'v' }, '<c-l>', '<c-w>l')
 
+vim.keymap.set('t', '<esc>', '<c-\\><c-n>')
+
 vim.keymap.set({ 'n', 'v' }, '<f1>', 'gT')
 vim.keymap.set({ 'n', 'v' }, '<f2>', 'gt')
 vim.keymap.set({ 'n', 'v' }, '<c-w>t', ':tab split<cr>', { silent = true })
@@ -92,7 +93,6 @@ vim.keymap.set('i', '<f3>', '<nop>')
 vim.keymap.set('i', '<f4>', '<nop>')
 
 vim.keymap.set('c', '%%', '<c-r>=fnameescape(expand("%:h")) .. "/"<cr>')
-vim.g.netrw_banner = 0
 vim.keymap.set('n', '-', ':silent edit %:p:h<cr>', { silent = true })
 vim.keymap.set('n', '<space>f', ':silent !xdg-open %:p:h<cr>', { silent = true })
 vim.keymap.set('n', '<space>F', ':silent !xdg-open .<cr>', { silent = true })
@@ -144,7 +144,7 @@ vim.api.nvim_create_autocmd({ 'VimEnter', 'VimResume' }, {
 vim.api.nvim_create_autocmd({ 'VimLeave', 'VimSuspend' }, {
     group = init_augroup,
     pattern = '*',
-    command = 'set guicursor=a:ver25-blinkon500-blinkoff500'
+    command = 'set guicursor=a:ver25'
 })
 
 -- Plugins
@@ -166,8 +166,10 @@ require('packer').startup(function(use)
 
     use('ful1e5/onedark.nvim')
     use('nvim-lualine/lualine.nvim')
-    use('stevearc/dressing.nvim')
+
     use('elihunter173/dirbuf.nvim')
+    use({ 'lewis6991/gitsigns.nvim', requires = 'nvim-lua/plenary.nvim' })
+    use('stevearc/dressing.nvim')
 
     use({
         'nvim-telescope/telescope.nvim',
@@ -182,6 +184,7 @@ require('packer').startup(function(use)
 
     use('neovim/nvim-lspconfig')
     use({ 'williamboman/nvim-lsp-installer', run = ':LspInstallInfo' })
+    use('mfussenegger/nvim-jdtls')
 
     use({
         'hrsh7th/nvim-cmp',
@@ -199,8 +202,6 @@ require('packer').startup(function(use)
     use('tpope/vim-abolish')
     use({ 'tpope/vim-surround', requires = 'tpope/vim-repeat' })
     use('tpope/vim-sleuth')
-    use('tpope/vim-fugitive')
-    use({ 'lewis6991/gitsigns.nvim', requires = 'nvim-lua/plenary.nvim' })
 end)
 
 -- Colorscheme
@@ -239,6 +240,46 @@ require('dirbuf').setup({
     sort_order = 'directories_first',
 })
 
+-- Git signs
+require('gitsigns').setup({
+    on_attach = function(bufnr)
+        local opts = { buffer = bufnr }
+
+        vim.keymap.set('n', ']c', function()
+            if vim.wo.diff then return ']c' end
+
+            vim.schedule(function() require('gitsigns').next_hunk() end)
+            return '<ignore>'
+        end, { buffer = bufnr, expr = true })
+
+        vim.keymap.set('n', '[c', function()
+            if vim.wo.diff then return '[c' end
+
+            vim.schedule(function() require('gitsigns').prev_hunk() end)
+            return '<ignore>'
+        end, { buffer = bufnr, expr = true })
+
+        vim.keymap.set({ 'n', 'v' }, '<space>hs', require('gitsigns').stage_hunk, opts)
+        vim.keymap.set({ 'n', 'v' }, '<space>hr', require('gitsigns').reset_hunk, opts)
+        vim.keymap.set('n', '<space>hS', require('gitsigns').stage_buffer, opts)
+        vim.keymap.set('n', '<space>hR', require('gitsigns').reset_buffer, opts)
+        vim.keymap.set('n', '<space>hu', require('gitsigns').undo_stage_hunk, opts)
+
+        vim.keymap.set('n', '<space>hp', require('gitsigns').preview_hunk, opts)
+        vim.keymap.set('n', '<space>hb', function()
+            require('gitsigns').blame_line { full = true }
+        end, opts)
+        vim.keymap.set('n', '<space>hd', require('gitsigns').diffthis, opts)
+    end
+})
+
+-- UI
+require('dressing').setup({
+    select = {
+        telescope = require('telescope.themes').get_ivy({ initial_mode = 'normal' })
+    },
+})
+
 -- Fuzzy finder
 require('telescope').setup({
     defaults = {
@@ -254,39 +295,51 @@ require('telescope').setup({
             },
         },
     },
+
+    pickers = {
+        lsp_references = { show_line = false },
+        lsp_incoming_calls = { show_line = false },
+        lsp_outgoing_calls = { show_line = false },
+        lsp_definitions = { show_line = false },
+        lsp_type_definitions = { show_line = false },
+        lsp_implementations = { show_line = false },
+        lsp_document_symbols = { show_line = false },
+        lsp_workspace_symbols = { show_line = false },
+        lsp_dynamic_workspace_symbols = { show_line = false },
+    },
 })
 require('telescope').load_extension('fzf')
 
-vim.keymap.set('n', '<c-p>', require('telescope.builtin').find_files)
 vim.keymap.set('n', '<space>p', require('telescope.builtin').find_files)
-vim.keymap.set('n', '<space>P', function()
-    require('telescope.builtin').find_files({
-        cwd = require('telescope.utils').buffer_dir()
-    })
-end)
 vim.keymap.set('n', '<space>g', require('telescope.builtin').live_grep)
 vim.keymap.set('n', '<space>c', require('telescope.builtin').git_status)
+vim.keymap.set('n', '<space>hh', require('telescope.builtin').git_bcommits)
+vim.keymap.set('n', '<space><space>', function()
+    require('telescope.builtin').buffers({ sort_mru = true })
+end)
 
 -- Treesitter
 require('nvim-treesitter.configs').setup({
     ensure_installed = {
         'rust',
+        'toml',
         'typescript',
         'tsx',
         'javascript',
-        'java',
-        'bash',
         'html',
         'css',
         'json',
+        'yaml',
+        'java',
+        'bash',
         'lua',
         'c',
         'cpp',
-        'dockerfile',
         'make',
         'ninja',
-        'toml',
-        'yaml',
+        'dockerfile',
+        'markdown',
+        'markdown_inline',
     },
     sync_install = false,
 
@@ -378,14 +431,16 @@ local lsp_on_attach = function(client, bufnr)
         require('telescope.builtin').lsp_references({ include_declaration = false })
     end, opts)
     vim.keymap.set('n', 'gR', require('telescope.builtin').lsp_references, opts)
+    vim.keymap.set('n', 'gi', require('telescope.builtin').lsp_incoming_calls, opts)
+    vim.keymap.set('n', 'go', require('telescope.builtin').lsp_outgoing_calls, opts)
 
     vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, opts)
     vim.keymap.set('n', '<cr>', vim.lsp.buf.code_action, opts)
-    vim.keymap.set('n', '<space>t', require('telescope.builtin').lsp_dynamic_workspace_symbols, opts)
+    vim.keymap.set('n', '<space>s', require('telescope.builtin').lsp_dynamic_workspace_symbols, opts)
 
-    vim.keymap.set('n', '<space><space>', require('telescope.builtin').diagnostics, opts)
-    vim.keymap.set('n', '[e', vim.diagnostic.goto_prev, opts)
-    vim.keymap.set('n', ']e', vim.diagnostic.goto_next, opts)
+    vim.keymap.set('n', '<space>e', require('telescope.builtin').diagnostics, opts)
+    vim.keymap.set('n', '[e', function() vim.diagnostic.goto_prev({ wrap = false }) end, opts)
+    vim.keymap.set('n', ']e', function() vim.diagnostic.goto_next({ wrap = false}) end, opts)
 
     vim.keymap.set('n', 'gqie', vim.lsp.buf.formatting, opts)
     vim.api.nvim_buf_set_option(bufnr, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
@@ -422,7 +477,6 @@ require('lspconfig').rust_analyzer.setup(lsp_opts)
 require('lspconfig').clangd.setup(lsp_opts)
 require('lspconfig').bashls.setup(lsp_opts)
 
-require('lspconfig').jdtls.setup(lsp_opts)
 require('lspconfig').tsserver.setup(lsp_opts)
 require('lspconfig').html.setup(lsp_opts)
 require('lspconfig').cssls.setup(lsp_opts)
@@ -443,6 +497,22 @@ require('lspconfig').sumneko_lua.setup(vim.tbl_extend('force', lsp_opts, {
         },
     },
 }))
+
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'java',
+    callback = function()
+        require('jdtls').start_or_attach(vim.tbl_extend('force', lsp_opts, {
+            cmd = {
+                vim.fn.stdpath('data') .. '/lsp_servers/jdtls/bin/jdtls',
+                '-configuration',
+                vim.fn.expand('~/.cache/jdtls/config'),
+                '-data',
+                vim.fn.expand('~/.cache/jdtls/workspace'),
+                '--jvm-arg=-javaagent:' .. vim.fn.stdpath('data') .. '/lsp_servers/jdtls/lombok.jar'
+            },
+        }))
+    end
+})
 
 -- Autocomplete
 require('cmp').setup({
@@ -491,55 +561,3 @@ require('cmp').setup.cmdline(':', {
         { name = 'cmdline' },
     }),
 })
-
--- Git signs
-require('gitsigns').setup({
-    on_attach = function(bufnr)
-        local opts = { buffer = bufnr }
-
-        vim.keymap.set('n', ']c', function()
-            if vim.wo.diff then return ']c' end
-
-            vim.schedule(function() require('gitsigns').next_hunk() end)
-            return '<ignore>'
-        end, { buffer = bufnr, expr = true })
-
-        vim.keymap.set('n', '[c', function()
-            if vim.wo.diff then return '[c' end
-
-            vim.schedule(function() require('gitsigns').prev_hunk() end)
-            return '<ignore>'
-        end, { buffer = bufnr, expr = true })
-
-        vim.keymap.set({ 'n', 'v' }, '<space>hs', require('gitsigns').stage_hunk, opts)
-        vim.keymap.set({ 'n', 'v' }, '<space>hr', require('gitsigns').reset_hunk, opts)
-        vim.keymap.set('n', '<space>hS', require('gitsigns').stage_buffer, opts)
-        vim.keymap.set('n', '<space>hR', require('gitsigns').reset_buffer, opts)
-        vim.keymap.set('n', '<space>hu', require('gitsigns').undo_stage_hunk, opts)
-
-        vim.keymap.set('n', '<space>hp', require('gitsigns').preview_hunk, opts)
-        vim.keymap.set('n', '<space>hb', function()
-            require('gitsigns').blame_line { full = true }
-        end, opts)
-        vim.keymap.set('n', '<space>hd', require('gitsigns').diffthis, opts)
-    end
-})
-
--- Debug
-vim.cmd('packadd! termdebug')
-vim.keymap.set('n', '<space>dd', ':Termdebug<space>')
-vim.keymap.set('n', '<silent>', '<space>dD :call TermDebugSendCommand("quit")<cr>:Gdb<cr>y<cr>')
-vim.keymap.set('n', '<space>dr', ':Run<cr>')
-vim.keymap.set('n', '<space>dR', ':Stop<cr>')
-vim.keymap.set('n', '<space>db', ':Break<cr>')
-vim.keymap.set('n', '<space>dB', ':Clear<cr>')
-vim.keymap.set('n', '<space>ds', ':Step<cr>')
-vim.keymap.set('n', '<space>dn', ':Over<cr>')
-vim.keymap.set('n', '<space>df', ':Finish<cr>')
-vim.keymap.set('n', '<space>dc', ':Continue<cr>')
-vim.keymap.set('n', '<space>dp', ':Evaluate<cr>')
-vim.keymap.set('n', '<space>de', ':Evaluate<space>')
-vim.keymap.set('n', '<space>dl', ':call TermDebugSendCommand("info locals")<cr>')
-vim.keymap.set('n', '<space>da', ':call TermDebugSendCommand("info args")<cr>')
-vim.g.termdebug_wide = 1
-vim.g.termdebugger = 'rust-gdb'
