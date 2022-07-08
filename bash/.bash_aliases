@@ -5,6 +5,9 @@
 alias vim='vim -p'
 alias vimp='vim -i NONE -c "set noswapfile" -c "set noundofile"'
 alias view='vim -R'
+alias nvim='nvim -p'
+alias nvimp='nvim -i NONE -c "set noswapfile" -c "set noundofile"'
+alias nview='nvim -R'
 alias push='pushd .'
 alias pop='popd'
 export LS_COLORS="ow="
