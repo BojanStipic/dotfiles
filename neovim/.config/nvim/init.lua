@@ -40,6 +40,10 @@ vim.opt.undofile = true
 vim.opt.backup = false
 
 vim.diagnostic.config({ virtual_text = false })
+vim.fn.sign_define('DiagnosticSignError', { text = '●', texthl = 'DiagnosticSignError', numhl = 'DiagnosticSignError' })
+vim.fn.sign_define('DiagnosticSignWarn', { text = '●', texthl = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn' })
+vim.fn.sign_define('DiagnosticSignInfo', { text = '●', texthl = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo' })
+vim.fn.sign_define('DiagnosticSignHint', { text = '●', texthl = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint' })
 
 -- Keymaps
 vim.keymap.set({ 'n', 'v', 'o' }, '<space>', '<nop>')
@@ -164,7 +168,7 @@ end
 require('packer').startup(function(use)
     use('wbthomason/packer.nvim')
 
-    use('ful1e5/onedark.nvim')
+    use('navarasu/onedark.nvim')
     use('nvim-lualine/lualine.nvim')
 
     use('elihunter173/dirbuf.nvim')
@@ -206,15 +210,12 @@ end)
 
 -- Colorscheme
 require('onedark').setup({
-    dark_float = true,
-    overrides = function(colors)
-        return {
-            LspReferenceText = { bg = colors.bg_visual },
-            LspReferenceRead = { bg = colors.bg_visual },
-            LspReferenceWrite = { bg = colors.bg_visual },
-        }
-    end
+    code_style = {
+        comments = 'italic',
+        keywords = 'italic',
+    },
 })
+require('onedark').load()
 
 -- Statusline
 require('lualine').setup({
@@ -440,7 +441,7 @@ local lsp_on_attach = function(client, bufnr)
 
     vim.keymap.set('n', '<space>e', require('telescope.builtin').diagnostics, opts)
     vim.keymap.set('n', '[e', function() vim.diagnostic.goto_prev({ wrap = false }) end, opts)
-    vim.keymap.set('n', ']e', function() vim.diagnostic.goto_next({ wrap = false}) end, opts)
+    vim.keymap.set('n', ']e', function() vim.diagnostic.goto_next({ wrap = false }) end, opts)
 
     vim.keymap.set('n', 'gqie', vim.lsp.buf.formatting, opts)
     vim.api.nvim_buf_set_option(bufnr, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
