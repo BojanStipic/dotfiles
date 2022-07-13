@@ -104,9 +104,6 @@ vim.keymap.set('n', '<space>F', ':silent !xdg-open .<cr>', { silent = true })
 vim.keymap.set('n', '<space>q', ':source Session.vim<cr>', { silent = true })
 vim.keymap.set('n', '<space>Q', ':Obsession<cr>', { silent = true })
 
-vim.keymap.set('n', 's', 'ys')
-vim.keymap.set('n', 'S', 'yS')
-
 -- Auto commands
 local init_augroup = vim.api.nvim_create_augroup('init.lua', {})
 
@@ -170,7 +167,7 @@ require('packer').startup(function(use)
 
     use('navarasu/onedark.nvim')
     use('nvim-lualine/lualine.nvim')
-
+    use('kylechui/nvim-surround')
     use('elihunter173/dirbuf.nvim')
     use({ 'lewis6991/gitsigns.nvim', requires = 'nvim-lua/plenary.nvim' })
     use('stevearc/dressing.nvim')
@@ -204,7 +201,6 @@ require('packer').startup(function(use)
     use('tpope/vim-obsession')
     use('tpope/vim-eunuch')
     use('tpope/vim-abolish')
-    use({ 'tpope/vim-surround', requires = 'tpope/vim-repeat' })
     use('tpope/vim-sleuth')
 end)
 
@@ -234,6 +230,17 @@ require('lualine').setup({
             { 'tabs', max_length = vim.o.columns, mode = 2 },
         },
     }
+})
+
+-- Surround
+require('nvim-surround').setup({
+    keymaps = {
+        insert = "s",
+        insert_line = "ss",
+        visual = "s",
+        delete = "ds",
+        change = "cs",
+    },
 })
 
 -- File browser
