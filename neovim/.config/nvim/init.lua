@@ -237,8 +237,8 @@ require('lualine').setup({
 -- Surround
 require('nvim-surround').setup({
     keymaps = {
-        insert = "s",
-        insert_line = "ss",
+        normal = "s",
+        normal_cur = "ss",
         visual = "s",
         delete = "ds",
         change = "cs",
