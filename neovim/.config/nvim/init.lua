@@ -164,6 +164,7 @@ end
 
 require('packer').startup(function(use)
     use('wbthomason/packer.nvim')
+    use('williamboman/mason.nvim')
 
     use('navarasu/onedark.nvim')
     use('nvim-lualine/lualine.nvim')
@@ -184,7 +185,6 @@ require('packer').startup(function(use)
     use('nvim-treesitter/nvim-treesitter-textobjects')
 
     use('neovim/nvim-lspconfig')
-    use({ 'williamboman/nvim-lsp-installer', run = ':LspInstallInfo' })
     use('mfussenegger/nvim-jdtls')
 
     use({
@@ -203,6 +203,8 @@ require('packer').startup(function(use)
     use('tpope/vim-abolish')
     use('tpope/vim-sleuth')
 end)
+
+require("mason").setup()
 
 -- Colorscheme
 require('onedark').setup({
@@ -477,10 +479,6 @@ local lsp_opts = {
     ),
 }
 
-require('nvim-lsp-installer').setup({
-    automatic_installation = true
-})
-
 require('lspconfig').rust_analyzer.setup(lsp_opts)
 require('lspconfig').clangd.setup(lsp_opts)
 require('lspconfig').bashls.setup(lsp_opts)
@@ -514,12 +512,12 @@ vim.api.nvim_create_autocmd('FileType', {
     callback = function()
         require('jdtls').start_or_attach(vim.tbl_extend('force', lsp_opts, {
             cmd = {
-                vim.fn.stdpath('data') .. '/lsp_servers/jdtls/bin/jdtls',
+                'jdtls',
                 '-configuration',
                 vim.fn.expand('~/.cache/jdtls/config'),
                 '-data',
                 vim.fn.expand('~/.cache/jdtls/workspace'),
-                '--jvm-arg=-javaagent:' .. vim.fn.stdpath('data') .. '/lsp_servers/jdtls/lombok.jar'
+                '--jvm-arg=-javaagent:' .. vim.fn.stdpath('data') .. '/mason/packages/jdtls/lombok.jar'
             },
         }))
     end
