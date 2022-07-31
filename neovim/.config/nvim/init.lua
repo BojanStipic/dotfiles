@@ -286,7 +286,7 @@ require('gitsigns').setup({
 -- UI
 require('dressing').setup({
     select = {
-        telescope = require('telescope.themes').get_ivy({ initial_mode = 'normal' })
+        telescope = require('telescope.themes').get_ivy()
     },
 })
 
