@@ -39,12 +39,6 @@ vim.opt.swapfile = true
 vim.opt.undofile = true
 vim.opt.backup = false
 
-vim.diagnostic.config({ virtual_text = false })
-vim.fn.sign_define('DiagnosticSignError', { text = '●', texthl = 'DiagnosticSignError', numhl = 'DiagnosticSignError' })
-vim.fn.sign_define('DiagnosticSignWarn', { text = '●', texthl = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn' })
-vim.fn.sign_define('DiagnosticSignInfo', { text = '●', texthl = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo' })
-vim.fn.sign_define('DiagnosticSignHint', { text = '●', texthl = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint' })
-
 -- Keymaps
 vim.keymap.set({ 'n', 'v', 'o' }, '<space>', '<nop>')
 vim.keymap.set('n', 'ZZ', '<nop>')
@@ -103,6 +97,15 @@ vim.keymap.set('n', '<space>F', ':silent !xdg-open .<cr>', { silent = true })
 
 vim.keymap.set('n', '<space>q', ':source Session.vim<cr>', { silent = true })
 vim.keymap.set('n', '<space>Q', ':Obsession<cr>', { silent = true })
+
+-- Diagnostics
+vim.diagnostic.config({ virtual_text = false })
+vim.keymap.set('n', '[e', function() vim.diagnostic.goto_prev({ wrap = false }) end)
+vim.keymap.set('n', ']e', function() vim.diagnostic.goto_next({ wrap = false }) end)
+vim.fn.sign_define('DiagnosticSignError', { text = '●', texthl = 'DiagnosticSignError', numhl = 'DiagnosticSignError' })
+vim.fn.sign_define('DiagnosticSignWarn', { text = '●', texthl = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn' })
+vim.fn.sign_define('DiagnosticSignInfo', { text = '●', texthl = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo' })
+vim.fn.sign_define('DiagnosticSignHint', { text = '●', texthl = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint' })
 
 -- Auto commands
 local init_augroup = vim.api.nvim_create_augroup('init.lua', {})
@@ -322,6 +325,7 @@ require('telescope').load_extension('fzf')
 
 vim.keymap.set('n', '<space>p', require('telescope.builtin').find_files)
 vim.keymap.set('n', '<space>g', require('telescope.builtin').live_grep)
+vim.keymap.set('n', '<space>e', require('telescope.builtin').diagnostics)
 vim.keymap.set('n', '<space>c', require('telescope.builtin').git_status)
 vim.keymap.set('n', '<space>hh', require('telescope.builtin').git_bcommits)
 vim.keymap.set('n', '<space><space>', function()
@@ -447,10 +451,6 @@ local lsp_on_attach = function(client, bufnr)
     vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, opts)
     vim.keymap.set('n', '<cr>', vim.lsp.buf.code_action, opts)
     vim.keymap.set('n', '<space>s', require('telescope.builtin').lsp_dynamic_workspace_symbols, opts)
-
-    vim.keymap.set('n', '<space>e', require('telescope.builtin').diagnostics, opts)
-    vim.keymap.set('n', '[e', function() vim.diagnostic.goto_prev({ wrap = false }) end, opts)
-    vim.keymap.set('n', ']e', function() vim.diagnostic.goto_next({ wrap = false }) end, opts)
 
     vim.keymap.set('n', 'gqie', vim.lsp.buf.formatting, opts)
     vim.api.nvim_buf_set_option(bufnr, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
