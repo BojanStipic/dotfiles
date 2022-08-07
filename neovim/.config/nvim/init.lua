@@ -207,7 +207,7 @@ require('packer').startup(function(use)
     use('tpope/vim-sleuth')
 end)
 
-require("mason").setup()
+require('mason').setup()
 
 -- Colorscheme
 require('onedark').setup({
@@ -240,11 +240,11 @@ require('lualine').setup({
 -- Surround
 require('nvim-surround').setup({
     keymaps = {
-        normal = "s",
-        normal_cur = "ss",
-        visual = "s",
-        delete = "ds",
-        change = "cs",
+        normal = 's',
+        normal_cur = 'ss',
+        visual = 's',
+        delete = 'ds',
+        change = 'cs',
     },
 })
 
