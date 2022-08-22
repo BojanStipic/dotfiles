@@ -35,7 +35,6 @@ export BROWSER=firefox
 #
 PATH="$PATH:$HOME/.local/bin"
 PATH="$PATH:$HOME/.cargo/bin"
-export RUSTUP_HOME="$HOME/.cargo/rustup"
 PATH="$PATH:$HOME/.npm/bin"
 export npm_config_prefix="$HOME/.npm"
 
