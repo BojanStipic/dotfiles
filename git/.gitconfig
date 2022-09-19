@@ -16,5 +16,3 @@
 	keepBackup = false
 [alias]
 	timeline = log --all --graph --oneline
-	stat = log --stat
-	continue = !vim -p $(git ls-files --modified --others --exclude-standard)
