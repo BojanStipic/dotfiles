@@ -514,9 +514,7 @@ vim.api.nvim_create_autocmd('FileType', {
             cmd = {
                 'jdtls',
                 '-configuration',
-                vim.fn.expand('~/.cache/jdtls/config'),
-                '-data',
-                vim.fn.expand('~/.cache/jdtls/workspace'),
+                vim.fn.expand('~/.cache/jdtls'),
                 '--jvm-arg=-javaagent:' .. vim.fn.stdpath('data') .. '/mason/packages/jdtls/lombok.jar'
             },
         }))
