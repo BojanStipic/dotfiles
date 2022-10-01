@@ -30,7 +30,7 @@ vim.opt.listchars = { tab = '¦ ', trail = '·' }
 vim.opt.timeoutlen = 2000
 vim.opt.ttimeoutlen = 0
 vim.opt.updatetime = 300
-vim.opt.mouse = 'a'
+vim.opt.mousescroll = { 'ver:1', 'hor:1' }
 vim.opt.shortmess:append({ A = true })
 vim.opt.sessionoptions:remove({ 'curdir' })
 vim.opt.sessionoptions:append({ 'sesdir' })
@@ -449,13 +449,11 @@ local lsp_on_attach = function(client, bufnr)
     vim.keymap.set('n', 'gco', require('telescope.builtin').lsp_outgoing_calls, opts)
 
     vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, opts)
-    vim.keymap.set('n', '<cr>', vim.lsp.buf.code_action, opts)
+    vim.keymap.set({ 'n', 'v' }, '<cr>', vim.lsp.buf.code_action, opts)
     vim.keymap.set('n', '<space>s', require('telescope.builtin').lsp_dynamic_workspace_symbols, opts)
+    vim.keymap.set('n', 'gqie', vim.lsp.buf.format, opts)
 
-    vim.keymap.set('n', 'gqie', vim.lsp.buf.formatting, opts)
-    vim.api.nvim_buf_set_option(bufnr, 'formatexpr', 'v:lua.vim.lsp.formatexpr()')
-
-    if client.resolved_capabilities.document_highlight then
+    if client.server_capabilities.documentHighlightProvider then
         local lsp_augroup = vim.api.nvim_create_augroup('lsp', { clear = false })
         vim.api.nvim_clear_autocmds({ group = lsp_augroup, buffer = bufnr })
 
@@ -541,6 +539,8 @@ require('cmp').setup({
         end, { 'i', 's' }),
         ['<c-e>'] = require('cmp').mapping.scroll_docs(1),
         ['<c-y>'] = require('cmp').mapping.scroll_docs(-1),
+        ['<c-d>'] = require('cmp').mapping.scroll_docs(2),
+        ['<c-u>'] = require('cmp').mapping.scroll_docs(-2),
         ['<c-f>'] = require('cmp').mapping.scroll_docs(4),
         ['<c-b>'] = require('cmp').mapping.scroll_docs(-4),
         ['<cr>'] = require('cmp').mapping.confirm(),
