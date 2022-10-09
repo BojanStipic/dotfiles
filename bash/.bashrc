@@ -28,6 +28,7 @@ stty -ixon
 # Default applications
 #
 export VISUAL=nvim
+export DIFFPROG='nvim -d'
 export BROWSER=firefox
 
 #
