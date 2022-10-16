@@ -525,10 +525,8 @@ require('cmp').setup({
         end,
     },
 
-    mapping = {
+    mapping = require('cmp').mapping.preset.insert({
         ['<c-space>'] = require('cmp').mapping.complete(),
-        ['<c-n>'] = require('cmp').mapping.select_next_item(),
-        ['<c-p>'] = require('cmp').mapping.select_prev_item(),
         ['<c-j>'] = require('cmp').mapping(function()
             require('luasnip').jump(1)
         end, { 'i', 's' }),
@@ -542,7 +540,7 @@ require('cmp').setup({
         ['<c-f>'] = require('cmp').mapping.scroll_docs(4),
         ['<c-b>'] = require('cmp').mapping.scroll_docs(-4),
         ['<cr>'] = require('cmp').mapping.confirm(),
-    },
+    }),
 
     sources = require('cmp').config.sources({
         { name = 'nvim_lsp' },
@@ -551,7 +549,7 @@ require('cmp').setup({
     }),
 })
 
-require('cmp').setup.cmdline('/', {
+require('cmp').setup.cmdline({ '/', '?' }, {
     mapping = require('cmp').mapping.preset.cmdline(),
     sources = {
         { name = 'buffer' },
