@@ -174,6 +174,7 @@ require('packer').startup(function(use)
     use('kylechui/nvim-surround')
     use('elihunter173/dirbuf.nvim')
     use({ 'lewis6991/gitsigns.nvim', requires = 'nvim-lua/plenary.nvim' })
+    use({ 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' })
     use('stevearc/dressing.nvim')
 
     use({
@@ -282,9 +283,28 @@ require('gitsigns').setup({
         vim.keymap.set('n', '<space>hb', function()
             require('gitsigns').blame_line { full = true }
         end, opts)
-        vim.keymap.set('n', '<space>hd', require('gitsigns').diffthis, opts)
-    end
+    end,
 })
+
+require('diffview').setup({
+    use_icons = false,
+    signs = {
+        fold_closed = '+',
+        fold_open = '-',
+        done = '✓',
+    },
+    view = {
+        merge_tool = {
+            layout = 'diff1_plain',
+        },
+    },
+    file_panel = {
+        listing_style = 'list',
+    },
+})
+vim.keymap.set('n', '<space>c', ':DiffviewOpen<cr>', { silent = true })
+vim.keymap.set('n', '<space>hh', ':DiffviewFileHistory %<cr>', { silent = true })
+vim.keymap.set('n', '<space>hl', ':DiffviewFileHistory<cr>', { silent = true })
 
 -- UI
 require('dressing').setup({
@@ -326,8 +346,6 @@ require('telescope').load_extension('fzf')
 vim.keymap.set('n', '<space>p', require('telescope.builtin').find_files)
 vim.keymap.set('n', '<space>g', require('telescope.builtin').live_grep)
 vim.keymap.set('n', '<space>e', require('telescope.builtin').diagnostics)
-vim.keymap.set('n', '<space>c', require('telescope.builtin').git_status)
-vim.keymap.set('n', '<space>hh', require('telescope.builtin').git_bcommits)
 vim.keymap.set('n', '<space><space>', function()
     require('telescope.builtin').buffers({ sort_mru = true })
 end)
