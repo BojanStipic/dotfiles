@@ -202,6 +202,14 @@ require('packer').startup(function(use)
         },
     })
 
+    use({
+        'nvim-neotest/neotest',
+        requires = {
+            'nvim-lua/plenary.nvim',
+            'haydenmeade/neotest-jest',
+        },
+    })
+
     use('tpope/vim-obsession')
     use('tpope/vim-eunuch')
     use('tpope/vim-abolish')
@@ -584,3 +592,23 @@ require('cmp').setup.cmdline(':', {
         { name = 'cmdline' },
     }),
 })
+
+-- Test runner
+require('neotest').setup({
+    adapters = {
+        require('neotest-jest')({
+            jestCommand = "npm test --",
+            env = { CI = true },
+        }),
+    },
+    icons = {
+        passed = '✔',
+        failed = '✘',
+        running = '●',
+        skipped = '●',
+        unknown = '●',
+    },
+})
+
+vim.keymap.set('n', '<space>t', require('neotest').run.run)
+vim.keymap.set('n', '<space>T', function() require('neotest').run.run(vim.fn.expand('%')) end)
