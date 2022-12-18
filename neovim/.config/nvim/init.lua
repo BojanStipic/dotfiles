@@ -264,6 +264,9 @@ require('dirbuf').setup({
 
 -- Git signs
 require('gitsigns').setup({
+    signs = {
+        untracked = {text = '┃'}
+    },
     on_attach = function(bufnr)
         local opts = { buffer = bufnr }
 
@@ -506,6 +509,7 @@ require('lspconfig').clangd.setup(lsp_opts)
 require('lspconfig').bashls.setup(lsp_opts)
 
 require('lspconfig').tsserver.setup(lsp_opts)
+require('lspconfig').eslint.setup(lsp_opts)
 require('lspconfig').html.setup(lsp_opts)
 require('lspconfig').cssls.setup(lsp_opts)
 require('lspconfig').jsonls.setup(lsp_opts)
