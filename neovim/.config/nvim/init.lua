@@ -54,8 +54,8 @@ vim.keymap.set({ 'n', 'v' }, 'gP', '"0P=`]')
 vim.keymap.set({ 'n', 'v' }, 'p', 'p=`]')
 vim.keymap.set({ 'n', 'v' }, 'P', 'P=`]')
 
-vim.keymap.set('n', '<space>z', ':set spell! spell?<cr>')
-vim.keymap.set('n', '<space>/', ':set hlsearch! hlsearch?<cr>')
+vim.keymap.set('n', '<space>z', '<cmd>set spell! spell?<cr>')
+vim.keymap.set('n', '<space>/', '<cmd>set hlsearch! hlsearch?<cr>')
 
 vim.keymap.set('i', '(<cr>', '(<cr>)<esc>O')
 vim.keymap.set('i', '(;', '(<cr>);<esc>O')
@@ -67,8 +67,8 @@ vim.keymap.set('i', '{<cr>', '{<cr>}<esc>O')
 vim.keymap.set('i', '{;', '{<cr>};<esc>O')
 vim.keymap.set('i', '{,', '{<cr>},<esc>O')
 
-vim.keymap.set('o', 'ie', ':<c-u>normal! meggVG<cr>`e')
-vim.keymap.set('o', 'ae', ':<c-u>normal! meggVG<cr>`e')
+vim.keymap.set('o', 'ie', '<cmd>normal! meggVG<cr>`e')
+vim.keymap.set('o', 'ae', '<cmd>normal! meggVG<cr>`e')
 
 vim.keymap.set({ 'n', 'v' }, 'H', '^')
 vim.keymap.set({ 'n', 'v' }, 'L', '$')
@@ -82,8 +82,8 @@ vim.keymap.set('t', '<esc>', '<c-\\><c-n>')
 
 vim.keymap.set({ 'n', 'v' }, '<f1>', 'gT')
 vim.keymap.set({ 'n', 'v' }, '<f2>', 'gt')
-vim.keymap.set({ 'n', 'v' }, '<c-w>t', ':tab split<cr>', { silent = true })
-vim.keymap.set({ 'n', 'v' }, '<f3>', ':tab split<cr>', { silent = true })
+vim.keymap.set({ 'n', 'v' }, '<c-w>t', '<cmd>tab split<cr>')
+vim.keymap.set({ 'n', 'v' }, '<f3>', '<cmd>tab split<cr>')
 vim.keymap.set({ 'n', 'v' }, '<f4>', '<c-w>T')
 vim.keymap.set('i', '<f1>', '<nop>')
 vim.keymap.set('i', '<f2>', '<nop>')
@@ -91,12 +91,12 @@ vim.keymap.set('i', '<f3>', '<nop>')
 vim.keymap.set('i', '<f4>', '<nop>')
 
 vim.keymap.set('c', '%%', '<c-r>=fnameescape(expand("%:h")) .. "/"<cr>')
-vim.keymap.set('n', '-', ':silent edit %:p:h<cr>', { silent = true })
-vim.keymap.set('n', '<space>f', ':silent !xdg-open %:p:h<cr>', { silent = true })
-vim.keymap.set('n', '<space>F', ':silent !xdg-open .<cr>', { silent = true })
+vim.keymap.set('n', '-', '<cmd>edit %:p:h<cr>')
+vim.keymap.set('n', '<space>f', '<cmd>silent !xdg-open %:p:h<cr>')
+vim.keymap.set('n', '<space>F', '<cmd>silent !xdg-open .<cr>')
 
-vim.keymap.set('n', '<space>q', ':source Session.vim<cr>', { silent = true })
-vim.keymap.set('n', '<space>Q', ':Obsession<cr>', { silent = true })
+vim.keymap.set('n', '<space>q', '<cmd>source Session.vim<cr>')
+vim.keymap.set('n', '<space>Q', '<cmd>Obsession<cr>')
 
 -- Diagnostics
 vim.diagnostic.config({ virtual_text = false })
@@ -311,7 +311,7 @@ require('gitsigns').setup({
 
         vim.keymap.set('n', '<space>hp', require('gitsigns').preview_hunk, opts)
         vim.keymap.set('n', '<space>hb', function()
-            require('gitsigns').blame_line { full = true }
+            require('gitsigns').blame_line({ full = true })
         end, opts)
     end,
 })
@@ -332,9 +332,9 @@ require('diffview').setup({
         listing_style = 'list',
     },
 })
-vim.keymap.set('n', '<space>c', ':DiffviewOpen<cr>', { silent = true })
-vim.keymap.set('n', '<space>hh', ':DiffviewFileHistory %<cr>', { silent = true })
-vim.keymap.set('n', '<space>hl', ':DiffviewFileHistory<cr>', { silent = true })
+vim.keymap.set('n', '<space>c', '<cmd>DiffviewOpen<cr>')
+vim.keymap.set('n', '<space>hh', '<cmd>DiffviewFileHistory %<cr>')
+vim.keymap.set('n', '<space>hl', '<cmd>DiffviewFileHistory<cr>')
 
 -- UI
 require('dressing').setup({
