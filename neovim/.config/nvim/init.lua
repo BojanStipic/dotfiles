@@ -152,69 +152,88 @@ vim.api.nvim_create_autocmd({ 'VimLeave', 'VimSuspend' }, {
 })
 
 -- Plugins
-local packer_location = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-if vim.fn.empty(vim.fn.glob(packer_location)) > 0 then
+local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
-        'git', 'clone',
-        '--depth', '1',
-        'https://github.com/wbthomason/packer.nvim',
-        packer_location
+        'git',
+        'clone',
+        '--filter=blob:none',
+        '--single-branch',
+        'https://github.com/folke/lazy.nvim.git',
+        lazypath,
     })
-    vim.cmd([[packadd packer.nvim]])
-    vim.api.nvim_create_autocmd('VimEnter', { pattern = '*', command = 'PackerSync' })
-    vim.api.nvim_create_autocmd('User', { pattern = 'PackerComplete', command = 'source $MYVIMRC' })
 end
+vim.opt.runtimepath:prepend(lazypath)
 
-require('packer').startup(function(use)
-    use('wbthomason/packer.nvim')
-    use('williamboman/mason.nvim')
+require('lazy').setup({
+    'williamboman/mason.nvim',
+    'navarasu/onedark.nvim',
+    'nvim-lualine/lualine.nvim',
+    'stevearc/dressing.nvim',
+    'kylechui/nvim-surround',
+    'elihunter173/dirbuf.nvim',
+    { 'lewis6991/gitsigns.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
+    { 'sindrets/diffview.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
+    'tpope/vim-obsession',
+    'tpope/vim-eunuch',
+    'tpope/vim-abolish',
+    'tpope/vim-sleuth',
 
-    use('navarasu/onedark.nvim')
-    use('nvim-lualine/lualine.nvim')
-    use('kylechui/nvim-surround')
-    use('elihunter173/dirbuf.nvim')
-    use({ 'lewis6991/gitsigns.nvim', requires = 'nvim-lua/plenary.nvim' })
-    use({ 'sindrets/diffview.nvim', requires = 'nvim-lua/plenary.nvim' })
-    use('stevearc/dressing.nvim')
-
-    use({
+    {
         'nvim-telescope/telescope.nvim',
-        requires = {
+        dependencies = {
             'nvim-lua/plenary.nvim',
-            { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-        }
-    })
+            { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+        },
+    },
 
-    use({ 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' })
-    use('nvim-treesitter/nvim-treesitter-textobjects')
+    {
+        'nvim-treesitter/nvim-treesitter',
+        build = ':TSUpdate',
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter-textobjects',
+        },
+    },
 
-    use('neovim/nvim-lspconfig')
-    use('mfussenegger/nvim-jdtls')
+    'neovim/nvim-lspconfig',
+    'mfussenegger/nvim-jdtls',
 
-    use({
+    {
         'hrsh7th/nvim-cmp',
-        requires = {
+        dependencies = {
             'L3MON4D3/LuaSnip',
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-path',
             'hrsh7th/cmp-cmdline',
         },
-    })
+    },
 
-    use({
+    {
         'nvim-neotest/neotest',
-        requires = {
+        dependencies = {
             'nvim-lua/plenary.nvim',
             'haydenmeade/neotest-jest',
         },
-    })
-
-    use('tpope/vim-obsession')
-    use('tpope/vim-eunuch')
-    use('tpope/vim-abolish')
-    use('tpope/vim-sleuth')
-end)
+    },
+}, {
+    ui = {
+        icons = {
+            lazy = '💤 ',
+            cmd = "⌘",
+            config = "🛠",
+            event = "📅",
+            ft = "📂",
+            init = "⚙",
+            keys = "🗝",
+            plugin = "🔌",
+            runtime = "💻",
+            source = "📄",
+            start = "🚀",
+            task = "📌",
+        },
+    },
+})
 
 require('mason').setup()
 
@@ -601,7 +620,7 @@ require('cmp').setup.cmdline(':', {
 require('neotest').setup({
     adapters = {
         require('neotest-jest')({
-            jestCommand = "npm test --",
+            jestCommand = 'npm test --',
             env = { CI = true },
         }),
     },
