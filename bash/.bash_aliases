@@ -1,14 +1,10 @@
-#
-# ~/.bash_aliases
-#
-
 alias nvim='nvim -p'
 alias nvimp='nvim -i NONE -c "set noswapfile" -c "set noundofile"'
 alias nview='nvim -R'
 alias push='pushd .'
 alias pop='popd'
-export LS_COLORS="ow="
-alias ls='ls --color=auto --human-readable --group-directories-first --classify'
+alias ls='exa --group-directories-first --classify --header --modified --created --git --icons'
+alias tree='exa --tree --git-ignore'
 alias grep='grep --color=auto --perl-regexp'
 alias rg='rg --smart-case'
 alias diff='diff --color=auto'
@@ -29,10 +25,6 @@ alias ffprobe='ffprobe -hide_banner'
 dupl() { find "$@" -maxdepth 1 | sort | uniq -di;}
 # Scan all number types, not just int
 alias scanmem='sudo scanmem --command="option scan_data_type number"'
-# Mute/Unmute microphone
-# to list all cards: `pactl list short sources`
-# use @DEFAULT_SOURCE@ to mute the currently default source
-alias mute='pactl set-source-mute @DEFAULT_SOURCE@ toggle'
 
 # Bookmarks
 alias storage='cd /mnt/storage'
@@ -52,8 +44,6 @@ alias ls-services='systemctl --type=service'
 alias ls-failed='systemctl --failed'
 # List error logs since boot
 alias ls-log='journalctl -p err -b'
-# List all samba users (add with `sudo smbpasswd -a username`)
-alias ls-samba='sudo pdbedit -L'
 # List all network connections
 # -n	Numerical address (don't resolve),
 # -a	Both listening and non-listening sockets
@@ -95,7 +85,7 @@ alias curl-json='curl -H "Content-Type: application/json"'
 # cmus daemon
 # screen: -q quiet, -d detach elsewhere, -R reattach or create new, -S session name
 alias cmus='screen -q -d -R -S cmus -s cmus'
-alias cr='cmus-remote'
+alias cmusr='cmus-remote'
 
 # mpv
 alias mpv-fb='mpv --hwdec=no'
@@ -103,16 +93,18 @@ alias mpv-dvd='mpv dvd://'
 alias mpv-cd='mpv cdda://'
 
 # youtube-dl
-alias youtube-dl='youtube-dl --ignore-errors '\
+alias youtube-dl='youtube-dl '\
+'--ignore-errors '\
 '--no-warnings '\
 '--restrict-filenames '\
 '--output="%(title)s.%(ext)s"'
 # youtube-dl for playlists
 alias youtube-dl-pl='youtube-dl --output="%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s"'
 # youtube-dl + convert to mp3
-alias youtube-dl-audio='youtube-dl --format=bestaudio '\
+alias youtube-dl-audio='youtube-dl '\
+'--format=bestaudio '\
 '--extract-audio '\
-'--audio-format mp3 --audio-quality 320K'
+'--audio-format opus'
 
 # Screencast with audio using ffmpeg
 alias screencast='ffmpeg '\
@@ -120,8 +112,7 @@ alias screencast='ffmpeg '\
 '-f pulse -ar 16000 -i default '\
 '-c:v libx264 -preset superfast -c:a aac'
 
-mime()
-{
+mime() {
 	TEMP=$(xdg-mime query filetype "$@")
 	echo "Mime type: $TEMP"
 	echo -n "Default open application: "
@@ -129,8 +120,7 @@ mime()
 	echo
 }
 
-img2pdf()
-{
+img2pdf() {
 	TEMP="$(mktemp -d)"
 	for img in "$@"; do
 		convert -quality '85%' "$img" "$TEMP/${img%.*}.pdf"
@@ -139,26 +129,8 @@ img2pdf()
 	rm -rf "$TEMP"
 }
 
-# Astyle: Java style; indent with spaces
-alias astyle='astyle --style=java '\
-'--indent=spaces '\
-'--break-blocks '\
-'--pad-oper '\
-'--pad-comma '\
-'--pad-header '\
-'--unpad-paren '\
-'--delete-empty-lines '\
-'--align-pointer=name '\
-'--align-reference=name '\
-'--break-one-line-headers '\
-'--add-braces '\
-'--convert-tabs '\
-'--suffix=none'
-alias astyle-java='astyle --mode=java'
-
 # Colored man pages
-man()
-{
+man() {
 	env \
 	LESS_TERMCAP_md=$'\E[01;38;5;203m' \
 	LESS_TERMCAP_me=$'\E[0m' \
