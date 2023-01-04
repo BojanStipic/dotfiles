@@ -1,0 +1,63 @@
+'$schema' = 'https://starship.rs/config-schema.json'
+
+format = """
+┌ $jobs$battery$all$line_break\
+└─$character\
+"""
+
+[directory]
+truncation_length = 0
+truncate_to_repo = false
+repo_root_style = 'bold red'
+
+[jobs]
+symbol = '●'
+
+[[battery.display]]
+threshold = 20
+
+[memory_usage]
+disabled = false
+
+[git_metrics]
+disabled = false
+
+[git_status]
+format = '(\[ [$all_status$ahead_behind]($style)\] )'
+stashed = '\$${count} '
+conflicted = '=${count} '
+untracked = '?${count} '
+modified = 'M${count} '
+staged = 'A${count} '
+renamed = 'R${count} '
+deleted = 'D${count} '
+ahead = '⇡${count} '
+diverged = '⇕⇡${ahead_count}⇣${behind_count} '
+behind = '⇣${count} '
+
+[package]
+symbol = 'pkg '
+style = 'bold yellow'
+
+[aws]
+symbol = 'aws '
+
+[c]
+symbol = 'C '
+style = 'bold green'
+
+[deno]
+symbol = 'deno '
+
+[java]
+symbol = 'java '
+style = 'bold red'
+
+[lua]
+symbol = 'lua '
+
+[nodejs]
+symbol = 'nodejs '
+
+[rust]
+symbol = 'rust '
