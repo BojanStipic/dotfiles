@@ -525,6 +525,7 @@ local lsp_opts = {
 }
 
 require('lspconfig').rust_analyzer.setup(lsp_opts)
+require('lspconfig').taplo.setup(lsp_opts)
 require('lspconfig').clangd.setup(lsp_opts)
 require('lspconfig').bashls.setup(lsp_opts)
 
