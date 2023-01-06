@@ -196,6 +196,7 @@ require('lazy').setup({
     },
 
     'neovim/nvim-lspconfig',
+    'folke/neodev.nvim',
     'mfussenegger/nvim-jdtls',
 
     {
@@ -533,21 +534,19 @@ require('lspconfig').html.setup(lsp_opts)
 require('lspconfig').cssls.setup(lsp_opts)
 require('lspconfig').jsonls.setup(lsp_opts)
 
+require('neodev').setup({
+    override = function(root_dir, options)
+        if root_dir:match('dotfiles') then
+            options.enabled = true
+            options.plugins = true
+        end
+    end,
+})
 require('lspconfig').sumneko_lua.setup(vim.tbl_extend('force', lsp_opts, {
     settings = {
         Lua = {
-            runtime = {
-                version = 'LuaJIT',
-            },
-            diagnostics = {
-                globals = { 'vim' },
-            },
-            workspace = {
-                library = vim.api.nvim_get_runtime_file('', true),
-            },
-            telemetry = {
-                enable = false,
-            },
+            workspace = { checkThirdParty = false },
+            telemetry = { enable = false },
         },
     },
 }))
@@ -577,7 +576,7 @@ require('cmp').setup({
     },
 
     mapping = require('cmp').mapping.preset.insert({
-        ['<c-space>'] = require('cmp').mapping.complete(),
+        ['<c-space>'] = require('cmp').mapping.complete({}),
         ['<c-j>'] = require('cmp').mapping(function()
             require('luasnip').jump(1)
         end, { 'i', 's' }),
