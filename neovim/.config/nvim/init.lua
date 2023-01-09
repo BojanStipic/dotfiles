@@ -114,6 +114,11 @@ vim.fn.sign_define('DiagnosticSignHint', { text = '●', texthl = 'DiagnosticSig
 -- Auto commands
 local init_augroup = vim.api.nvim_create_augroup('init.lua', {})
 
+vim.api.nvim_create_autocmd({ 'FocusGained', 'TermClose', 'TermLeave' }, {
+    group = init_augroup,
+    command = 'silent! checktime',
+})
+
 vim.api.nvim_create_autocmd('BufWritePre', {
     group = init_augroup,
     command = '%s/\\s\\+$//e',
