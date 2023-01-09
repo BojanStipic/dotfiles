@@ -112,43 +112,38 @@ local init_augroup = vim.api.nvim_create_augroup('init.lua', {})
 
 vim.api.nvim_create_autocmd('BufWritePre', {
     group = init_augroup,
-    pattern = '*',
-    command = '%s/\\s\\+$//e'
+    command = '%s/\\s\\+$//e',
 })
 
 vim.api.nvim_create_autocmd('BufWritePre', {
     group = init_augroup,
-    pattern = '*',
     callback = function()
         local dir = vim.fn.expand('<afile>:p:h')
 
         if vim.fn.isdirectory(dir) == 0 then
             vim.fn.mkdir(dir, 'p')
         end
-    end
+    end,
 })
 
 vim.api.nvim_create_autocmd('FileType', {
     group = init_augroup,
     pattern = 'gitcommit',
-    command = 'setlocal spell'
+    command = 'setlocal spell',
 })
 
 vim.api.nvim_create_autocmd('TextYankPost', {
     group = init_augroup,
-    pattern = '*',
-    callback = function() vim.highlight.on_yank({ timeout = 300 }) end
+    callback = function() vim.highlight.on_yank({ timeout = 300 }) end,
 })
 
 vim.api.nvim_create_autocmd({ 'VimEnter', 'VimResume' }, {
     group = init_augroup,
-    pattern = '*',
-    command = 'set guicursor&'
+    command = 'set guicursor&',
 })
 vim.api.nvim_create_autocmd({ 'VimLeave', 'VimSuspend' }, {
     group = init_augroup,
-    pattern = '*',
-    command = 'set guicursor=a:ver25'
+    command = 'set guicursor=a:ver25',
 })
 
 -- Plugins
@@ -263,7 +258,7 @@ require('lualine').setup({
         lualine_a = {
             { 'tabs', max_length = vim.o.columns, mode = 2 },
         },
-    }
+    },
 })
 
 -- Surround
@@ -285,7 +280,7 @@ require('dirbuf').setup({
 -- Git signs
 require('gitsigns').setup({
     signs = {
-        untracked = {text = '┃'}
+        untracked = {text = '┃'},
     },
     on_attach = function(bufnr)
         local opts = { buffer = bufnr }
@@ -340,7 +335,7 @@ vim.keymap.set('n', '<space>hl', '<cmd>DiffviewFileHistory<cr>')
 -- UI
 require('dressing').setup({
     select = {
-        telescope = require('telescope.themes').get_ivy()
+        telescope = require('telescope.themes').get_ivy(),
     },
 })
 
@@ -352,10 +347,10 @@ require('telescope').setup({
         layout_config = { preview_cutoff = 0 },
         mappings = {
             i = {
-                ['<c-s>'] = require('telescope.actions').select_horizontal
+                ['<c-s>'] = require('telescope.actions').select_horizontal,
             },
             n = {
-                ['<c-s>'] = require('telescope.actions').select_horizontal
+                ['<c-s>'] = require('telescope.actions').select_horizontal,
             },
         },
     },
@@ -509,12 +504,12 @@ local lsp_on_attach = function(client, bufnr)
         vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
             group = lsp_augroup,
             buffer = bufnr,
-            callback = function() vim.lsp.buf.document_highlight() end
+            callback = function() vim.lsp.buf.document_highlight() end,
         })
         vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
             group = lsp_augroup,
             buffer = bufnr,
-            callback = function() vim.lsp.buf.clear_references() end
+            callback = function() vim.lsp.buf.clear_references() end,
         })
     end
 end
@@ -565,7 +560,7 @@ vim.api.nvim_create_autocmd('FileType', {
                     .. '/lombok.jar',
             },
         }))
-    end
+    end,
 })
 
 -- Autocomplete
