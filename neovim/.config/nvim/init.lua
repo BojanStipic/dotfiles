@@ -95,6 +95,7 @@ vim.keymap.set('i', '<f4>', '<nop>')
 
 vim.keymap.set('c', '%%', '<c-r>=fnameescape(expand("%:h")) .. "/"<cr>')
 vim.keymap.set('n', '-', '<cmd>edit %:p:h<cr>')
+vim.keymap.set('n', '_', '<cmd>edit .<cr>')
 vim.keymap.set('n', '<space>f', '<cmd>silent !xdg-open %:p:h<cr>')
 vim.keymap.set('n', '<space>F', '<cmd>silent !xdg-open .<cr>')
 
