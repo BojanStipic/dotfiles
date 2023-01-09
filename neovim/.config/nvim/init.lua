@@ -55,6 +55,8 @@ vim.keymap.set('n', 'p', 'p=`]')
 vim.keymap.set('v', 'p', '"_dP=`]')
 vim.keymap.set({ 'n', 'v' }, 'P', 'P=`]')
 
+vim.keymap.set({ 'n', 'v' }, 'gw', '*N')
+
 vim.keymap.set('n', '<space>z', '<cmd>set spell! spell?<cr>')
 vim.keymap.set('n', '<space>/', '<cmd>set hlsearch! hlsearch?<cr>')
 
