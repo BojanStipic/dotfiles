@@ -126,10 +126,9 @@ vim.api.nvim_create_autocmd('BufWritePre', {
 
 vim.api.nvim_create_autocmd('BufWritePre', {
     group = init_augroup,
-    callback = function()
-        local dir = vim.fn.expand('<afile>:p:h')
-
-        if vim.fn.isdirectory(dir) == 0 then
+    callback = function(opts)
+        local dir = vim.fn.fnamemodify(opts.match, ':h')
+        if opts.match:find('://') == nil and vim.fn.isdirectory(dir) == 0 then
             vim.fn.mkdir(dir, 'p')
         end
     end,
