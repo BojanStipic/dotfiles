@@ -174,7 +174,7 @@ require('lazy').setup({
     'nvim-lualine/lualine.nvim',
     'stevearc/dressing.nvim',
     'kylechui/nvim-surround',
-    'elihunter173/dirbuf.nvim',
+    'stevearc/oil.nvim',
     { 'lewis6991/gitsigns.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
     { 'sindrets/diffview.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
     'tpope/vim-obsession',
@@ -281,8 +281,10 @@ require('nvim-surround').setup({
 })
 
 -- File browser
-require('dirbuf').setup({
-    sort_order = 'directories_first',
+require('oil').setup({
+    win_options = {
+        conceallevel = 0,
+    },
 })
 
 -- Git signs
