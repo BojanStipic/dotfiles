@@ -169,7 +169,7 @@ vim.opt.runtimepath:prepend(lazypath)
 
 require('lazy').setup({
     'williamboman/mason.nvim',
-    'navarasu/onedark.nvim',
+    { 'catppuccin/nvim', name = 'catppuccin' },
     'nvim-lualine/lualine.nvim',
     'stevearc/dressing.nvim',
     'kylechui/nvim-surround',
@@ -241,13 +241,20 @@ require('lazy').setup({
 require('mason').setup()
 
 -- Colorscheme
-require('onedark').setup({
-    code_style = {
-        comments = 'italic',
-        keywords = 'italic',
+require('catppuccin').setup({
+    integrations = {
+        native_lsp = {
+            underlines = {
+                errors = { 'undercurl' },
+                hints = { 'undercurl' },
+                warnings = { 'undercurl' },
+                information = { 'undercurl' },
+            },
+        },
     },
 })
-require('onedark').load()
+
+vim.cmd.colorscheme('catppuccin')
 
 -- Statusline
 require('lualine').setup({
