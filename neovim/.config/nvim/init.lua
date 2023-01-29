@@ -282,6 +282,9 @@ require('oil').setup({
     win_options = {
         conceallevel = 0,
     },
+    view_options = {
+        show_hidden = true,
+    },
 })
 
 -- Surround
