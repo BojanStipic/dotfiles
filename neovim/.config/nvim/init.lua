@@ -255,7 +255,11 @@ require('lualine').setup({
         section_separators = '',
     },
     sections = {
-        lualine_x = {},
+        lualine_x = {
+            function()
+                if vim.lsp.buf.server_ready() then return 'LSP' else return '' end
+            end,
+        },
         lualine_y = { 'filetype' },
         lualine_z = { 'ObsessionStatus', 'progress', 'location' },
     },
