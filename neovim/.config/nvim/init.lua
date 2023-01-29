@@ -304,7 +304,7 @@ require('gitsigns').setup({
         untracked = {text = '┃'},
     },
     on_attach = function(bufnr)
-        local opts = { buffer = bufnr }
+        local opts = { buffer = bufnr, silent = true }
 
         vim.keymap.set('n', ']c', function()
             if vim.wo.diff then return ']c' end
@@ -320,8 +320,8 @@ require('gitsigns').setup({
             return '<ignore>'
         end, { buffer = bufnr, expr = true })
 
-        vim.keymap.set({ 'n', 'v' }, '<space>hs', require('gitsigns').stage_hunk, opts)
-        vim.keymap.set({ 'n', 'v' }, '<space>hr', require('gitsigns').reset_hunk, opts)
+        vim.keymap.set({ 'n', 'v' }, '<space>hs', ':Gitsigns stage_hunk<cr>', opts)
+        vim.keymap.set({ 'n', 'v' }, '<space>hr', ':Gitsigns reset_hunk<cr>', opts)
         vim.keymap.set('n', '<space>hS', require('gitsigns').stage_buffer, opts)
         vim.keymap.set('n', '<space>hR', require('gitsigns').reset_buffer, opts)
         vim.keymap.set('n', '<space>hu', require('gitsigns').undo_stage_hunk, opts)
