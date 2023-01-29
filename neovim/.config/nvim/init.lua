@@ -172,22 +172,29 @@ vim.opt.runtimepath:prepend(lazypath)
 
 require('lazy').setup({
     'williamboman/mason.nvim',
+
     { 'catppuccin/nvim', name = 'catppuccin' },
-    'nvim-lualine/lualine.nvim',
+    { 'nvim-lualine/lualine.nvim', dependencies = 'nvim-tree/nvim-web-devicons' },
     'stevearc/dressing.nvim',
+
+    { 'stevearc/oil.nvim', dependencies = 'nvim-tree/nvim-web-devicons' },
     'kylechui/nvim-surround',
-    'stevearc/oil.nvim',
-    { 'lewis6991/gitsigns.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
-    { 'sindrets/diffview.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
     'tpope/vim-obsession',
     'tpope/vim-eunuch',
     'tpope/vim-abolish',
     'tpope/vim-sleuth',
 
+    'lewis6991/gitsigns.nvim',
+    {
+        'sindrets/diffview.nvim',
+        dependencies = { 'nvim-lua/plenary.nvim', 'nvim-tree/nvim-web-devicons' },
+    },
+
     {
         'nvim-telescope/telescope.nvim',
         dependencies = {
             'nvim-lua/plenary.nvim',
+            'nvim-tree/nvim-web-devicons',
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
         },
     },
@@ -222,23 +229,6 @@ require('lazy').setup({
             'haydenmeade/neotest-jest',
         },
     },
-}, {
-    ui = {
-        icons = {
-            lazy = '💤 ',
-            cmd = "⌘",
-            config = "🛠",
-            event = "📅",
-            ft = "📂",
-            init = "⚙",
-            keys = "🗝",
-            plugin = "🔌",
-            runtime = "💻",
-            source = "📄",
-            start = "🚀",
-            task = "📌",
-        },
-    },
 })
 
 require('mason').setup()
@@ -262,7 +252,6 @@ vim.cmd.colorscheme('catppuccin')
 -- Statusline
 require('lualine').setup({
     options = {
-        icons_enabled = false,
         component_separators = '',
         section_separators = '',
     },
@@ -278,6 +267,20 @@ require('lualine').setup({
     },
 })
 
+-- UI
+require('dressing').setup({
+    select = {
+        telescope = require('telescope.themes').get_ivy(),
+    },
+})
+
+-- File browser
+require('oil').setup({
+    win_options = {
+        conceallevel = 0,
+    },
+})
+
 -- Surround
 require('nvim-surround').setup({
     keymaps = {
@@ -286,13 +289,6 @@ require('nvim-surround').setup({
         visual = 's',
         delete = 'ds',
         change = 'cs',
-    },
-})
-
--- File browser
-require('oil').setup({
-    win_options = {
-        conceallevel = 0,
     },
 })
 
@@ -332,12 +328,6 @@ require('gitsigns').setup({
 })
 
 require('diffview').setup({
-    use_icons = false,
-    signs = {
-        fold_closed = '+',
-        fold_open = '-',
-        done = '✓',
-    },
     view = {
         merge_tool = {
             layout = 'diff1_plain',
@@ -350,13 +340,6 @@ require('diffview').setup({
 vim.keymap.set('n', '<space>c', '<cmd>DiffviewOpen<cr>')
 vim.keymap.set('n', '<space>hh', '<cmd>DiffviewFileHistory %<cr>')
 vim.keymap.set('n', '<space>hl', '<cmd>DiffviewFileHistory<cr>')
-
--- UI
-require('dressing').setup({
-    select = {
-        telescope = require('telescope.themes').get_ivy(),
-    },
-})
 
 -- Fuzzy finder
 require('telescope').setup({
@@ -637,13 +620,6 @@ require('neotest').setup({
             jestCommand = 'npm test --',
             env = { CI = true },
         }),
-    },
-    icons = {
-        passed = '✔',
-        failed = '✘',
-        running = '●',
-        skipped = '●',
-        unknown = '●',
     },
 })
 
