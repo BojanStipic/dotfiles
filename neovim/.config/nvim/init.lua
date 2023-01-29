@@ -335,6 +335,9 @@ require('gitsigns').setup({
 
 require('diffview').setup({
     view = {
+        default = {
+            winbar_info = true,
+        },
         merge_tool = {
             layout = 'diff1_plain',
         },
