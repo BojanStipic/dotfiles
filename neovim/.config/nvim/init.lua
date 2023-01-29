@@ -180,7 +180,6 @@ require('lazy').setup({
     { 'stevearc/oil.nvim', dependencies = 'nvim-tree/nvim-web-devicons' },
     'kylechui/nvim-surround',
     'tpope/vim-obsession',
-    'tpope/vim-eunuch',
     'tpope/vim-abolish',
     'tpope/vim-sleuth',
 
