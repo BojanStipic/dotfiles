@@ -45,8 +45,13 @@ vim.keymap.set('n', 'ZZ', '<nop>')
 vim.keymap.set('i', '<c-j>', '<nop>')
 vim.keymap.set('i', '<c-k>', '<nop>')
 
-vim.keymap.set({ 'n', 'v' }, 'j', 'gj', { silent = true })
-vim.keymap.set({ 'n', 'v' }, 'k', 'gk', { silent = true })
+vim.keymap.set({ 'n', 'v' }, 'j', 'gj')
+vim.keymap.set({ 'n', 'v' }, 'k', 'gk')
+vim.keymap.set({ 'n', 'v' }, '<c-d>', '5gj')
+vim.keymap.set({ 'n', 'v' }, '<c-u>', '5gk')
+vim.keymap.set({ 'n', 'v' }, '<c-f>', '10gj')
+vim.keymap.set({ 'n', 'v' }, '<c-b>', '10gk')
+vim.keymap.set({ 'n', 'v' }, 'gw', '*')
 
 vim.keymap.set({ 'n', 'v' }, '\\', '"+')
 vim.keymap.set({ 'n', 'v' }, 'gp', '"0p=`]')
@@ -54,9 +59,7 @@ vim.keymap.set({ 'n', 'v' }, 'gP', '"0P=`]')
 vim.keymap.set({ 'n', 'v' }, 'p', 'p=`]')
 vim.keymap.set({ 'n', 'v' }, 'P', 'P=`]')
 
-vim.keymap.set({ 'n', 'v' }, 'gw', '*N')
-
-vim.keymap.set('n', '<space>z', '<cmd>set spell! spell?<cr>')
+vim.keymap.set('n', '<space>z', '<cmd>setlocal spell! spell?<cr>')
 vim.keymap.set('n', '<space>/', '<cmd>set hlsearch! hlsearch?<cr>')
 
 vim.keymap.set('i', '(<cr>', '(<cr>)<esc>O')
