@@ -549,7 +549,7 @@ require('neodev').setup({
         end
     end,
 })
-require('lspconfig').sumneko_lua.setup(vim.tbl_extend('force', lsp_opts, {
+require('lspconfig').lua_ls.setup(vim.tbl_extend('force', lsp_opts, {
     settings = {
         Lua = {
             workspace = { checkThirdParty = false },
