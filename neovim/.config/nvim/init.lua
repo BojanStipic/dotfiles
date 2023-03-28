@@ -389,10 +389,11 @@ require('telescope').setup({
 })
 require('telescope').load_extension('fzf')
 
+vim.keymap.set('n', '<space><space>', require('telescope.builtin').resume)
 vim.keymap.set('n', '<space>p', require('telescope.builtin').find_files)
 vim.keymap.set('n', '<space>g', require('telescope.builtin').live_grep)
 vim.keymap.set('n', '<space>d', require('telescope.builtin').diagnostics)
-vim.keymap.set('n', '<space><space>', function()
+vim.keymap.set('n', '<space>b', function()
     require('telescope.builtin').buffers({ sort_mru = true })
 end)
 
