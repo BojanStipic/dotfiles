@@ -9,7 +9,9 @@ vim.opt.scrolloff = 10
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.foldlevelstart = 99
-vim.opt.diffopt:append({ 'algorithm:patience', 'indent-heuristic', 'vertical' })
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.opt.diffopt:append({ 'algorithm:patience', 'indent-heuristic', 'linematch:60', 'vertical' })
 vim.opt.hlsearch = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
@@ -399,37 +401,13 @@ end)
 
 -- Treesitter
 require('nvim-treesitter.configs').setup({
-    ensure_installed = {
-        'rust',
-        'toml',
-        'typescript',
-        'tsx',
-        'javascript',
-        'html',
-        'css',
-        'json',
-        'yaml',
-        'java',
-        'bash',
-        'lua',
-        'c',
-        'cpp',
-        'make',
-        'ninja',
-        'dockerfile',
-        'markdown',
-        'markdown_inline',
-    },
-    sync_install = false,
-
+    auto_install = true,
     highlight = {
         enable = true,
     },
-
     indent = {
         enable = true,
     },
-
     textobjects = {
         select = {
             enable = true,
@@ -492,9 +470,6 @@ require('nvim-treesitter.configs').setup({
         },
     },
 })
-
-vim.opt.foldmethod = 'expr'
-vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 
 -- LSP
 local lsp_on_attach = function(client, bufnr)
