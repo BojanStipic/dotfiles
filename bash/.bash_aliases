@@ -92,16 +92,16 @@ alias mpv-fb='mpv --hwdec=no'
 alias mpv-dvd='mpv dvd://'
 alias mpv-cd='mpv cdda://'
 
-# youtube-dl
-alias youtube-dl='youtube-dl '\
+# yt-dlp
+alias yt-dlp='yt-dlp '\
 '--ignore-errors '\
 '--no-warnings '\
 '--restrict-filenames '\
 '--output="%(title)s.%(ext)s"'
-# youtube-dl for playlists
-alias youtube-dl-pl='youtube-dl --output="%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s"'
-# youtube-dl + convert to mp3
-alias youtube-dl-audio='youtube-dl '\
+# yt-dlp for playlists
+alias yt-dlp-pl='yt-dlp --output="%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s"'
+# yt-dlp + convert to opus
+alias yt-dlp-audio='yt-dlp '\
 '--format=bestaudio '\
 '--extract-audio '\
 '--audio-format opus'
