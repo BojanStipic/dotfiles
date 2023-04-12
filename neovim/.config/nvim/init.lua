@@ -297,6 +297,7 @@ require('oil').setup({
         ['g.'] = 'actions.toggle_hidden',
     },
 })
+vim.keymap.set('n', '-', require('oil').open)
 
 -- Surround
 require('nvim-surround').setup({
