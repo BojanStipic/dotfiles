@@ -167,6 +167,7 @@ require('lazy').setup({
 
     { 'catppuccin/nvim', name = 'catppuccin' },
     { 'nvim-lualine/lualine.nvim', dependencies = 'nvim-tree/nvim-web-devicons' },
+    { 'folke/noice.nvim', dependencies = 'MunifTanjim/nui.nvim' },
     'stevearc/dressing.nvim',
 
     { 'stevearc/oil.nvim', dependencies = 'nvim-tree/nvim-web-devicons' },
@@ -264,7 +265,21 @@ require('lualine').setup({
 })
 
 -- UI
+require('noice').setup({
+    lsp = {
+        override = {
+            ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
+            ['vim.lsp.util.stylize_markdown'] = true,
+            ['cmp.entry.get_documentation'] = true,
+        },
+    },
+})
+vim.keymap.set('n', '<space>m', function() require('noice').cmd('history') end)
+
 require('dressing').setup({
+    input = {
+        enabled = false,
+    },
     select = {
         telescope = require('telescope.themes').get_ivy(),
     },
