@@ -64,16 +64,6 @@ vim.keymap.set({ 'n', 'v' }, 'P', 'P=`]')
 vim.keymap.set('n', '<space>z', '<cmd>setlocal spell! spell?<cr>')
 vim.keymap.set('n', '<space>/', '<cmd>set hlsearch! hlsearch?<cr>')
 
-vim.keymap.set('i', '(<cr>', '(<cr>)<esc>O')
-vim.keymap.set('i', '(;', '(<cr>);<esc>O')
-vim.keymap.set('i', '(,', '(<cr>),<esc>O')
-vim.keymap.set('i', '[<cr>', '[<cr>]<esc>O')
-vim.keymap.set('i', '[;', '[<cr>];<esc>O')
-vim.keymap.set('i', '[,', '[<cr>],<esc>O')
-vim.keymap.set('i', '{<cr>', '{<cr>}<esc>O')
-vim.keymap.set('i', '{;', '{<cr>};<esc>O')
-vim.keymap.set('i', '{,', '{<cr>},<esc>O')
-
 vim.keymap.set('o', 'ie', '<cmd>normal! meggVG<cr>`e')
 vim.keymap.set('o', 'ae', '<cmd>normal! meggVG<cr>`e')
 
@@ -181,6 +171,7 @@ require('lazy').setup({
 
     { 'stevearc/oil.nvim', dependencies = 'nvim-tree/nvim-web-devicons' },
     'kylechui/nvim-surround',
+    'windwp/nvim-autopairs',
     'tpope/vim-obsession',
     'tpope/vim-abolish',
     'tpope/vim-sleuth',
@@ -309,6 +300,9 @@ require('nvim-surround').setup({
         change = 'cs',
     },
 })
+
+-- Autopairs
+require('nvim-autopairs').setup({})
 
 -- Git signs
 require('gitsigns').setup({
