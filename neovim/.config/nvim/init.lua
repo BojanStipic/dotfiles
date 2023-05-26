@@ -33,7 +33,7 @@ vim.opt.timeoutlen = 2000
 vim.opt.ttimeoutlen = 0
 vim.opt.updatetime = 300
 vim.opt.mousescroll = { 'ver:1', 'hor:1' }
-vim.opt.shortmess:append({ A = true })
+vim.opt.shortmess:append({ A = true, c = true, C = true })
 vim.opt.sessionoptions:remove({ 'curdir' })
 vim.opt.sessionoptions:append({ 'sesdir' })
 
