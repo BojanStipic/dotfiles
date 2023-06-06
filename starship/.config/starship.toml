@@ -10,7 +10,7 @@ truncation_length = 0
 truncate_to_repo = false
 style = 'bold blue'
 repo_root_style = 'bold red'
-read_only = ' '
+read_only = ' 󰌾'
 
 [jobs]
 symbol = '●'
@@ -43,7 +43,7 @@ behind = '⇣${count} '
 
 [package]
 style = 'bold yellow'
-symbol = ' '
+symbol = '󰏗 '
 
 [aws]
 disabled = true
