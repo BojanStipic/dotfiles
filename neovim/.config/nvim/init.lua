@@ -220,7 +220,7 @@ require('lazy').setup({
         'nvim-neotest/neotest',
         dependencies = {
             'nvim-lua/plenary.nvim',
-            'haydenmeade/neotest-jest',
+            'nvim-neotest/neotest-jest',
         },
     },
 })
