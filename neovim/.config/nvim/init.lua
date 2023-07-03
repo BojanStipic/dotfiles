@@ -173,6 +173,7 @@ require('lazy').setup({
     { 'stevearc/oil.nvim', dependencies = 'nvim-tree/nvim-web-devicons' },
     'kylechui/nvim-surround',
     'windwp/nvim-autopairs',
+    'Wansmer/treesj',
     'tpope/vim-obsession',
     'tpope/vim-abolish',
     'tpope/vim-sleuth',
@@ -319,10 +320,14 @@ require('nvim-surround').setup({
 -- Autopairs
 require('nvim-autopairs').setup({})
 
+-- Split-join
+require('treesj').setup({ use_default_keymaps = false })
+vim.keymap.set('n', '<space>j', require('treesj').toggle)
+
 -- Git signs
 require('gitsigns').setup({
     signs = {
-        untracked = {text = '┃'},
+        untracked = { text = '┃' },
     },
     on_attach = function(bufnr)
         local opts = { buffer = bufnr, silent = true }
