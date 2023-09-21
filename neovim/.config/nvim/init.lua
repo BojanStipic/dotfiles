@@ -6,6 +6,7 @@ vim.opt.shiftwidth = 0
 
 vim.opt.spelllang = { 'en', 'sr@latin' }
 vim.opt.scrolloff = 10
+vim.opt.smoothscroll = true
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.foldlevelstart = 99
@@ -33,7 +34,7 @@ vim.opt.timeoutlen = 2000
 vim.opt.ttimeoutlen = 0
 vim.opt.updatetime = 300
 vim.opt.mousescroll = { 'ver:1', 'hor:1' }
-vim.opt.shortmess:append({ A = true, c = true, C = true })
+vim.opt.shortmess:append({ A = true, c = true })
 vim.opt.sessionoptions:remove({ 'curdir' })
 vim.opt.sessionoptions:append({ 'sesdir' })
 
@@ -90,8 +91,8 @@ vim.keymap.set('i', '<f4>', '<nop>')
 vim.keymap.set('c', '%%', '<c-r>=fnameescape(expand("%:h")) .. "/"<cr>')
 vim.keymap.set('n', '-', '<cmd>edit %:p:h<cr>')
 vim.keymap.set('n', '_', '<cmd>edit .<cr>')
-vim.keymap.set('n', '<space>f', '<cmd>silent !xdg-open %:p:h<cr>')
-vim.keymap.set('n', '<space>F', '<cmd>silent !xdg-open .<cr>')
+vim.keymap.set('n', '<space>f', function() vim.ui.open(vim.fn.expand('%:h')) end)
+vim.keymap.set('n', '<space>F', function() vim.ui.open('.') end)
 
 vim.keymap.set('n', '<space>q', '<cmd>source Session.vim<cr>')
 vim.keymap.set('n', '<space>Q', '<cmd>Obsession<cr>')
@@ -167,7 +168,6 @@ require('lazy').setup({
 
     { 'catppuccin/nvim', name = 'catppuccin' },
     { 'nvim-lualine/lualine.nvim', dependencies = 'nvim-tree/nvim-web-devicons' },
-    { 'folke/noice.nvim', dependencies = 'MunifTanjim/nui.nvim' },
     'stevearc/dressing.nvim',
 
     { 'stevearc/oil.nvim', dependencies = 'nvim-tree/nvim-web-devicons' },
@@ -250,11 +250,6 @@ require('lualine').setup({
         section_separators = '',
     },
     sections = {
-        lualine_x = {
-            function()
-                if vim.lsp.buf.server_ready() then return 'LSP' else return '' end
-            end,
-        },
         lualine_y = { 'filetype' },
         lualine_z = { 'ObsessionStatus', 'progress', 'location' },
     },
@@ -266,17 +261,6 @@ require('lualine').setup({
 })
 
 -- UI
-require('noice').setup({
-    lsp = {
-        override = {
-            ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
-            ['vim.lsp.util.stylize_markdown'] = true,
-            ['cmp.entry.get_documentation'] = true,
-        },
-    },
-})
-vim.keymap.set('n', '<space>m', function() require('noice').cmd('history') end)
-
 require('dressing').setup({
     input = {
         enabled = false,
@@ -490,8 +474,6 @@ require('nvim-treesitter.configs').setup({
 local lsp_on_attach = function(client, bufnr)
     local opts = { buffer = bufnr }
 
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-
     vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
     vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, opts)
     vim.keymap.set('n', 'gi', require('telescope.builtin').lsp_implementations, opts)
@@ -508,7 +490,11 @@ local lsp_on_attach = function(client, bufnr)
     vim.keymap.set('n', '<space>s', require('telescope.builtin').lsp_dynamic_workspace_symbols, opts)
     vim.keymap.set('n', 'gqie', vim.lsp.buf.format, opts)
 
-    if client.server_capabilities.documentHighlightProvider then
+    if client.supports_method('textDocument/inlayHint') then
+        vim.lsp.inlay_hint(bufnr, true)
+    end
+
+    if client.supports_method('textDocument/documentHighlight') then
         local lsp_augroup = vim.api.nvim_create_augroup('lsp', { clear = false })
         vim.api.nvim_clear_autocmds({ group = lsp_augroup, buffer = bufnr })
 
@@ -565,6 +551,13 @@ vim.api.nvim_create_autocmd('FileType', {
             cmd = {
                 'jdtls',
                 '--jvm-arg=-javaagent:' .. vim.fn.expand('$MASON/share/jdtls/lombok.jar'),
+            },
+            settings = {
+                java = {
+                    codeGeneration = {
+                        generateComments = false,
+                    },
+                },
             },
         }))
     end,
