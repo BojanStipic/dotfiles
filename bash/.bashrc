@@ -25,6 +25,7 @@ stty -ixon
 #
 export VISUAL=nvim
 export DIFFPROG='nvim -d'
+export MANPAGER='nvim +Man!'
 export BROWSER=firefox
 
 #
