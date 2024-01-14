@@ -12,6 +12,7 @@ vim.opt.splitbelow = true
 vim.opt.foldlevelstart = 99
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.opt.foldtext = 'v:lua.vim.treesitter.foldtext()'
 vim.opt.diffopt:append({ 'algorithm:patience', 'indent-heuristic', 'linematch:60', 'vertical' })
 vim.opt.hlsearch = false
 vim.opt.ignorecase = true
@@ -29,7 +30,7 @@ vim.opt.cursorlineopt = 'number'
 vim.opt.signcolumn = 'yes:2'
 vim.opt.colorcolumn = '81'
 vim.opt.list = true
-vim.opt.listchars = { tab = '¦ ', trail = '·' }
+vim.opt.listchars = { tab = '│ ', trail = '·' }
 vim.opt.timeoutlen = 2000
 vim.opt.ttimeoutlen = 0
 vim.opt.updatetime = 300
@@ -129,6 +130,17 @@ vim.api.nvim_create_autocmd('BufWritePre', {
     end,
 })
 
+vim.api.nvim_create_autocmd('BufEnter', {
+    group = init_augroup,
+    callback = function()
+        local lead = '│'
+        for _ = 1, vim.bo.tabstop - 1 do
+            lead = lead .. ' '
+        end
+        vim.opt_local.listchars:append({ leadmultispace = lead })
+    end,
+})
+
 vim.api.nvim_create_autocmd('FileType', {
     group = init_augroup,
     pattern = 'gitcommit',
@@ -208,19 +220,10 @@ require('lazy').setup({
     {
         'hrsh7th/nvim-cmp',
         dependencies = {
-            'L3MON4D3/LuaSnip',
             'hrsh7th/cmp-nvim-lsp',
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-path',
             'hrsh7th/cmp-cmdline',
-        },
-    },
-
-    {
-        'nvim-neotest/neotest',
-        dependencies = {
-            'nvim-lua/plenary.nvim',
-            'nvim-neotest/neotest-jest',
         },
     },
 })
@@ -250,14 +253,15 @@ require('lualine').setup({
         section_separators = '',
     },
     sections = {
-        lualine_y = { 'filetype' },
-        lualine_z = { 'ObsessionStatus', 'progress', 'location' },
+        lualine_y = { 'ObsessionStatus' },
+        lualine_z = { 'progress', 'location' },
     },
     tabline = {
         lualine_a = {
             { 'tabs', max_length = vim.o.columns, mode = 2 },
         },
     },
+    extensions = { 'man', 'quickfix', 'oil' }
 })
 
 -- UI
@@ -491,7 +495,7 @@ local lsp_on_attach = function(client, bufnr)
     vim.keymap.set('n', 'gqie', vim.lsp.buf.format, opts)
 
     if client.supports_method('textDocument/inlayHint') then
-        vim.lsp.inlay_hint(bufnr, true)
+        vim.lsp.inlay_hint.enable(bufnr, true)
     end
 
     if client.supports_method('textDocument/documentHighlight') then
@@ -567,17 +571,17 @@ vim.api.nvim_create_autocmd('FileType', {
 require('cmp').setup({
     snippet = {
         expand = function(args)
-            require('luasnip').lsp_expand(args.body)
+            vim.snippet.expand(args.body)
         end,
     },
 
     mapping = require('cmp').mapping.preset.insert({
         ['<c-space>'] = require('cmp').mapping.complete({}),
         ['<c-j>'] = require('cmp').mapping(function()
-            require('luasnip').jump(1)
+            vim.snippet.jump(1)
         end, { 'i', 's' }),
         ['<c-k>'] = require('cmp').mapping(function()
-            require('luasnip').jump(-1)
+            vim.snippet.jump(-1)
         end, { 'i', 's' }),
         ['<c-e>'] = require('cmp').mapping.scroll_docs(1),
         ['<c-y>'] = require('cmp').mapping.scroll_docs(-1),
@@ -610,16 +614,3 @@ require('cmp').setup.cmdline(':', {
         { name = 'cmdline' },
     }),
 })
-
--- Test runner
-require('neotest').setup({
-    adapters = {
-        require('neotest-jest')({
-            jestCommand = 'npm test --',
-            env = { CI = true },
-        }),
-    },
-})
-
-vim.keymap.set('n', '<space>t', require('neotest').run.run)
-vim.keymap.set('n', '<space>T', function() require('neotest').run.run(vim.fn.expand('%')) end)
