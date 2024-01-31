@@ -539,14 +539,7 @@ require('neodev').setup({
         end
     end,
 })
-require('lspconfig').lua_ls.setup(vim.tbl_extend('force', lsp_opts, {
-    settings = {
-        Lua = {
-            workspace = { checkThirdParty = false },
-            telemetry = { enable = false },
-        },
-    },
-}))
+require('lspconfig').lua_ls.setup(lsp_opts)
 
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'java',
