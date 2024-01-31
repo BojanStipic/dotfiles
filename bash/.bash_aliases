@@ -3,12 +3,11 @@ alias nvimp='nvim -i NONE -c "set noswapfile" -c "set noundofile"'
 alias nview='nvim -R'
 alias push='pushd .'
 alias pop='popd'
-alias ls='exa --group-directories-first --classify --header --modified --created --git --icons'
-alias tree='exa --tree --git-ignore'
-alias grep='grep --color=auto --perl-regexp'
+alias ls='eza --group-directories-first --classify --header --modified --created --git --icons'
+alias tree='eza --tree --git-ignore'
 alias rg='rg --smart-case'
+alias grep='grep --color=auto'
 alias diff='diff --color=auto'
-alias dd='dd status=progress'
 alias cp='cp --interactive'
 alias mv='mv --interactive'
 alias rm='rm --interactive=once'
@@ -140,8 +139,3 @@ man() {
 	LESS_TERMCAP_ue=$'\E[0m' \
 	man "$@"
 }
-
-# Neofetch colors
-alias neofetch='neofetch --colors 203 fg 203 203 203 fg '\
-'--ascii_colors 203 203 '\
-'--color_blocks off'
