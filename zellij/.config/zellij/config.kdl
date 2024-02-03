@@ -7,6 +7,8 @@ keybinds clear-defaults=true {
     }
 
     normal {
+        bind "g" { Write 7; }
+
         bind "Ctrl q" { Quit; }
         bind "Ctrl z" { Detach; }
         bind "p" {
@@ -21,12 +23,15 @@ keybinds clear-defaults=true {
         bind "j" { MoveFocus "Down"; }
         bind "k" { MoveFocus "Up"; }
         bind "l" { MoveFocusOrTab "Right"; }
+        bind "H" { GoToPreviousTab; }
+        bind "L" { GoToNextTab; }
+        bind "K" { ToggleFloatingPanes; }
+        bind "Tab" { ToggleFocusFullscreen; }
 
         bind "q" { CloseFocus; SwitchToMode "Normal"; }
 
         bind "t" { NewTab; SwitchToMode "Normal"; }
         bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
-        bind "Tab" { GoToNextTab; }
         bind "1" { GoToTab 1; }
         bind "2" { GoToTab 2; }
         bind "3" { GoToTab 3; }
@@ -40,16 +45,11 @@ keybinds clear-defaults=true {
         bind "w" { NewPane; }
         bind "s" { NewPane "Down"; }
         bind "v" { NewPane "Right"; }
-        bind "x" { ToggleFloatingPanes; }
-        bind "f" { ToggleFocusFullscreen; }
-        bind "b" { BreakPane; }
-        bind "," { BreakPaneRight; }
-        bind "." { BreakPaneLeft; }
 
         bind "=" "+" { Resize "Increase"; }
         bind "-" { Resize "Decrease"; }
-        bind "[" { PreviousSwapLayout; }
-        bind "]" { NextSwapLayout; }
+        bind "[" "{" { PreviousSwapLayout; }
+        bind "]" "}" { NextSwapLayout; }
 
         bind "m" { SwitchToMode "Move"; }
         bind "z" { SwitchToMode "Scroll"; }
@@ -68,6 +68,10 @@ keybinds clear-defaults=true {
         bind "j" { MovePane "Down"; }
         bind "k" { MovePane "Up"; }
         bind "l" { MovePane "Right"; }
+        bind "H" { BreakPaneLeft; }
+        bind "L" { BreakPaneRight; }
+        bind "K" { TogglePaneEmbedOrFloating; }
+        bind "t" { BreakPane; SwitchToMode "Move"; }
     }
 
     scroll {
