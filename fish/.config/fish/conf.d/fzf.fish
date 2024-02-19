@@ -1,3 +1,5 @@
+status is-interactive || exit 0
+
 set --global --export FZF_DEFAULT_OPTS "--color=\
 bg+:#313244,\
 bg:#1e1e2e,\

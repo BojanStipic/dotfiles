@@ -1,3 +1,5 @@
+status is-interactive || exit 0
+
 alias nvim='nvim -p'
 alias nview='nvim -R'
 alias ls='eza --group-directories-first --classify --header --modified --created --git --icons'
