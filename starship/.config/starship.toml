@@ -18,9 +18,6 @@ symbol = '●'
 [[battery.display]]
 threshold = 20
 
-[memory_usage]
-disabled = false
-
 [git_branch]
 symbol = ' '
 
@@ -43,9 +40,6 @@ behind = '⇣${count} '
 [package]
 style = 'bold yellow'
 symbol = '󰏗 '
-
-[aws]
-disabled = true
 
 [c]
 style = 'bold green'
