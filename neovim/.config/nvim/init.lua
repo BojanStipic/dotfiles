@@ -276,9 +276,6 @@ require('dressing').setup({
 
 -- File browser
 require('oil').setup({
-    win_options = {
-        conceallevel = 0,
-    },
     view_options = {
         show_hidden = true,
     },
@@ -491,6 +488,9 @@ local lsp_on_attach = function(client, bufnr)
 
     vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, opts)
     vim.keymap.set({ 'n', 'v' }, '<cr>', vim.lsp.buf.code_action, opts)
+    vim.keymap.set({ 'n', 'v' }, '<s-cr>', function()
+        vim.lsp.buf.code_action({ context = { only = { 'source' } } })
+    end, opts)
     vim.keymap.set('n', '<space>s', require('telescope.builtin').lsp_dynamic_workspace_symbols, opts)
     vim.keymap.set('n', 'gqie', vim.lsp.buf.format, opts)
 
@@ -521,15 +521,21 @@ local lsp_opts = {
 }
 
 require('lspconfig').rust_analyzer.setup(lsp_opts)
-require('lspconfig').taplo.setup(lsp_opts)
-require('lspconfig').clangd.setup(lsp_opts)
+require('lspconfig').gopls.setup(lsp_opts)
+require('lspconfig').gleam.setup(lsp_opts)
 require('lspconfig').bashls.setup(lsp_opts)
+require('lspconfig').clangd.setup(lsp_opts)
+require('lspconfig').pyright.setup(lsp_opts)
 
 require('lspconfig').tsserver.setup(lsp_opts)
 require('lspconfig').eslint.setup(lsp_opts)
 require('lspconfig').html.setup(lsp_opts)
 require('lspconfig').cssls.setup(lsp_opts)
+
+require('lspconfig').taplo.setup(lsp_opts)
 require('lspconfig').jsonls.setup(lsp_opts)
+require('lspconfig').yamlls.setup(lsp_opts)
+require('lspconfig').lemminx.setup(lsp_opts)
 
 require('neodev').setup({
     override = function(root_dir, options)
@@ -541,6 +547,7 @@ require('neodev').setup({
 })
 require('lspconfig').lua_ls.setup(lsp_opts)
 
+require('lspconfig').gradle_ls.setup(lsp_opts)
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'java',
     callback = function()
