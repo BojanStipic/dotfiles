@@ -12,7 +12,7 @@ vim.opt.splitbelow = true
 vim.opt.foldlevelstart = 99
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-vim.opt.foldtext = 'v:lua.vim.treesitter.foldtext()'
+vim.opt.foldtext = ''
 vim.opt.diffopt:append({ 'algorithm:patience', 'indent-heuristic', 'linematch:60', 'vertical' })
 vim.opt.hlsearch = false
 vim.opt.ignorecase = true
@@ -99,13 +99,19 @@ vim.keymap.set('n', '<space>q', '<cmd>source Session.vim<cr>')
 vim.keymap.set('n', '<space>Q', '<cmd>Obsession<cr>')
 
 -- Diagnostics
-vim.diagnostic.config({ virtual_text = false })
+vim.diagnostic.config({
+    virtual_text = false,
+    signs = {
+        text = {
+            [vim.diagnostic.severity.ERROR] = '●',
+            [vim.diagnostic.severity.WARN] = '●',
+            [vim.diagnostic.severity.INFO] = '●',
+            [vim.diagnostic.severity.HINT] = '●',
+        },
+    },
+})
 vim.keymap.set('n', '[d', function() vim.diagnostic.goto_prev({ wrap = false }) end)
 vim.keymap.set('n', ']d', function() vim.diagnostic.goto_next({ wrap = false }) end)
-vim.fn.sign_define('DiagnosticSignError', { text = '●', texthl = 'DiagnosticSignError', numhl = 'DiagnosticSignError' })
-vim.fn.sign_define('DiagnosticSignWarn', { text = '●', texthl = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn' })
-vim.fn.sign_define('DiagnosticSignInfo', { text = '●', texthl = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo' })
-vim.fn.sign_define('DiagnosticSignHint', { text = '●', texthl = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint' })
 
 -- Auto commands
 local init_augroup = vim.api.nvim_create_augroup('init.lua', {})
@@ -180,7 +186,6 @@ require('lazy').setup({
 
     { 'catppuccin/nvim', name = 'catppuccin' },
     { 'nvim-lualine/lualine.nvim', dependencies = 'nvim-tree/nvim-web-devicons' },
-    'stevearc/dressing.nvim',
 
     { 'stevearc/oil.nvim', dependencies = 'nvim-tree/nvim-web-devicons' },
     'kylechui/nvim-surround',
@@ -201,6 +206,7 @@ require('lazy').setup({
         dependencies = {
             'nvim-lua/plenary.nvim',
             'nvim-tree/nvim-web-devicons',
+            'nvim-telescope/telescope-ui-select.nvim',
             { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
         },
     },
@@ -253,8 +259,17 @@ require('lualine').setup({
         section_separators = '',
     },
     sections = {
+        lualine_b = { 'diff', 'diagnostics' },
+        lualine_c = {
+            { 'filename', path = 1 },
+        },
         lualine_y = { 'ObsessionStatus' },
         lualine_z = { 'progress', 'location' },
+    },
+    inactive_sections = {
+        lualine_c = {
+            { 'filename', path = 1 }
+        },
     },
     tabline = {
         lualine_a = {
@@ -262,16 +277,6 @@ require('lualine').setup({
         },
     },
     extensions = { 'man', 'quickfix', 'oil' }
-})
-
--- UI
-require('dressing').setup({
-    input = {
-        enabled = false,
-    },
-    select = {
-        telescope = require('telescope.themes').get_ivy(),
-    },
 })
 
 -- File browser
@@ -309,7 +314,7 @@ require('nvim-autopairs').setup({})
 require('treesj').setup({ use_default_keymaps = false })
 vim.keymap.set('n', '<space>j', require('treesj').toggle)
 
--- Git signs
+-- Git
 require('gitsigns').setup({
     signs = {
         untracked = { text = '┃' },
@@ -318,18 +323,20 @@ require('gitsigns').setup({
         local opts = { buffer = bufnr, silent = true }
 
         vim.keymap.set('n', ']c', function()
-            if vim.wo.diff then return ']c' end
-
-            vim.schedule(function() require('gitsigns').next_hunk() end)
-            return '<ignore>'
-        end, { buffer = bufnr, expr = true })
+            if vim.wo.diff then
+                vim.cmd.normal({ ']c', bang = true })
+                return
+            end
+            require('gitsigns').nav_hunk('next')
+        end, opts)
 
         vim.keymap.set('n', '[c', function()
-            if vim.wo.diff then return '[c' end
-
-            vim.schedule(function() require('gitsigns').prev_hunk() end)
-            return '<ignore>'
-        end, { buffer = bufnr, expr = true })
+            if vim.wo.diff then
+                vim.cmd.normal({ '[c', bang = true })
+                return
+            end
+            require('gitsigns').nav_hunk('prev')
+        end, opts)
 
         vim.keymap.set({ 'n', 'v' }, '<space>hs', ':Gitsigns stage_hunk<cr>', opts)
         vim.keymap.set({ 'n', 'v' }, '<space>hr', ':Gitsigns reset_hunk<cr>', opts)
@@ -388,7 +395,12 @@ require('telescope').setup({
         lsp_workspace_symbols = { show_line = false },
         lsp_dynamic_workspace_symbols = { show_line = false },
     },
+
+    extensions = {
+        ['ui-select'] = { require('telescope.themes').get_ivy() },
+    },
 })
+require('telescope').load_extension('ui-select')
 require('telescope').load_extension('fzf')
 
 vim.keymap.set('n', '<space><space>', require('telescope.builtin').resume)
@@ -426,20 +438,6 @@ require('nvim-treesitter.configs').setup({
             },
         },
 
-        swap = {
-            enable = true,
-            swap_next = {
-                ['sfl'] = '@function.outer',
-                ['sml'] = '@function.outer',
-                ['sal'] = '@parameter.inner',
-            },
-            swap_previous = {
-                ['sfh'] = '@function.outer',
-                ['smh'] = '@function.outer',
-                ['sah'] = '@parameter.inner',
-            },
-        },
-
         move = {
             enable = true,
             set_jumps = true,
@@ -472,51 +470,54 @@ require('nvim-treesitter.configs').setup({
 })
 
 -- LSP
-local lsp_on_attach = function(client, bufnr)
-    local opts = { buffer = bufnr }
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = init_augroup,
+    callback = function(event)
+        local client = vim.lsp.get_client_by_id(event.data.client_id)
+        local bufnr = event.buf
+        local opts = { buffer = bufnr }
 
-    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
-    vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, opts)
-    vim.keymap.set('n', 'gi', require('telescope.builtin').lsp_implementations, opts)
-    vim.keymap.set('n', 'gy', require('telescope.builtin').lsp_type_definitions, opts)
-    vim.keymap.set('n', 'gr', function()
-        require('telescope.builtin').lsp_references({ include_declaration = false })
-    end, opts)
-    vim.keymap.set('n', 'gR', require('telescope.builtin').lsp_references, opts)
-    vim.keymap.set('n', 'gci', require('telescope.builtin').lsp_incoming_calls, opts)
-    vim.keymap.set('n', 'gco', require('telescope.builtin').lsp_outgoing_calls, opts)
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+        vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, opts)
+        vim.keymap.set('n', 'gi', require('telescope.builtin').lsp_implementations, opts)
+        vim.keymap.set('n', 'gy', require('telescope.builtin').lsp_type_definitions, opts)
+        vim.keymap.set('n', 'gr', function()
+            require('telescope.builtin').lsp_references({ include_declaration = false })
+        end, opts)
+        vim.keymap.set('n', 'gR', require('telescope.builtin').lsp_references, opts)
+        vim.keymap.set('n', 'gci', require('telescope.builtin').lsp_incoming_calls, opts)
+        vim.keymap.set('n', 'gco', require('telescope.builtin').lsp_outgoing_calls, opts)
 
-    vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, opts)
-    vim.keymap.set({ 'n', 'v' }, '<cr>', vim.lsp.buf.code_action, opts)
-    vim.keymap.set({ 'n', 'v' }, '<s-cr>', function()
-        vim.lsp.buf.code_action({ context = { only = { 'source' } } })
-    end, opts)
-    vim.keymap.set('n', '<space>s', require('telescope.builtin').lsp_dynamic_workspace_symbols, opts)
-    vim.keymap.set('n', 'gqie', vim.lsp.buf.format, opts)
+        vim.keymap.set('n', '<space>r', vim.lsp.buf.rename, opts)
+        vim.keymap.set({ 'n', 'v' }, '<cr>', vim.lsp.buf.code_action, opts)
+        vim.keymap.set('n', '<s-cr>', function()
+            vim.lsp.buf.code_action({ context = { only = { 'source' } } })
+        end, opts)
+        vim.keymap.set('n', '<space>k', function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+        end, opts)
+        vim.keymap.set('n', '<space>s', require('telescope.builtin').lsp_dynamic_workspace_symbols, opts)
+        vim.keymap.set('n', 'gqie', vim.lsp.buf.format, opts)
 
-    if client.supports_method('textDocument/inlayHint') then
-        vim.lsp.inlay_hint.enable(bufnr, true)
-    end
+        if client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+            local lsp_augroup = vim.api.nvim_create_augroup('lsp', { clear = false })
+            vim.api.nvim_clear_autocmds({ group = lsp_augroup, buffer = bufnr })
 
-    if client.supports_method('textDocument/documentHighlight') then
-        local lsp_augroup = vim.api.nvim_create_augroup('lsp', { clear = false })
-        vim.api.nvim_clear_autocmds({ group = lsp_augroup, buffer = bufnr })
-
-        vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
-            group = lsp_augroup,
-            buffer = bufnr,
-            callback = function() vim.lsp.buf.document_highlight() end,
-        })
-        vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
-            group = lsp_augroup,
-            buffer = bufnr,
-            callback = function() vim.lsp.buf.clear_references() end,
-        })
-    end
-end
+            vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+                group = lsp_augroup,
+                buffer = bufnr,
+                callback = function() vim.lsp.buf.document_highlight() end,
+            })
+            vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+                group = lsp_augroup,
+                buffer = bufnr,
+                callback = function() vim.lsp.buf.clear_references() end,
+            })
+        end
+    end,
+})
 
 local lsp_opts = {
-    on_attach = lsp_on_attach,
     capabilities = require('cmp_nvim_lsp').default_capabilities(),
 }
 
@@ -547,7 +548,6 @@ require('neodev').setup({
 })
 require('lspconfig').lua_ls.setup(lsp_opts)
 
-require('lspconfig').gradle_ls.setup(lsp_opts)
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'java',
     callback = function()
@@ -566,6 +566,7 @@ vim.api.nvim_create_autocmd('FileType', {
         }))
     end,
 })
+require('lspconfig').gradle_ls.setup(lsp_opts)
 
 -- Autocomplete
 require('cmp').setup({
