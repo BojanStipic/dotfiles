@@ -18,5 +18,7 @@ bind --mode insert \cn history-search-forward
 bind --mode insert \cf accept-autosuggestion
 bind --mode insert \cr history-pager
 bind --mode insert \ce edit_command_buffer
+bind --mode insert \cz 'fg 2>/dev/null; commandline -f repaint'
 
+fzf --fish | source
 starship init fish | source
