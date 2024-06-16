@@ -220,7 +220,7 @@ require('lazy').setup({
     },
 
     'neovim/nvim-lspconfig',
-    'folke/neodev.nvim',
+    'folke/lazydev.nvim',
     'mfussenegger/nvim-jdtls',
 
     {
@@ -538,14 +538,7 @@ require('lspconfig').jsonls.setup(lsp_opts)
 require('lspconfig').yamlls.setup(lsp_opts)
 require('lspconfig').lemminx.setup(lsp_opts)
 
-require('neodev').setup({
-    override = function(root_dir, options)
-        if root_dir:match('dotfiles') then
-            options.enabled = true
-            options.plugins = true
-        end
-    end,
-})
+require('lazydev').setup()
 require('lspconfig').lua_ls.setup(lsp_opts)
 
 vim.api.nvim_create_autocmd('FileType', {
