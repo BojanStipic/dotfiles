@@ -1,0 +1,5 @@
+[flags]
+rate = "10s"
+basic = true
+battery = true
+enable_gpu_memory = true
