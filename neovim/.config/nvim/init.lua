@@ -55,7 +55,6 @@ vim.keymap.set({ 'n', 'v' }, '<c-d>', '5gj')
 vim.keymap.set({ 'n', 'v' }, '<c-u>', '5gk')
 vim.keymap.set({ 'n', 'v' }, '<c-f>', '10gj')
 vim.keymap.set({ 'n', 'v' }, '<c-b>', '10gk')
-vim.keymap.set({ 'n', 'v' }, 'gw', '*')
 
 vim.keymap.set({ 'n', 'v' }, '\\', '"+')
 vim.keymap.set({ 'n', 'v' }, 'gp', '"0p=`]')
@@ -292,6 +291,7 @@ require('oil').setup({
         ['-'] = 'actions.parent',
         ['_'] = 'actions.open_cwd',
         ['g.'] = 'actions.toggle_hidden',
+        ['gx'] = 'actions.open_external',
     },
 })
 vim.keymap.set('n', '-', require('oil').open)
@@ -522,8 +522,6 @@ local lsp_opts = {
 }
 
 require('lspconfig').rust_analyzer.setup(lsp_opts)
-require('lspconfig').gopls.setup(lsp_opts)
-require('lspconfig').gleam.setup(lsp_opts)
 require('lspconfig').bashls.setup(lsp_opts)
 require('lspconfig').clangd.setup(lsp_opts)
 require('lspconfig').pyright.setup(lsp_opts)
