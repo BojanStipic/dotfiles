@@ -231,6 +231,8 @@ require('lazy').setup({
             'hrsh7th/cmp-cmdline',
         },
     },
+
+    'stevearc/conform.nvim',
 })
 
 require('mason').setup()
@@ -477,6 +479,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
         local bufnr = event.buf
         local opts = { buffer = bufnr }
 
+        vim.bo[bufnr].formatexpr = nil
+
         vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
         vim.keymap.set('n', 'gd', require('telescope.builtin').lsp_definitions, opts)
         vim.keymap.set('n', 'gi', require('telescope.builtin').lsp_implementations, opts)
@@ -497,12 +501,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
             vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
         end, opts)
         vim.keymap.set('n', '<space>s', require('telescope.builtin').lsp_dynamic_workspace_symbols, opts)
-        vim.keymap.set('n', 'gqie', vim.lsp.buf.format, opts)
+
+        local lsp_augroup = vim.api.nvim_create_augroup('lsp', { clear = false })
+        vim.api.nvim_clear_autocmds({ group = lsp_augroup, buffer = bufnr })
 
         if client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
-            local lsp_augroup = vim.api.nvim_create_augroup('lsp', { clear = false })
-            vim.api.nvim_clear_autocmds({ group = lsp_augroup, buffer = bufnr })
-
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
                 group = lsp_augroup,
                 buffer = bufnr,
@@ -606,3 +609,24 @@ require('cmp').setup.cmdline(':', {
         { name = 'cmdline' },
     }),
 })
+
+-- Formatting
+require('conform').setup({
+    formatters_by_ft = {
+        rust = { 'rustfmt' },
+        fish = { 'fish_indent' },
+        lua = { 'stylua' },
+        javascript = { 'prettier' },
+        typescript = { 'prettier' },
+        javascriptreact = { 'prettier' },
+        typescriptreact = { 'prettier' },
+        html = { 'prettier' },
+        css = { 'prettier' },
+        json = { 'prettier' },
+        yaml = { 'prettier' },
+    },
+})
+vim.opt.formatexpr = "v:lua.require('conform').formatexpr({ 'lsp_format': 'fallback', 'timeout_ms': 2000 })"
+vim.keymap.set('n', 'gqie', function()
+    require('conform').format({ lsp_format = 'fallback', timeout_ms = 2000 })
+end)
