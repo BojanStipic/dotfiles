@@ -120,6 +120,17 @@ vim.keymap.set("n", "]d", function()
 	vim.diagnostic.goto_next({ wrap = false })
 end)
 
+-- File types
+vim.filetype.add({
+	extension = {
+		mdx = "markdown.mdx",
+	},
+	filename = {
+		["compose.yaml"] = "yaml.docker-compose",
+		["compose.yml"] = "yaml.docker-compose",
+	},
+})
+
 -- Auto commands
 local init_augroup = vim.api.nvim_create_augroup("init.lua", {})
 
@@ -539,14 +550,19 @@ local lsp_opts = {
 }
 
 require("lspconfig").rust_analyzer.setup(lsp_opts)
-require("lspconfig").bashls.setup(lsp_opts)
 require("lspconfig").clangd.setup(lsp_opts)
 require("lspconfig").pyright.setup(lsp_opts)
+require("lspconfig").bashls.setup(lsp_opts)
+require("lspconfig").dockerls.setup(lsp_opts)
+require("lspconfig").docker_compose_language_service.setup(lsp_opts)
 
 require("lspconfig").tsserver.setup(lsp_opts)
 require("lspconfig").eslint.setup(lsp_opts)
 require("lspconfig").html.setup(lsp_opts)
 require("lspconfig").cssls.setup(lsp_opts)
+require("lspconfig").tailwindcss.setup(lsp_opts)
+require("lspconfig").astro.setup(lsp_opts)
+require("lspconfig").mdx_analyzer.setup(lsp_opts)
 
 require("lspconfig").taplo.setup(lsp_opts)
 require("lspconfig").jsonls.setup(lsp_opts)
