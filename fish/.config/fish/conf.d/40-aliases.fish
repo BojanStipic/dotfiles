@@ -44,3 +44,13 @@ alias mpv-cd='mpv cdda://'
 alias yt-dlp='yt-dlp --ignore-errors --no-warnings --restrict-filenames --output="%(title)s.%(ext)s"'
 alias yt-dlp-pl='yt-dlp --output="%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s"'
 alias yt-dlp-audio='yt-dlp --format=bestaudio --extract-audio --audio-format opus'
+
+alias aws-profile 'set --global --export AWS_PROFILE'
+complete --command aws-profile --no-files --arguments '(aws configure list-profiles)'
+
+alias kubectl-context 'kubectl config use-context'
+alias kubectl-namespace 'kubectl config set-context --current --namespace'
+complete --command kubectl-namespace --no-files --arguments '(kubectl get namespaces --output custom-columns=":metadata.name")'
+abbr k kubectl
+abbr kx kubectl-context
+abbr kn kubectl-namespace
