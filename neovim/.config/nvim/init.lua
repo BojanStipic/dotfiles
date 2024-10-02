@@ -642,6 +642,10 @@ require("cmp").setup.cmdline(":", {
 
 -- Formatting
 require("conform").setup({
+	default_format_opts = {
+		lsp_format = "fallback",
+		timeout_ms = 2000,
+	},
 	formatters_by_ft = {
 		rust = { "rustfmt" },
 		fish = { "fish_indent" },
@@ -650,13 +654,14 @@ require("conform").setup({
 		typescript = { "prettier" },
 		javascriptreact = { "prettier" },
 		typescriptreact = { "prettier" },
+		astro = { "prettier" },
+		markdown = { "prettier" },
+		mdx = { "prettier" },
 		html = { "prettier" },
 		css = { "prettier" },
 		json = { "prettier" },
 		yaml = { "prettier" },
 	},
 })
-vim.opt.formatexpr = "v:lua.require('conform').formatexpr({ 'lsp_format': 'fallback', 'timeout_ms': 2000 })"
-vim.keymap.set("n", "gqie", function()
-	require("conform").format({ lsp_format = "fallback", timeout_ms = 2000 })
-end)
+vim.opt.formatexpr = "v:lua.require('conform').formatexpr()"
+vim.keymap.set("n", "gqie", require("conform").format)
