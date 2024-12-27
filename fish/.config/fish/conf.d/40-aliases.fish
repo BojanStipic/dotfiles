@@ -45,6 +45,9 @@ alias yt-dlp='yt-dlp --ignore-errors --no-warnings --restrict-filenames --output
 alias yt-dlp-pl='yt-dlp --output="%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s"'
 alias yt-dlp-audio='yt-dlp --format=bestaudio --extract-audio --audio-format opus'
 
+alias mise-profile 'mise config set --file .mise.toml env.MISE_ENV'
+complete --command mise-profile --no-files --arguments '(count .mise* >/dev/null && ls .mise* | string match --regex --groups-only "mise\.(.*)\.toml")'
+
 alias aws-profile 'set --global --export AWS_PROFILE'
 complete --command aws-profile --no-files --arguments '(aws configure list-profiles)'
 
