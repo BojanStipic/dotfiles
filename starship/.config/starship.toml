@@ -2,6 +2,7 @@
 
 format = """
 ┌ $jobs$all$line_break\
+(├ $aws$kubernetes${env_var.MISE_ENV}\n)\
 └─$character\
 """
 
@@ -36,6 +37,18 @@ deleted = '--${count} '
 ahead = '⇡${count} '
 diverged = '⇡${ahead_count} ⇣${behind_count} '
 behind = '⇣${count} '
+
+[kubernetes]
+disabled = false
+format = '[$symbol($context )(\($namespace\) )]($style)'
+
+[aws]
+disabled = false
+force_display = true
+format = '[$symbol($profile )(\($region\) )(\[$duration\] )]($style)'
+
+[env_var.MISE_ENV]
+style = 'bold purple'
 
 [package]
 style = 'bold yellow'
