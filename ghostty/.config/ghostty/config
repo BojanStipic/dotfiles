@@ -1,0 +1,10 @@
+theme = dark:catppuccin-mocha,light:catppuccin-latte
+
+font-family = Iosevka Term
+font-size = 14
+font-feature = -calt
+font-feature = -liga
+font-feature = -dlig
+
+shell-integration = fish
+auto-update = off
