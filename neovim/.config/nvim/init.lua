@@ -243,15 +243,7 @@ require("lazy").setup({
 	"folke/lazydev.nvim",
 	"mfussenegger/nvim-jdtls",
 
-	{
-		"hrsh7th/nvim-cmp",
-		dependencies = {
-			"hrsh7th/cmp-nvim-lsp",
-			"hrsh7th/cmp-buffer",
-			"hrsh7th/cmp-path",
-			"hrsh7th/cmp-cmdline",
-		},
-	},
+	{ "saghen/blink.cmp", version = "*" },
 
 	"stevearc/conform.nvim",
 })
@@ -546,7 +538,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 local lsp_opts = {
-	capabilities = require("cmp_nvim_lsp").default_capabilities(),
+	capabilities = require("blink.cmp").get_lsp_capabilities(),
 }
 
 require("lspconfig").rust_analyzer.setup(lsp_opts)
@@ -593,51 +585,25 @@ vim.api.nvim_create_autocmd("FileType", {
 require("lspconfig").gradle_ls.setup(lsp_opts)
 
 -- Autocomplete
-require("cmp").setup({
-	snippet = {
-		expand = function(args)
-			vim.snippet.expand(args.body)
-		end,
+require("blink.cmp").setup({
+	keymap = {
+		preset = "none",
+		["<c-space>"] = { "show", "show_documentation", "hide_documentation" },
+		["<c-e"] = { "hide", "fallback" },
+		["<cr>"] = { "accept", "fallback" },
+		["<c-n>"] = { "select_next", "fallback" },
+		["<c-p>"] = { "select_prev", "fallback" },
+		["<c-j>"] = { "snippet_forward", "fallback" },
+		["<c-k>"] = { "snippet_backward", "fallback" },
+		["<c-f>"] = { "scroll_documentation_down", "fallback" },
+		["<c-b>"] = { "scroll_documentation_up", "fallback" },
+		["<c-d>"] = { "scroll_documentation_down", "fallback" },
+		["<c-u>"] = { "scroll_documentation_up", "fallback" },
 	},
-
-	mapping = require("cmp").mapping.preset.insert({
-		["<c-space>"] = require("cmp").mapping.complete({}),
-		["<c-j>"] = require("cmp").mapping(function()
-			vim.snippet.jump(1)
-		end, { "i", "s" }),
-		["<c-k>"] = require("cmp").mapping(function()
-			vim.snippet.jump(-1)
-		end, { "i", "s" }),
-		["<c-e>"] = require("cmp").mapping.scroll_docs(1),
-		["<c-y>"] = require("cmp").mapping.scroll_docs(-1),
-		["<c-d>"] = require("cmp").mapping.scroll_docs(2),
-		["<c-u>"] = require("cmp").mapping.scroll_docs(-2),
-		["<c-f>"] = require("cmp").mapping.scroll_docs(4),
-		["<c-b>"] = require("cmp").mapping.scroll_docs(-4),
-		["<cr>"] = require("cmp").mapping.confirm(),
-	}),
-
-	sources = require("cmp").config.sources({
-		{ name = "nvim_lsp" },
-	}, {
-		{ name = "buffer" },
-	}),
-})
-
-require("cmp").setup.cmdline({ "/", "?" }, {
-	mapping = require("cmp").mapping.preset.cmdline(),
-	sources = {
-		{ name = "buffer" },
+	completion = {
+		list = { selection = "auto_insert" },
+		documentation = { auto_show = true },
 	},
-})
-
-require("cmp").setup.cmdline(":", {
-	mapping = require("cmp").mapping.preset.cmdline(),
-	sources = require("cmp").config.sources({
-		{ name = "path" },
-	}, {
-		{ name = "cmdline" },
-	}),
 })
 
 -- Formatting
