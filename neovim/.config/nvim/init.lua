@@ -551,7 +551,13 @@ require("lspconfig").bashls.setup(lsp_opts)
 require("lspconfig").dockerls.setup(lsp_opts)
 require("lspconfig").docker_compose_language_service.setup(lsp_opts)
 
-require("lspconfig").tsserver.setup(lsp_opts)
+require("lspconfig").denols.setup(vim.tbl_extend("force", lsp_opts, {
+	root_dir = require("lspconfig").util.root_pattern("deno.json", "deno.jsonc"),
+}))
+require("lspconfig").vtsls.setup(vim.tbl_extend("force", lsp_opts, {
+	root_dir = require("lspconfig").util.root_pattern("package.json"),
+	single_file_support = false,
+}))
 require("lspconfig").eslint.setup(lsp_opts)
 require("lspconfig").html.setup(lsp_opts)
 require("lspconfig").cssls.setup(lsp_opts)
