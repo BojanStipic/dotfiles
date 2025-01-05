@@ -76,7 +76,7 @@ vim.keymap.set({ "n", "v" }, "<c-j>", "<c-w>j")
 vim.keymap.set({ "n", "v" }, "<c-k>", "<c-w>k")
 vim.keymap.set({ "n", "v" }, "<c-l>", "<c-w>l")
 
-vim.keymap.set("t", "<esc>", "<c-\\><c-n>")
+vim.keymap.set("t", "<esc><esc>", "<c-\\><c-n>")
 
 vim.keymap.set({ "n", "v" }, "<f1>", "gT")
 vim.keymap.set({ "n", "v" }, "<f2>", "gt")
@@ -259,8 +259,11 @@ require("catppuccin").setup({
 				hints = { "undercurl" },
 				warnings = { "undercurl" },
 				information = { "undercurl" },
+				ok = { "undercurl" },
 			},
 		},
+		blink_cmp = true,
+		diffview = true,
 	},
 })
 
