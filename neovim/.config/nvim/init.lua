@@ -167,7 +167,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 
 vim.api.nvim_create_autocmd("FileType", {
 	group = init_augroup,
-	pattern = "gitcommit",
+	pattern = { "text", "markdown", "gitcommit" },
 	command = "setlocal spell",
 })
 
