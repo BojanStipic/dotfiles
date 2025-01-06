@@ -30,7 +30,7 @@ vim.opt.cursorlineopt = "number"
 vim.opt.signcolumn = "yes:2"
 vim.opt.colorcolumn = "81"
 vim.opt.list = true
-vim.opt.listchars = { tab = "│ ", trail = "·" }
+vim.opt.listchars = { tab = "  ", trail = "·" }
 vim.opt.timeoutlen = 2000
 vim.opt.ttimeoutlen = 0
 vim.opt.updatetime = 300
@@ -154,17 +154,6 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 	end,
 })
 
-vim.api.nvim_create_autocmd("BufEnter", {
-	group = init_augroup,
-	callback = function()
-		local lead = "│"
-		for _ = 1, vim.bo.tabstop - 1 do
-			lead = lead .. " "
-		end
-		vim.opt_local.listchars:append({ leadmultispace = lead })
-	end,
-})
-
 vim.api.nvim_create_autocmd("FileType", {
 	group = init_augroup,
 	pattern = "gitcommit",
@@ -211,6 +200,7 @@ require("lazy").setup({
 	"kylechui/nvim-surround",
 	"windwp/nvim-autopairs",
 	"Wansmer/treesj",
+	"folke/snacks.nvim",
 	"tpope/vim-obsession",
 	"tpope/vim-abolish",
 	"tpope/vim-sleuth",
@@ -331,6 +321,14 @@ require("nvim-autopairs").setup({})
 -- Split-join
 require("treesj").setup({ use_default_keymaps = false })
 vim.keymap.set("n", "<space>j", require("treesj").toggle)
+
+-- Extras
+require("snacks").setup({
+	bigfile = { enabled = true },
+	indent = { enabled = true },
+	scroll = { enabled = true },
+	statuscolumn = { enabled = true },
+})
 
 -- Git
 require("gitsigns").setup({
