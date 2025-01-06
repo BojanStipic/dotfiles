@@ -584,6 +584,8 @@ vim.api.nvim_create_autocmd("FileType", {
 			cmd = {
 				"jdtls",
 				"--jvm-arg=-javaagent:" .. vim.fn.expand("$MASON/share/jdtls/lombok.jar"),
+				"--jvm-arg=-Xms4G",
+				"--jvm-arg=-XX:+UseParallelGC",
 			},
 			settings = {
 				java = {
