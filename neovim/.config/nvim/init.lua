@@ -141,6 +141,15 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 	command = "silent! checktime",
 })
 
+vim.api.nvim_create_autocmd({ "VimResized" }, {
+	group = init_augroup,
+	callback = function()
+		local current_tab = vim.fn.tabpagenr()
+		vim.cmd("tabdo wincmd =")
+		vim.cmd("tabnext " .. current_tab)
+	end,
+})
+
 vim.api.nvim_create_autocmd("BufWritePre", {
 	group = init_augroup,
 	command = "%s/\\s\\+$//e",
