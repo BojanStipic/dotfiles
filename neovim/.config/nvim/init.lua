@@ -178,15 +178,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
-vim.api.nvim_create_autocmd({ "VimEnter", "VimResume" }, {
-	group = init_augroup,
-	command = "set guicursor&",
-})
-vim.api.nvim_create_autocmd({ "VimLeave", "VimSuspend" }, {
-	group = init_augroup,
-	command = "set guicursor=a:ver25",
-})
-
 -- Plugins
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
