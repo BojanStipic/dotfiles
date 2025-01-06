@@ -1,3 +1,5 @@
+---@diagnostic disable: missing-fields
+
 -- Options
 vim.opt.tabstop = 4
 vim.opt.expandtab = true
