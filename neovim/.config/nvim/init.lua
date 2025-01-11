@@ -615,7 +615,7 @@ require("blink.cmp").setup({
 		["<c-u>"] = { "scroll_documentation_up", "fallback" },
 	},
 	completion = {
-		list = { selection = "auto_insert" },
+		list = { selection = { preselect = false } },
 		documentation = { auto_show = true },
 	},
 })
