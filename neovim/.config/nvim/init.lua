@@ -209,10 +209,7 @@ require("lazy").setup({
 	"tpope/vim-sleuth",
 
 	"lewis6991/gitsigns.nvim",
-	{
-		"sindrets/diffview.nvim",
-		dependencies = { "nvim-lua/plenary.nvim", "nvim-tree/nvim-web-devicons" },
-	},
+	{ "sindrets/diffview.nvim", dependencies = { "nvim-tree/nvim-web-devicons" } },
 
 	{
 		"nvim-treesitter/nvim-treesitter",
