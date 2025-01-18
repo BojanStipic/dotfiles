@@ -38,8 +38,6 @@ vim.opt.ttimeoutlen = 0
 vim.opt.updatetime = 300
 vim.opt.mousescroll = { "ver:1", "hor:1" }
 vim.opt.shortmess:append({ A = true, c = true })
-vim.opt.sessionoptions:remove({ "curdir" })
-vim.opt.sessionoptions:append({ "sesdir" })
 
 vim.opt.swapfile = true
 vim.opt.undofile = true
@@ -99,9 +97,6 @@ end)
 vim.keymap.set("n", "<space>F", function()
 	vim.ui.open(".")
 end)
-
-vim.keymap.set("n", "<space>q", "<cmd>source Session.vim<cr>")
-vim.keymap.set("n", "<space>Q", "<cmd>Obsession<cr>")
 
 -- Diagnostics
 vim.diagnostic.config({
@@ -204,7 +199,7 @@ require("lazy").setup({
 	"Wansmer/treesj",
 	"folke/flash.nvim",
 	"folke/snacks.nvim",
-	"tpope/vim-obsession",
+	"folke/persistence.nvim",
 	"tpope/vim-abolish",
 	"tpope/vim-sleuth",
 
@@ -261,7 +256,7 @@ require("lualine").setup({
 		lualine_c = {
 			{ "filename", path = 1 },
 		},
-		lualine_y = { "ObsessionStatus" },
+		lualine_y = {},
 		lualine_z = { "progress", "location" },
 	},
 	inactive_sections = {
@@ -372,6 +367,10 @@ vim.keymap.set("n", "<space>b", require("snacks").picker.buffers)
 vim.keymap.set("n", "<space>g", require("snacks").picker.grep)
 vim.keymap.set("n", "<space>*", require("snacks").picker.grep_word)
 vim.keymap.set("n", "<space>d", require("snacks").picker.diagnostics)
+
+-- Sessions
+require("persistence").setup({})
+vim.keymap.set("n", "<space>q", require("persistence").load)
 
 -- Git
 require("gitsigns").setup({
