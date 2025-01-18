@@ -214,16 +214,6 @@ require("lazy").setup({
 	},
 
 	{
-		"nvim-telescope/telescope.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-tree/nvim-web-devicons",
-			"nvim-telescope/telescope-ui-select.nvim",
-			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-		},
-	},
-
-	{
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
 		dependencies = {
@@ -256,6 +246,7 @@ require("catppuccin").setup({
 		},
 		blink_cmp = true,
 		diffview = true,
+		snacks = true,
 	},
 })
 
@@ -327,10 +318,54 @@ vim.keymap.set("n", "<space>j", require("treesj").toggle)
 -- Extras
 require("snacks").setup({
 	bigfile = { enabled = true },
+	input = { enabled = true },
 	indent = { enabled = true },
+	scope = { enabled = true },
 	scroll = { enabled = true },
 	statuscolumn = { enabled = true },
+	picker = {
+		enabled = true,
+		layout = {
+			reverse = true,
+			layout = {
+				width = 0.8,
+				height = 0.8,
+				min_width = 120,
+				box = "vertical",
+				border = "rounded",
+				title = "{source} {live}",
+				{ win = "preview", height = 0.5, border = "bottom" },
+				{ win = "list", border = "none" },
+				{ win = "input", height = 1, border = "top" },
+			},
+		},
+		win = {
+			input = {
+				keys = {
+					["<c-t>"] = { "edit_tab", mode = { "i", "n" } },
+					["<c-h>"] = { "toggle_hidden", mode = { "i", "n" } },
+					["<c-a>"] = { "toggle_ignored", mode = { "i", "n" } },
+				},
+			},
+			preview = {
+				wo = { cursorlineopt = "both" },
+			},
+		},
+		sources = {
+			smart = { finders = { "buffers", "files" }, hidden = true },
+			buffers = { hidden = true },
+			files = { hidden = true },
+			grep = { hidden = true },
+		},
+	},
 })
+
+vim.keymap.set("n", "<space><space>", require("snacks").picker.resume)
+vim.keymap.set("n", "<space>p", require("snacks").picker.smart)
+vim.keymap.set("n", "<space>b", require("snacks").picker.buffers)
+vim.keymap.set("n", "<space>g", require("snacks").picker.grep)
+vim.keymap.set("n", "<space>*", require("snacks").picker.grep_word)
+vim.keymap.set("n", "<space>d", require("snacks").picker.diagnostics)
 
 -- Git
 require("gitsigns").setup({
@@ -385,49 +420,6 @@ require("diffview").setup({
 vim.keymap.set("n", "<space>c", "<cmd>DiffviewOpen<cr>")
 vim.keymap.set("n", "<space>hh", "<cmd>DiffviewFileHistory %<cr>")
 vim.keymap.set("n", "<space>hl", "<cmd>DiffviewFileHistory<cr>")
-
--- Fuzzy finder
-require("telescope").setup({
-	defaults = {
-		wrap_results = true,
-		layout_strategy = "vertical",
-		layout_config = { preview_cutoff = 0 },
-		mappings = {
-			i = {
-				["<c-s>"] = require("telescope.actions").select_horizontal,
-			},
-			n = {
-				["<c-s>"] = require("telescope.actions").select_horizontal,
-			},
-		},
-	},
-
-	pickers = {
-		lsp_references = { show_line = false },
-		lsp_incoming_calls = { show_line = false },
-		lsp_outgoing_calls = { show_line = false },
-		lsp_definitions = { show_line = false },
-		lsp_type_definitions = { show_line = false },
-		lsp_implementations = { show_line = false },
-		lsp_document_symbols = { show_line = false },
-		lsp_workspace_symbols = { show_line = false },
-		lsp_dynamic_workspace_symbols = { show_line = false },
-	},
-
-	extensions = {
-		["ui-select"] = { require("telescope.themes").get_ivy() },
-	},
-})
-require("telescope").load_extension("ui-select")
-require("telescope").load_extension("fzf")
-
-vim.keymap.set("n", "<space><space>", require("telescope.builtin").resume)
-vim.keymap.set("n", "<space>p", require("telescope.builtin").find_files)
-vim.keymap.set("n", "<space>g", require("telescope.builtin").live_grep)
-vim.keymap.set("n", "<space>d", require("telescope.builtin").diagnostics)
-vim.keymap.set("n", "<space>b", function()
-	require("telescope.builtin").buffers({ sort_mru = true })
-end)
 
 -- Treesitter
 require("nvim-treesitter.configs").setup({
@@ -497,16 +489,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 		vim.bo[bufnr].formatexpr = nil
 
-		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
-		vim.keymap.set("n", "gd", require("telescope.builtin").lsp_definitions, opts)
-		vim.keymap.set("n", "gi", require("telescope.builtin").lsp_implementations, opts)
-		vim.keymap.set("n", "gy", require("telescope.builtin").lsp_type_definitions, opts)
-		vim.keymap.set("n", "gr", function()
-			require("telescope.builtin").lsp_references({ include_declaration = false })
-		end, opts)
-		vim.keymap.set("n", "gR", require("telescope.builtin").lsp_references, opts)
-		vim.keymap.set("n", "gci", require("telescope.builtin").lsp_incoming_calls, opts)
-		vim.keymap.set("n", "gco", require("telescope.builtin").lsp_outgoing_calls, opts)
+		vim.keymap.set("n", "gD", require("snacks").picker.lsp_declarations, opts)
+		vim.keymap.set("n", "gd", require("snacks").picker.lsp_definitions, opts)
+		vim.keymap.set("n", "gi", require("snacks").picker.lsp_implementations, opts)
+		vim.keymap.set("n", "gy", require("snacks").picker.lsp_type_definitions, opts)
+		vim.keymap.set("n", "gr", require("snacks").picker.lsp_references, opts)
+		vim.keymap.set("n", "<space>s", require("snacks").picker.lsp_symbols, opts)
 
 		vim.keymap.set("n", "<space>r", vim.lsp.buf.rename, opts)
 		vim.keymap.set({ "n", "v" }, "<cr>", vim.lsp.buf.code_action, opts)
@@ -516,7 +504,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "<space>k", function()
 			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 		end, opts)
-		vim.keymap.set("n", "<space>s", require("telescope.builtin").lsp_dynamic_workspace_symbols, opts)
 
 		local lsp_augroup = vim.api.nvim_create_augroup("lsp", { clear = false })
 		vim.api.nvim_clear_autocmds({ group = lsp_augroup, buffer = bufnr })
