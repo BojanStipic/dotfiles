@@ -45,6 +45,7 @@ format = '[$symbol($context )(\($namespace\) )]($style)'
 [aws]
 disabled = false
 force_display = true
+symbol = '󰅟  '
 format = '[$symbol($profile )(\($region\) )(\[$duration\] )]($style)'
 
 [env_var.MISE_ENV]
