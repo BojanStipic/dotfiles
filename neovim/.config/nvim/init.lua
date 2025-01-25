@@ -197,7 +197,6 @@ require("lazy").setup({
 	"kylechui/nvim-surround",
 	"windwp/nvim-autopairs",
 	"Wansmer/treesj",
-	"folke/flash.nvim",
 	"folke/snacks.nvim",
 	"folke/persistence.nvim",
 	"tpope/vim-abolish",
@@ -307,14 +306,6 @@ require("nvim-autopairs").setup({})
 -- Split-join
 require("treesj").setup({ use_default_keymaps = false })
 vim.keymap.set("n", "<space>j", require("treesj").toggle)
-
--- Navigation
-require("flash").setup({
-	modes = {
-		search = { enabled = true },
-		char = { enabled = true },
-	},
-})
 
 -- Extras
 require("snacks").setup({
