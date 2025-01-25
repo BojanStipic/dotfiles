@@ -317,6 +317,13 @@ require("snacks").setup({
 	statuscolumn = { enabled = true },
 	picker = {
 		enabled = true,
+		matcher = {
+			sort_empty = true,
+			frecency = true,
+		},
+		formatters = {
+			file = { truncate = 999 },
+		},
 		layout = {
 			reverse = true,
 			layout = {
@@ -325,8 +332,8 @@ require("snacks").setup({
 				min_width = 120,
 				box = "vertical",
 				border = "rounded",
-				title = "{source} {live}",
-				{ win = "preview", height = 0.5, border = "bottom" },
+				title = "{title} {live} {flags}",
+				{ win = "preview", height = 0.5, border = "bottom", title = "{preview}" },
 				{ win = "list", border = "none" },
 				{ win = "input", height = 1, border = "top" },
 			},
@@ -344,20 +351,19 @@ require("snacks").setup({
 			},
 		},
 		sources = {
-			smart = { finders = { "buffers", "files" }, hidden = true },
-			buffers = { hidden = true },
-			files = { hidden = true },
-			grep = { hidden = true },
+			files = { hidden = true, follow = true },
+			grep = { hidden = true, follow = true },
 		},
 	},
 })
 
 vim.keymap.set("n", "<space><space>", require("snacks").picker.resume)
-vim.keymap.set("n", "<space>p", require("snacks").picker.smart)
+vim.keymap.set("n", "<space>p", require("snacks").picker.files)
 vim.keymap.set("n", "<space>b", require("snacks").picker.buffers)
 vim.keymap.set("n", "<space>g", require("snacks").picker.grep)
 vim.keymap.set("n", "<space>*", require("snacks").picker.grep_word)
 vim.keymap.set("n", "<space>d", require("snacks").picker.diagnostics)
+vim.keymap.set("n", "z=", require("snacks").picker.spelling)
 
 -- Sessions
 require("persistence").setup({})
@@ -391,9 +397,7 @@ require("gitsigns").setup({
 		vim.keymap.set({ "n", "v" }, "<space>hr", ":Gitsigns reset_hunk<cr>", opts)
 		vim.keymap.set("n", "<space>hS", require("gitsigns").stage_buffer, opts)
 		vim.keymap.set("n", "<space>hR", require("gitsigns").reset_buffer, opts)
-		vim.keymap.set("n", "<space>hu", require("gitsigns").undo_stage_hunk, opts)
-
-		vim.keymap.set("n", "<space>hp", require("gitsigns").preview_hunk, opts)
+		vim.keymap.set("n", "<space>hp", require("gitsigns").preview_hunk_inline, opts)
 		vim.keymap.set("n", "<space>hb", function()
 			require("gitsigns").blame_line({ full = true })
 		end, opts)
