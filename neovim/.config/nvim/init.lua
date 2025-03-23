@@ -354,9 +354,6 @@ require("snacks").setup({
 					["<c-a>"] = { "toggle_ignored", mode = { "i", "n" } },
 				},
 			},
-			preview = {
-				wo = { cursorlineopt = "both" },
-			},
 		},
 		sources = {
 			files = { hidden = true, follow = true },
