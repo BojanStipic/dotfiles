@@ -15,7 +15,14 @@ vim.opt.foldlevelstart = 99
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldtext = ""
-vim.opt.diffopt:append({ "algorithm:patience", "indent-heuristic", "linematch:60", "vertical" })
+vim.opt.diffopt:append({
+	"algorithm:histogram",
+	"indent-heuristic",
+	"linematch:60",
+	"vertical",
+	"closeoff",
+	"followwrap",
+})
 vim.opt.hlsearch = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
