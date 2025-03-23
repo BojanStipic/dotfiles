@@ -322,6 +322,7 @@ require("snacks").setup({
 	scope = { enabled = true },
 	scroll = { enabled = true },
 	statuscolumn = { enabled = true },
+	image = { enabled = true },
 	picker = {
 		enabled = true,
 		matcher = {
