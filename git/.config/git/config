@@ -6,12 +6,16 @@
 	defaultBranch = master
 [branch]
 	sort = -committerdate
+[tag]
+	sort = -version:refname
 [grep]
 	lineNumber = true
 	patternType = perl
 [diff]
-	algorithm = patience
+	algorithm = histogram
 	indentHeuristic = true
+	colorMoved = plain
+	mnemonicPrefix = true
 	tool = nvimdiff
 [merge]
 	tool = nvimdiff
@@ -23,7 +27,15 @@
 	autoSetupRemote = true
 [fetch]
 	prune = true
+	pruneTags = true
+	all = true
+[commit]
+	verbose = true
 [rebase]
-	autosquash = true
+	autoSquash = true
+	updateRefs = true
+[rerere]
+	enabled = true
+	autoUpdate = true
 [alias]
 	timeline = log --all --graph --oneline
