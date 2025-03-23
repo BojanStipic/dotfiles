@@ -2,9 +2,7 @@ theme = catppuccin-mocha
 
 font-family = Iosevka Term
 font-size = 14
-font-feature = -calt
-font-feature = -liga
-font-feature = -dlig
+font-feature = -calt,-liga,-dlig
 
 shell-integration = fish
 auto-update = off
