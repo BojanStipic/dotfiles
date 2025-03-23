@@ -57,3 +57,12 @@ complete --command kubectl-namespace --no-files --arguments '(kubectl get namesp
 abbr k kubectl
 abbr kx kubectl-context
 abbr kn kubectl-namespace
+
+abbr g git
+abbr --command git s status
+abbr --command git r rebase
+abbr --command git m merge
+abbr --command git f fetch
+abbr --command git p push
+abbr --command git l log
+abbr --command git t timeline
