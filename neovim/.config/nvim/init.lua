@@ -18,9 +18,7 @@ vim.opt.foldtext = ""
 vim.opt.diffopt:append({
 	"algorithm:histogram",
 	"indent-heuristic",
-	"linematch:60",
 	"vertical",
-	"closeoff",
 	"followwrap",
 })
 vim.opt.hlsearch = false
@@ -29,7 +27,7 @@ vim.opt.smartcase = true
 vim.opt.fileignorecase = true
 vim.opt.wrapscan = false
 vim.opt.wildmode = { "longest:full", "full" }
-vim.opt.completeopt = { "menuone", "noselect", "preview" }
+vim.opt.completeopt = { "menuone", "noselect", "preview", "fuzzy" }
 vim.opt.modeline = false
 vim.opt.showmode = false
 vim.opt.number = true
@@ -45,6 +43,7 @@ vim.opt.ttimeoutlen = 0
 vim.opt.updatetime = 300
 vim.opt.mousescroll = { "ver:1", "hor:1" }
 vim.opt.shortmess:append({ A = true, c = true })
+vim.opt.winborder = "rounded"
 
 vim.opt.swapfile = true
 vim.opt.undofile = true
@@ -107,7 +106,8 @@ end)
 
 -- Diagnostics
 vim.diagnostic.config({
-	virtual_text = false,
+	severity_sort = true,
+	jump = { wrap = false, float = true },
 	signs = {
 		text = {
 			[vim.diagnostic.severity.ERROR] = "●",
@@ -117,12 +117,6 @@ vim.diagnostic.config({
 		},
 	},
 })
-vim.keymap.set("n", "[d", function()
-	vim.diagnostic.goto_prev({ wrap = false })
-end)
-vim.keymap.set("n", "]d", function()
-	vim.diagnostic.goto_next({ wrap = false })
-end)
 
 -- File types
 vim.filetype.add({
@@ -322,7 +316,6 @@ require("snacks").setup({
 	scope = { enabled = true },
 	scroll = { enabled = true },
 	statuscolumn = { enabled = true },
-	image = { enabled = true },
 	picker = {
 		enabled = true,
 		matcher = {
@@ -488,7 +481,7 @@ require("nvim-treesitter.configs").setup({
 vim.api.nvim_create_autocmd("LspAttach", {
 	group = init_augroup,
 	callback = function(event)
-		local client = vim.lsp.get_client_by_id(event.data.client_id)
+		local client = assert(vim.lsp.get_client_by_id(event.data.client_id))
 		local bufnr = event.buf
 		local opts = { buffer = bufnr }
 
@@ -513,7 +506,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local lsp_augroup = vim.api.nvim_create_augroup("lsp", { clear = false })
 		vim.api.nvim_clear_autocmds({ group = lsp_augroup, buffer = bufnr })
 
-		if client.supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+		if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
 			vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 				group = lsp_augroup,
 				buffer = bufnr,
@@ -540,12 +533,12 @@ local setup_lsp = function(server, opts)
 	require("lspconfig")[server].setup(vim.tbl_deep_extend("force", default_lsp_opts, opts or {}))
 end
 
-setup_lsp("rust_analyzer")
-setup_lsp("clangd")
-setup_lsp("pyright")
-setup_lsp("bashls")
+vim.lsp.enable("rust_analyzer")
+vim.lsp.enable("clangd")
+vim.lsp.enable("pyright")
+vim.lsp.enable("bashls")
 require("lazydev").setup()
-setup_lsp("lua_ls")
+vim.lsp.enable("lua_ls")
 
 setup_lsp("denols", {
 	root_dir = require("lspconfig").util.root_pattern("deno.json", "deno.jsonc"),
@@ -555,20 +548,21 @@ setup_lsp("vtsls", {
 	single_file_support = false,
 })
 setup_lsp("eslint")
-setup_lsp("html")
-setup_lsp("cssls")
+vim.lsp.enable("html")
+vim.lsp.enable("cssls")
 setup_lsp("tailwindcss")
 setup_lsp("astro")
 setup_lsp("mdx_analyzer")
+vim.lsp.enable("harper_ls")
 
-setup_lsp("dockerls")
-setup_lsp("docker_compose_language_service")
-setup_lsp("taplo")
-setup_lsp("jsonls")
-setup_lsp("yamlls")
-setup_lsp("lemminx")
+vim.lsp.enable("dockerls")
+vim.lsp.enable("docker_compose_language_service")
+vim.lsp.enable("taplo")
+vim.lsp.enable("jsonls")
+vim.lsp.enable("yamlls")
+vim.lsp.enable("lemminx")
 
-setup_lsp("gradle_ls")
+vim.lsp.enable("gradle_ls")
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "java",
 	callback = function()
@@ -607,9 +601,11 @@ require("blink.cmp").setup({
 		["<c-u>"] = { "scroll_documentation_up", "fallback" },
 	},
 	completion = {
-		list = { selection = { preselect = false } },
+		list = { selection = { preselect = false, auto_insert = true } },
 		documentation = { auto_show = true },
+		ghost_text = { enabled = true },
 	},
+	signature = { enabled = true },
 })
 
 -- Formatting
