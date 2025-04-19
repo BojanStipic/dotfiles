@@ -6,3 +6,5 @@ font-feature = -calt,-liga,-dlig
 
 shell-integration = fish
 auto-update = off
+
+cursor-invert-fg-bg = true
