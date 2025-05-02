@@ -342,7 +342,6 @@ require("snacks").setup({
 		win = {
 			input = {
 				keys = {
-					["<c-t>"] = { "edit_tab", mode = { "i", "n" } },
 					["<c-h>"] = { "toggle_hidden", mode = { "i", "n" } },
 					["<c-a>"] = { "toggle_ignored", mode = { "i", "n" } },
 				},
@@ -525,48 +524,46 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	end,
 })
 
-local default_lsp_opts = {
-	capabilities = require("blink.cmp").get_lsp_capabilities(),
-}
-
-local setup_lsp = function(server, opts)
-	require("lspconfig")[server].setup(vim.tbl_deep_extend("force", default_lsp_opts, opts or {}))
-end
-
-vim.lsp.enable("rust_analyzer")
-vim.lsp.enable("clangd")
-vim.lsp.enable("pyright")
-vim.lsp.enable("bashls")
 require("lazydev").setup()
-vim.lsp.enable("lua_ls")
-
-setup_lsp("denols", {
-	root_dir = require("lspconfig").util.root_pattern("deno.json", "deno.jsonc"),
+vim.lsp.config("denols", {
+	root_markers = { "deno.json", "deno.jsonc" },
 })
-setup_lsp("vtsls", {
-	root_dir = require("lspconfig").util.root_pattern("package.json"),
-	single_file_support = false,
+vim.lsp.config("vtsls", {
+	root_markers = { "package.json" },
+	workspace_required = true,
 })
-setup_lsp("eslint")
-vim.lsp.enable("html")
-vim.lsp.enable("cssls")
-setup_lsp("tailwindcss")
-setup_lsp("astro")
-setup_lsp("mdx_analyzer")
-vim.lsp.enable("harper_ls")
 
-vim.lsp.enable("dockerls")
-vim.lsp.enable("docker_compose_language_service")
-vim.lsp.enable("taplo")
-vim.lsp.enable("jsonls")
-vim.lsp.enable("yamlls")
-vim.lsp.enable("lemminx")
+vim.lsp.enable({
+	"lua_ls",
+	"bashls",
+	"rust_analyzer",
+	"clangd",
+	"pyright",
 
-vim.lsp.enable("gradle_ls")
+	"denols",
+	"vtsls",
+	"eslint",
+	"html",
+	"cssls",
+	"tailwindcss",
+	"astro",
+	"mdx_analyzer",
+
+	"dockerls",
+	"docker_compose_language_service",
+	"taplo",
+	"jsonls",
+	"yamlls",
+	"lemminx",
+	"gradle_ls",
+	"harper_ls",
+})
+
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = "java",
 	callback = function()
-		require("jdtls").start_or_attach(vim.tbl_deep_extend("force", default_lsp_opts, {
+		require("jdtls").start_or_attach({
+			capabilities = require("blink.cmp").get_lsp_capabilities(),
 			cmd = {
 				"jdtls",
 				"--jvm-arg=-javaagent:" .. vim.fn.expand("$MASON/share/jdtls/lombok.jar"),
@@ -580,7 +577,7 @@ vim.api.nvim_create_autocmd("FileType", {
 					},
 				},
 			},
-		}))
+		})
 	end,
 })
 
