@@ -1,5 +1,6 @@
 status is-interactive || exit 0
 
+alias t='tmux new-session -A -s main'
 alias nvim='nvim -p'
 alias nview='nvim -R'
 alias ls='eza --group-directories-first --classify --header --modified --created --git --icons'
