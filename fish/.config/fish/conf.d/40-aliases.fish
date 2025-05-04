@@ -36,7 +36,7 @@ alias rsync-simple='rsync --ignore-existing'
 alias rsync-backup='rsync --delete'
 
 alias curl='curl --silent --show-error --dump-header /dev/stderr'
-alias curl-json='curl -H "Content-Type: application/json"'
+alias curl-json='curl --json'
 
 alias mpv-fb='mpv --hwdec=no'
 alias mpv-dvd='mpv dvd://'
