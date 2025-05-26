@@ -189,7 +189,7 @@ end
 vim.opt.runtimepath:prepend(lazypath)
 
 require("lazy").setup({
-	"williamboman/mason.nvim",
+	"mason-org/mason.nvim",
 
 	{ "catppuccin/nvim", name = "catppuccin" },
 	{ "nvim-lualine/lualine.nvim", dependencies = "nvim-tree/nvim-web-devicons" },
