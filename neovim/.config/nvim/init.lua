@@ -527,6 +527,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 require("lazydev").setup()
 vim.lsp.config("denols", {
 	root_markers = { "deno.json", "deno.jsonc" },
+	workspace_required = true,
 })
 vim.lsp.config("vtsls", {
 	root_markers = { "package.json" },
