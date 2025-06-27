@@ -1,5 +1,23 @@
 [flags]
 rate = "10s"
-basic = true
-battery = true
-enable_gpu_memory = true
+group_processes = true
+process_memory_as_value = true
+default_widget_type = "processes"
+
+[[row]]
+    [[row.child]]
+        type = "cpu"
+    [[row.child]]
+        type = "memory"
+    [[row.child]]
+        type = "network"
+[[row]]
+    ratio = 3
+    [[row.child]]
+        type = "processes"
+
+[cpu]
+    default = "average"
+
+[processes]
+    columns = ["name", "cpu%", "mem%", "gpu%", "gmem%", "read", "write", "tread", "twrite"]
