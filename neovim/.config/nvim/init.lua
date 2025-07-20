@@ -583,7 +583,6 @@ vim.lsp.enable({
 	"yamlls",
 	"lemminx",
 	"gradle_ls",
-	"harper_ls",
 })
 
 vim.api.nvim_create_autocmd("FileType", {
