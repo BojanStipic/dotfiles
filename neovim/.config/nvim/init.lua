@@ -416,10 +416,7 @@ vim.keymap.set("n", "<space>hl", "<cmd>DiffviewFileHistory<cr>")
 require("nvim-treesitter").install({
 	"astro",
 	"bash",
-	"c",
-	"cpp",
 	"css",
-	"csv",
 	"dockerfile",
 	"fish",
 	"git_config",
@@ -564,7 +561,6 @@ vim.lsp.enable({
 	"lua_ls",
 	"bashls",
 	"rust_analyzer",
-	"clangd",
 	"pyright",
 
 	"denols",
