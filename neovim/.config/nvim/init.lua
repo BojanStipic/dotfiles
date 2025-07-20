@@ -656,3 +656,6 @@ require("conform").setup({
 })
 vim.opt.formatexpr = "v:lua.require'conform'.formatexpr()"
 vim.keymap.set("n", "gqie", require("conform").format)
+vim.api.nvim_create_user_command("Format", function()
+	require("conform").format()
+end, {})
