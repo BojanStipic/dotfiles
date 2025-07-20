@@ -12,8 +12,7 @@ vim.opt.smoothscroll = true
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.foldlevelstart = 99
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldmethod = "indent"
 vim.opt.foldtext = ""
 vim.opt.diffopt:append({
 	"algorithm:histogram",
@@ -27,7 +26,7 @@ vim.opt.smartcase = true
 vim.opt.fileignorecase = true
 vim.opt.wrapscan = false
 vim.opt.wildmode = { "longest:full", "full" }
-vim.opt.completeopt = { "menuone", "noselect", "preview", "fuzzy" }
+vim.opt.completeopt = { "menuone", "noselect", "popup", "fuzzy" }
 vim.opt.modeline = false
 vim.opt.showmode = false
 vim.opt.number = true
@@ -206,13 +205,8 @@ require("lazy").setup({
 	"lewis6991/gitsigns.nvim",
 	{ "sindrets/diffview.nvim", dependencies = { "nvim-tree/nvim-web-devicons" } },
 
-	{
-		"nvim-treesitter/nvim-treesitter",
-		build = ":TSUpdate",
-		dependencies = {
-			"nvim-treesitter/nvim-treesitter-textobjects",
-		},
-	},
+	{ "nvim-treesitter/nvim-treesitter", branch = "main", build = ":TSUpdate" },
+	{ "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" },
 
 	"neovim/nvim-lspconfig",
 	"folke/lazydev.nvim",
@@ -419,62 +413,94 @@ vim.keymap.set("n", "<space>hh", "<cmd>DiffviewFileHistory %<cr>")
 vim.keymap.set("n", "<space>hl", "<cmd>DiffviewFileHistory<cr>")
 
 -- Treesitter
-require("nvim-treesitter.configs").setup({
-	auto_install = true,
-	highlight = {
-		enable = true,
-	},
-	indent = {
-		enable = true,
-	},
-	textobjects = {
-		select = {
-			enable = true,
-			lookahead = true,
-			keymaps = {
-				["ac"] = "@class.outer",
-				["ic"] = "@class.inner",
-				["af"] = "@function.outer",
-				["if"] = "@function.inner",
-				["am"] = "@function.outer",
-				["im"] = "@function.inner",
-				["aa"] = "@parameter.outer",
-				["ia"] = "@parameter.inner",
-				["ab"] = "@block.outer",
-				["ib"] = "@block.inner",
-			},
-		},
-
-		move = {
-			enable = true,
-			set_jumps = true,
-			goto_next_start = {
-				["]]"] = "@class.outer",
-				["]f"] = "@function.outer",
-				["]m"] = "@function.outer",
-				["]a"] = "@parameter.inner",
-			},
-			goto_next_end = {
-				["]["] = "@class.outer",
-				["]F"] = "@function.outer",
-				["]M"] = "@function.outer",
-				["]A"] = "@parameter.inner",
-			},
-			goto_previous_start = {
-				["[["] = "@class.outer",
-				["[f"] = "@function.outer",
-				["[m"] = "@function.outer",
-				["[a"] = "@parameter.inner",
-			},
-			goto_previous_end = {
-				["[]"] = "@class.outer",
-				["[F"] = "@function.outer",
-				["[M"] = "@function.outer",
-				["[A"] = "@parameter.inner",
-			},
-		},
-	},
+require("nvim-treesitter").install({
+	"astro",
+	"bash",
+	"c",
+	"cpp",
+	"css",
+	"csv",
+	"dockerfile",
+	"fish",
+	"git_config",
+	"git_rebase",
+	"gitattributes",
+	"gitcommit",
+	"gitignore",
+	"groovy",
+	"html",
+	"http",
+	"hurl",
+	"java",
+	"javadoc",
+	"javascript",
+	"json",
+	"just",
+	"lua",
+	"make",
+	"markdown",
+	"markdown_inline",
+	"python",
+	"rust",
+	"sql",
+	"tmux",
+	"toml",
+	"tsx",
+	"typesctipt",
+	"xml",
+	"yaml",
 })
+
+vim.api.nvim_create_autocmd("FileType", {
+	group = init_augroup,
+	callback = function(args)
+		local filetype = args.match
+		local lang = vim.treesitter.language.get_lang(filetype)
+		if not vim.treesitter.language.add(lang or "") then
+			return
+		end
+
+		vim.treesitter.start()
+		vim.wo.foldmethod = "expr"
+		vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+		if not vim.tbl_contains({ "yaml" }, lang) then
+			vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+		end
+	end,
+})
+
+local function ts_select(lhs, rhs)
+	local ts = require("nvim-treesitter-textobjects.select")
+	vim.keymap.set({ "x", "o" }, "a" .. lhs, function()
+		ts.select_textobject(rhs .. ".outer", "textobjects")
+	end)
+	vim.keymap.set({ "x", "o" }, "i" .. lhs, function()
+		ts.select_textobject(rhs .. ".inner", "textobjects")
+	end)
+end
+ts_select("c", "@class")
+ts_select("f", "@function")
+ts_select("m", "@function")
+ts_select("a", "@parameter")
+
+local function ts_move(lhs_start, lhs_end, rhs)
+	local ts = require("nvim-treesitter-textobjects.move")
+	vim.keymap.set({ "n", "x", "o" }, "]" .. lhs_start, function()
+		ts.goto_next_start(rhs .. ".outer", "textobjects")
+	end)
+	vim.keymap.set({ "n", "x", "o" }, "[" .. lhs_start, function()
+		ts.goto_previous_start(rhs .. ".outer", "textobjects")
+	end)
+	vim.keymap.set({ "n", "x", "o" }, "]" .. lhs_end, function()
+		ts.goto_next_end(rhs .. ".outer", "textobjects")
+	end)
+	vim.keymap.set({ "n", "x", "o" }, "[" .. lhs_end, function()
+		ts.goto_previous_end(rhs .. ".outer", "textobjects")
+	end)
+end
+ts_move("]", "[", "@class")
+ts_move("m", "M", "@function")
+ts_move("a", "a", "@parameter")
 
 -- LSP
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -629,5 +655,5 @@ require("conform").setup({
 		yaml = { "prettier" },
 	},
 })
-vim.opt.formatexpr = "v:lua.require('conform').formatexpr()"
+vim.opt.formatexpr = "v:lua.require'conform'.formatexpr()"
 vim.keymap.set("n", "gqie", require("conform").format)
