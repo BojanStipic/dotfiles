@@ -7,4 +7,4 @@ set --global --export EDITOR nvim
 set --global --export VISUAL nvim
 set --global --export DIFFPROG 'nvim -d'
 set --global --export MANPAGER 'nvim +Man!'
-set --global --export BROWSER firefox
+set --global --export BROWSER brave
