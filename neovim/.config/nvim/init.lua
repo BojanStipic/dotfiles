@@ -195,9 +195,9 @@ require("lazy").setup({
 	"nvim-lualine/lualine.nvim",
 
 	"stevearc/oil.nvim",
-	"kylechui/nvim-surround",
-	"windwp/nvim-autopairs",
-	"Wansmer/treesj",
+	"echasnovski/mini.surround",
+	"echasnovski/mini.pairs",
+	"echasnovski/mini.splitjoin",
 	"folke/snacks.nvim",
 	"folke/persistence.nvim",
 	"tpope/vim-abolish",
@@ -290,22 +290,24 @@ require("oil").setup({
 vim.keymap.set("n", "-", require("oil").open)
 
 -- Surround
-require("nvim-surround").setup({
-	keymaps = {
-		normal = "s",
-		normal_cur = "ss",
-		visual = "s",
+require("mini.surround").setup({
+	silent = true,
+	mappings = {
+		add = "s",
 		delete = "ds",
-		change = "cs",
+		replace = "cs",
 	},
 })
 
 -- Autopairs
-require("nvim-autopairs").setup({})
+require("mini.pairs").setup()
 
 -- Split-join
-require("treesj").setup({ use_default_keymaps = false })
-vim.keymap.set("n", "<space>j", require("treesj").toggle)
+require("mini.splitjoin").setup({
+	mappings = {
+		toggle = "<space>j",
+	},
+})
 
 -- Extras
 require("snacks").setup({
