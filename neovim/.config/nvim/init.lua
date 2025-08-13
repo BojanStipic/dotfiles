@@ -314,7 +314,6 @@ require("snacks").setup({
 	input = { enabled = true },
 	indent = { enabled = true },
 	scope = { enabled = true },
-	scroll = { enabled = true },
 	statuscolumn = { enabled = true },
 	picker = {
 		enabled = true,
