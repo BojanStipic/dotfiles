@@ -310,6 +310,7 @@ vim.keymap.set("n", "<space>j", require("treesj").toggle)
 -- Extras
 require("snacks").setup({
 	bigfile = { enabled = true },
+	image = { enabled = true },
 	input = { enabled = true },
 	indent = { enabled = true },
 	scope = { enabled = true },
