@@ -190,10 +190,11 @@ vim.opt.runtimepath:prepend(lazypath)
 require("lazy").setup({
 	"mason-org/mason.nvim",
 
+	"echasnovski/mini.icons",
 	{ "catppuccin/nvim", name = "catppuccin" },
-	{ "nvim-lualine/lualine.nvim", dependencies = "nvim-tree/nvim-web-devicons" },
+	"nvim-lualine/lualine.nvim",
 
-	{ "stevearc/oil.nvim", dependencies = "nvim-tree/nvim-web-devicons" },
+	"stevearc/oil.nvim",
 	"kylechui/nvim-surround",
 	"windwp/nvim-autopairs",
 	"Wansmer/treesj",
@@ -203,7 +204,7 @@ require("lazy").setup({
 	"tpope/vim-sleuth",
 
 	"lewis6991/gitsigns.nvim",
-	{ "sindrets/diffview.nvim", dependencies = { "nvim-tree/nvim-web-devicons" } },
+	"sindrets/diffview.nvim",
 
 	{ "nvim-treesitter/nvim-treesitter", branch = "main", build = ":TSUpdate" },
 	{ "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" },
@@ -218,6 +219,10 @@ require("lazy").setup({
 })
 
 require("mason").setup()
+
+-- Icons
+require("mini.icons").setup()
+require("mini.icons").mock_nvim_web_devicons()
 
 -- Colorscheme
 require("catppuccin").setup({
