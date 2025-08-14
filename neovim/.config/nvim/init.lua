@@ -195,10 +195,11 @@ require("lazy").setup({
 	"nvim-lualine/lualine.nvim",
 
 	"stevearc/oil.nvim",
-	"echasnovski/mini.surround",
+	{ "saghen/blink.cmp", version = "*" },
+	"echasnovski/mini.ai",
 	"echasnovski/mini.pairs",
 	"echasnovski/mini.splitjoin",
-	"echasnovski/mini.ai",
+	"echasnovski/mini.surround",
 	"folke/snacks.nvim",
 	"folke/persistence.nvim",
 	"tpope/vim-abolish",
@@ -212,8 +213,6 @@ require("lazy").setup({
 	"neovim/nvim-lspconfig",
 	"folke/lazydev.nvim",
 	"mfussenegger/nvim-jdtls",
-
-	{ "saghen/blink.cmp", version = "*" },
 
 	"stevearc/conform.nvim",
 })
@@ -289,32 +288,52 @@ require("oil").setup({
 })
 vim.keymap.set("n", "-", require("oil").open)
 
--- Surround
-require("mini.surround").setup({
-	silent = true,
+-- Text editing
+require("blink.cmp").setup({
+	keymap = {
+		preset = "none",
+		["<c-space>"] = { "show", "show_documentation", "hide_documentation" },
+		["<c-e"] = { "hide", "fallback" },
+		["<cr>"] = { "accept", "fallback" },
+		["<c-n>"] = { "select_next", "fallback" },
+		["<c-p>"] = { "select_prev", "fallback" },
+		["<c-j>"] = { "snippet_forward", "fallback" },
+		["<c-k>"] = { "snippet_backward", "fallback" },
+		["<c-f>"] = { "scroll_documentation_down", "fallback" },
+		["<c-b>"] = { "scroll_documentation_up", "fallback" },
+		["<c-d>"] = { "scroll_documentation_down", "fallback" },
+		["<c-u>"] = { "scroll_documentation_up", "fallback" },
+	},
+	completion = {
+		list = { selection = { preselect = false, auto_insert = true } },
+		documentation = { auto_show = true },
+		ghost_text = { enabled = true },
+	},
+	signature = { enabled = true },
+})
+
+require("mini.ai").setup({
+	search_method = "cover",
 	mappings = {
-		add = "s",
-		delete = "ds",
-		replace = "cs",
+		goto_left = "[",
+		goto_right = "]",
 	},
 })
 
--- Autopairs
 require("mini.pairs").setup()
 
--- Split-join
 require("mini.splitjoin").setup({
 	mappings = {
 		toggle = "<space>j",
 	},
 })
 
--- Text objects
-require("mini.ai").setup({
-	search_method = "cover",
+require("mini.surround").setup({
+	silent = true,
 	mappings = {
-		goto_left = "[",
-		goto_right = "]",
+		add = "s",
+		delete = "ds",
+		replace = "cs",
 	},
 })
 
@@ -584,30 +603,6 @@ vim.api.nvim_create_autocmd("FileType", {
 			},
 		})
 	end,
-})
-
--- Autocomplete
-require("blink.cmp").setup({
-	keymap = {
-		preset = "none",
-		["<c-space>"] = { "show", "show_documentation", "hide_documentation" },
-		["<c-e"] = { "hide", "fallback" },
-		["<cr>"] = { "accept", "fallback" },
-		["<c-n>"] = { "select_next", "fallback" },
-		["<c-p>"] = { "select_prev", "fallback" },
-		["<c-j>"] = { "snippet_forward", "fallback" },
-		["<c-k>"] = { "snippet_backward", "fallback" },
-		["<c-f>"] = { "scroll_documentation_down", "fallback" },
-		["<c-b>"] = { "scroll_documentation_up", "fallback" },
-		["<c-d>"] = { "scroll_documentation_down", "fallback" },
-		["<c-u>"] = { "scroll_documentation_up", "fallback" },
-	},
-	completion = {
-		list = { selection = { preselect = false, auto_insert = true } },
-		documentation = { auto_show = true },
-		ghost_text = { enabled = true },
-	},
-	signature = { enabled = true },
 })
 
 -- Formatting
