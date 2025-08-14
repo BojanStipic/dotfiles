@@ -198,6 +198,7 @@ require("lazy").setup({
 	"echasnovski/mini.surround",
 	"echasnovski/mini.pairs",
 	"echasnovski/mini.splitjoin",
+	"echasnovski/mini.ai",
 	"folke/snacks.nvim",
 	"folke/persistence.nvim",
 	"tpope/vim-abolish",
@@ -207,7 +208,6 @@ require("lazy").setup({
 	"sindrets/diffview.nvim",
 
 	{ "nvim-treesitter/nvim-treesitter", branch = "main", build = ":TSUpdate" },
-	{ "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" },
 
 	"neovim/nvim-lspconfig",
 	"folke/lazydev.nvim",
@@ -306,6 +306,15 @@ require("mini.pairs").setup()
 require("mini.splitjoin").setup({
 	mappings = {
 		toggle = "<space>j",
+	},
+})
+
+-- Text objects
+require("mini.ai").setup({
+	search_method = "cover",
+	mappings = {
+		goto_left = "[",
+		goto_right = "]",
 	},
 })
 
@@ -472,39 +481,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		end
 	end,
 })
-
-local function ts_select(lhs, rhs)
-	local ts = require("nvim-treesitter-textobjects.select")
-	vim.keymap.set({ "x", "o" }, "a" .. lhs, function()
-		ts.select_textobject(rhs .. ".outer", "textobjects")
-	end)
-	vim.keymap.set({ "x", "o" }, "i" .. lhs, function()
-		ts.select_textobject(rhs .. ".inner", "textobjects")
-	end)
-end
-ts_select("c", "@class")
-ts_select("f", "@function")
-ts_select("m", "@function")
-ts_select("a", "@parameter")
-
-local function ts_move(lhs_start, lhs_end, rhs)
-	local ts = require("nvim-treesitter-textobjects.move")
-	vim.keymap.set({ "n", "x", "o" }, "]" .. lhs_start, function()
-		ts.goto_next_start(rhs .. ".outer", "textobjects")
-	end)
-	vim.keymap.set({ "n", "x", "o" }, "[" .. lhs_start, function()
-		ts.goto_previous_start(rhs .. ".outer", "textobjects")
-	end)
-	vim.keymap.set({ "n", "x", "o" }, "]" .. lhs_end, function()
-		ts.goto_next_end(rhs .. ".outer", "textobjects")
-	end)
-	vim.keymap.set({ "n", "x", "o" }, "[" .. lhs_end, function()
-		ts.goto_previous_end(rhs .. ".outer", "textobjects")
-	end)
-end
-ts_move("]", "[", "@class")
-ts_move("m", "M", "@function")
-ts_move("a", "a", "@parameter")
 
 -- LSP
 vim.api.nvim_create_autocmd("LspAttach", {
