@@ -55,7 +55,9 @@ vim.keymap.set("i", "<c-j>", "<nop>")
 vim.keymap.set("i", "<c-k>", "<nop>")
 
 vim.keymap.set({ "n", "v" }, "j", "gj")
+vim.keymap.set({ "n", "v" }, "<down>", "gj")
 vim.keymap.set({ "n", "v" }, "k", "gk")
+vim.keymap.set({ "n", "v" }, "<up>", "gk")
 vim.keymap.set({ "n", "v" }, "<c-d>", "5gj")
 vim.keymap.set({ "n", "v" }, "<c-u>", "5gk")
 vim.keymap.set({ "n", "v" }, "<c-f>", "10gj")
@@ -69,9 +71,6 @@ vim.keymap.set({ "n", "v" }, "P", "P=`]")
 
 vim.keymap.set("n", "<space>z", "<cmd>setlocal spell! spell?<cr>")
 vim.keymap.set("n", "<space>/", "<cmd>set hlsearch! hlsearch?<cr>")
-
-vim.keymap.set("o", "ie", "<cmd>normal! meggVG<cr>`e")
-vim.keymap.set("o", "ae", "<cmd>normal! meggVG<cr>`e")
 
 vim.keymap.set({ "n", "v" }, "H", "^")
 vim.keymap.set({ "n", "v" }, "L", "$")
@@ -132,11 +131,13 @@ vim.filetype.add({
 local init_augroup = vim.api.nvim_create_augroup("init.lua", {})
 
 vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
+	desc = "Check if any buffers were changed outside of Neovim",
 	group = init_augroup,
 	command = "silent! checktime",
 })
 
 vim.api.nvim_create_autocmd({ "VimResized" }, {
+	desc = "Resize all windows when Neovim is resized",
 	group = init_augroup,
 	callback = function()
 		local current_tab = vim.fn.tabpagenr()
@@ -146,14 +147,20 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
 })
 
 vim.api.nvim_create_autocmd("BufWritePre", {
+	desc = "Trim all trailing whitespace",
 	group = init_augroup,
-	command = "%s/\\s\\+$//e",
+	callback = function()
+		local cursor_position = vim.api.nvim_win_get_cursor(0)
+		vim.cmd([[keeppatterns %s/\s\+$//e]])
+		vim.api.nvim_win_set_cursor(0, cursor_position)
+	end,
 })
 
 vim.api.nvim_create_autocmd("BufWritePre", {
+	desc = "Auto-create parent directories on :write",
 	group = init_augroup,
 	callback = function(opts)
-		local dir = vim.fn.fnamemodify(opts.match, ":h")
+		local dir = vim.fs.dirname(opts.match)
 		if opts.match:find("://") == nil and vim.fn.isdirectory(dir) == 0 then
 			vim.fn.mkdir(dir, "p")
 		end
@@ -161,12 +168,14 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+	desc = "Enable spell check on text files",
 	group = init_augroup,
-	pattern = { "text", "markdown", "gitcommit" },
+	pattern = { "text", "markdown", "asciidoc", "gitcommit" },
 	command = "setlocal spell",
 })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
+	desc = "Highlight yanked region",
 	group = init_augroup,
 	callback = function()
 		vim.highlight.on_yank({ timeout = 300 })
@@ -235,12 +244,8 @@ require("catppuccin").setup({
 				ok = { "undercurl" },
 			},
 		},
-		blink_cmp = true,
-		diffview = true,
-		snacks = true,
 	},
 })
-
 vim.cmd.colorscheme("catppuccin")
 
 -- Statusline
@@ -254,7 +259,8 @@ require("lualine").setup({
 		lualine_c = {
 			{ "filename", path = 1 },
 		},
-		lualine_y = {},
+		lualine_x = {},
+		lualine_y = { "filetype", "lsp_status" },
 		lualine_z = { "progress", "location" },
 	},
 	inactive_sections = {
@@ -313,10 +319,26 @@ require("blink.cmp").setup({
 })
 
 require("mini.ai").setup({
+	silent = true,
 	search_method = "cover",
+	n_lines = 1000,
 	mappings = {
 		goto_left = "[",
 		goto_right = "]",
+	},
+	custom_textobjects = {
+		e = function()
+			return {
+				from = {
+					line = 1,
+					col = 1,
+				},
+				to = {
+					line = vim.fn.line("$"),
+					col = math.max(vim.fn.getline("$"):len(), 1),
+				},
+			}
+		end,
 	},
 })
 
@@ -330,6 +352,7 @@ require("mini.splitjoin").setup({
 
 require("mini.surround").setup({
 	silent = true,
+	n_lines = 1000,
 	mappings = {
 		add = "s",
 		delete = "ds",
