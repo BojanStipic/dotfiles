@@ -632,7 +632,7 @@ vim.api.nvim_create_autocmd("FileType", {
 require("conform").setup({
 	default_format_opts = {
 		lsp_format = "fallback",
-		timeout_ms = 2000,
+		timeout_ms = 5000,
 	},
 	formatters_by_ft = {
 		rust = { "rustfmt" },
@@ -649,6 +649,7 @@ require("conform").setup({
 		css = { "prettier" },
 		json = { "prettier" },
 		yaml = { "prettier" },
+		java = { "spotless_gradle", "spotless_maven" },
 	},
 })
 vim.opt.formatexpr = "v:lua.require'conform'.formatexpr()"
