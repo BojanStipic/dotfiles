@@ -588,6 +588,21 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 require("lazydev").setup()
+vim.lsp.config("jdtls", {
+	cmd = {
+		"jdtls",
+		"--jvm-arg=-javaagent:" .. vim.fn.expand("$MASON/share/jdtls/lombok.jar"),
+		"--jvm-arg=-Xms4G",
+		"--jvm-arg=-XX:+UseParallelGC",
+	},
+	settings = {
+		java = {
+			codeGeneration = {
+				generateComments = false,
+			},
+		},
+	},
+})
 vim.lsp.config("denols", {
 	root_markers = { "deno.json", "deno.jsonc" },
 	workspace_required = true,
@@ -601,6 +616,7 @@ vim.lsp.enable({
 	"lua_ls",
 	"bashls",
 	"rust_analyzer",
+	"jdtls",
 	"pyright",
 
 	"denols",
@@ -619,28 +635,6 @@ vim.lsp.enable({
 	"yamlls",
 	"lemminx",
 	"gradle_ls",
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-	pattern = "java",
-	callback = function()
-		require("jdtls").start_or_attach({
-			capabilities = require("blink.cmp").get_lsp_capabilities(),
-			cmd = {
-				"jdtls",
-				"--jvm-arg=-javaagent:" .. vim.fn.expand("$MASON/share/jdtls/lombok.jar"),
-				"--jvm-arg=-Xms4G",
-				"--jvm-arg=-XX:+UseParallelGC",
-			},
-			settings = {
-				java = {
-					codeGeneration = {
-						generateComments = false,
-					},
-				},
-			},
-		})
-	end,
 })
 
 -- Formatting
