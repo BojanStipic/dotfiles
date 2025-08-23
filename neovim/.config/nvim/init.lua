@@ -209,8 +209,8 @@ require("lazy").setup({
 	"stevearc/oil.nvim",
 	{ "saghen/blink.cmp", version = "*" },
 	"echasnovski/mini.pairs",
-	"echasnovski/mini.splitjoin",
 	"echasnovski/mini.surround",
+	"Wansmer/treesj",
 	"folke/snacks.nvim",
 	"folke/persistence.nvim",
 	"tpope/vim-abolish",
@@ -323,12 +323,6 @@ require("blink.cmp").setup({
 
 require("mini.pairs").setup()
 
-require("mini.splitjoin").setup({
-	mappings = {
-		toggle = "<space>j",
-	},
-})
-
 require("mini.surround").setup({
 	silent = true,
 	n_lines = 1000,
@@ -338,6 +332,9 @@ require("mini.surround").setup({
 		replace = "cs",
 	},
 })
+
+require("treesj").setup({ use_default_keymaps = false })
+vim.keymap.set("n", "<space>j", require("treesj").toggle)
 
 -- Extras
 require("snacks").setup({
