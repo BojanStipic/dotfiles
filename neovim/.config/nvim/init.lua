@@ -202,14 +202,14 @@ vim.opt.runtimepath:prepend(lazypath)
 require("lazy").setup({
 	"mason-org/mason.nvim",
 
-	"echasnovski/mini.icons",
+	"nvim-mini/mini.icons",
 	{ "catppuccin/nvim", name = "catppuccin" },
 	"nvim-lualine/lualine.nvim",
 
 	"stevearc/oil.nvim",
 	{ "saghen/blink.cmp", version = "*" },
-	"echasnovski/mini.pairs",
-	"echasnovski/mini.surround",
+	"nvim-mini/mini.pairs",
+	"nvim-mini/mini.surround",
 	"Wansmer/treesj",
 	"folke/snacks.nvim",
 	"folke/persistence.nvim",
