@@ -617,7 +617,7 @@ vim.lsp.enable({
 	"bashls",
 	"rust_analyzer",
 	"jdtls",
-	"pyright",
+	"basedpyright",
 
 	"denols",
 	"vtsls",
