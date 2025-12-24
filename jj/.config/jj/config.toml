@@ -1,0 +1,23 @@
+#:schema https://docs.jj-vcs.dev/latest/config-schema.json
+
+[ui]
+default-command = "log"
+diff-editor = ":builtin"
+conflict-marker-style = "snapshot"
+bookmark-list-sort-keys = ["committer-date-"]
+
+[remotes.origin]
+auto-track-bookmarks = "glob:*"
+
+[colors]
+"diff token" = { underline = false }
+
+[templates]
+log = "builtin_log_comfortable"
+
+[aliases]
+timeline = ["log", "--revisions", "::"]
+tug = ["bookmark", "move", "--from", "heads(::@- & bookmarks())", "--to", "@-"]
+retrunk = ["rebase", "--onto", "trunk()"]
+fetch = ["git", "fetch"]
+push = ["git", "push"]
