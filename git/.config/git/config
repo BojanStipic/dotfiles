@@ -15,11 +15,12 @@
 	algorithm = histogram
 	indentHeuristic = true
 	colorMoved = plain
+	colorMovedWS = allow-indentation-change
 	mnemonicPrefix = true
 	tool = nvimdiff
 [merge]
 	tool = nvimdiff
-	conflictStyle = zdiff3
+	conflictStyle = diff3
 [mergetool]
 	keepBackup = false
 [push]
