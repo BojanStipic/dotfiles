@@ -39,4 +39,4 @@
 	enabled = true
 	autoUpdate = true
 [alias]
-	timeline = log --all --graph --oneline
+	timeline = log --exclude refs/jj/* --all --graph --oneline
