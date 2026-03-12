@@ -16,7 +16,6 @@ vim.opt.foldmethod = "indent"
 vim.opt.foldtext = ""
 vim.opt.diffopt:append({
 	"algorithm:histogram",
-	"indent-heuristic",
 	"vertical",
 	"followwrap",
 })
@@ -68,6 +67,16 @@ vim.keymap.set({ "n", "v" }, "gp", '"0p=`]')
 vim.keymap.set({ "n", "v" }, "gP", '"0P=`]')
 vim.keymap.set({ "n", "v" }, "p", "p=`]")
 vim.keymap.set({ "n", "v" }, "P", "P=`]")
+vim.keymap.set("n", "<space>y", function()
+	local filepath = vim.fn.expand("%:p:.")
+	local lineNumber = vim.fn.line(".")
+	vim.fn.setreg("+", string.format("%s:%d", filepath, lineNumber))
+end, { desc = "Copy file path with line number" })
+vim.keymap.set("n", "<space>Y", function()
+	local filepath = vim.fn.expand("%:p")
+	local lineNumber = vim.fn.line(".")
+	vim.fn.setreg("+", string.format("%s:%d", filepath, lineNumber))
+end, { desc = "Copy absolute file path with line number" })
 
 vim.keymap.set("n", "<space>z", "<cmd>setlocal spell! spell?<cr>")
 vim.keymap.set("n", "<space>/", "<cmd>set hlsearch! hlsearch?<cr>")
@@ -144,8 +153,8 @@ vim.api.nvim_create_autocmd({ "VimResized" }, {
 	group = init_augroup,
 	callback = function()
 		local current_tab = vim.fn.tabpagenr()
-		vim.cmd("tabdo wincmd =")
-		vim.cmd("tabnext " .. current_tab)
+		vim.cmd.tabdo("wincmd =")
+		vim.cmd.tabnext(current_tab)
 	end,
 })
 
@@ -173,7 +182,7 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 vim.api.nvim_create_autocmd("FileType", {
 	desc = "Enable spell check on text files",
 	group = init_augroup,
-	pattern = { "text", "markdown", "asciidoc", "gitcommit" },
+	pattern = { "text", "markdown", "asciidoc", "gitcommit", "jjdescription" },
 	command = "setlocal spell",
 })
 
@@ -185,51 +194,128 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 	end,
 })
 
--- Plugins
-local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.uv.fs_stat(lazypath) then
-	vim.fn.system({
-		"git",
-		"clone",
-		"--filter=blob:none",
-		"--single-branch",
-		"https://github.com/folke/lazy.nvim.git",
-		lazypath,
-	})
-end
-vim.opt.runtimepath:prepend(lazypath)
+-- Builtin plugins
+vim.cmd.packadd("nvim.undotree")
+vim.keymap.set("n", "<space>u", function()
+	require("undotree").open({ command = "80vnew" })
+end)
+vim.cmd.packadd("nvim.difftool")
 
-require("lazy").setup({
-	"mason-org/mason.nvim",
+-- External plugins and packages
+vim.api.nvim_create_user_command("Pack", function()
+	vim.pack.update()
+end, {})
 
-	"nvim-mini/mini.icons",
-	{ "catppuccin/nvim", name = "catppuccin" },
-	"nvim-lualine/lualine.nvim",
+vim.pack.add({
+	"https://github.com/mason-org/mason.nvim",
 
-	"stevearc/oil.nvim",
-	{ "saghen/blink.cmp", version = "*" },
-	"nvim-mini/mini.pairs",
-	"nvim-mini/mini.surround",
-	"Wansmer/treesj",
-	"folke/snacks.nvim",
-	"folke/persistence.nvim",
-	"tpope/vim-abolish",
-	"tpope/vim-sleuth",
+	"https://github.com/nvim-mini/mini.icons",
+	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+	"https://github.com/nvim-lualine/lualine.nvim",
 
-	"lewis6991/gitsigns.nvim",
-	"sindrets/diffview.nvim",
+	"https://github.com/stevearc/oil.nvim",
+	{ src = "https://github.com/saghen/blink.cmp", version = vim.version.range("*") },
+	"https://github.com/nvim-mini/mini.surround",
+	"https://github.com/Wansmer/treesj",
+	"https://github.com/folke/snacks.nvim",
+	"https://github.com/folke/persistence.nvim",
+	"https://github.com/tpope/vim-abolish",
+	"https://github.com/tpope/vim-sleuth",
 
-	{ "nvim-treesitter/nvim-treesitter", branch = "main", build = ":TSUpdate" },
-	{ "nvim-treesitter/nvim-treesitter-textobjects", branch = "main" },
+	"https://github.com/lewis6991/gitsigns.nvim",
+	"https://github.com/sindrets/diffview.nvim",
 
-	"neovim/nvim-lspconfig",
-	"folke/lazydev.nvim",
-	"mfussenegger/nvim-jdtls",
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
 
-	"stevearc/conform.nvim",
+	"https://github.com/neovim/nvim-lspconfig",
+	"https://github.com/folke/lazydev.nvim",
+	"https://github.com/mfussenegger/nvim-jdtls",
+
+	"https://github.com/stevearc/conform.nvim",
+})
+
+vim.api.nvim_create_autocmd("PackChanged", {
+	group = init_augroup,
+	callback = function(event)
+		local kind = event.data.kind
+		local spec = event.data.spec
+
+		if spec.name == "nvim-treesitter" and (kind == "install" or kind == "update") then
+			vim.cmd.TSUpdate()
+		end
+	end,
+})
+
+require("nvim-treesitter").install({
+	"astro",
+	"bash",
+	"css",
+	"diff",
+	"dockerfile",
+	"fish",
+	"git_config",
+	"git_rebase",
+	"gitattributes",
+	"gitcommit",
+	"gitignore",
+	"groovy",
+	"html",
+	"http",
+	"hurl",
+	"java",
+	"javadoc",
+	"javascript",
+	"json",
+	"just",
+	"lua",
+	"make",
+	"markdown",
+	"markdown_inline",
+	"python",
+	"rust",
+	"sql",
+	"tmux",
+	"toml",
+	"tsx",
+	"typescript",
+	"xml",
+	"yaml",
 })
 
 require("mason").setup()
+require("mason-registry").refresh(function()
+	for _, package_name in ipairs({
+		"lua-language-server",
+		"stylua",
+		"bash-language-server",
+		"rust-analyzer",
+		"jdtls",
+		"ty",
+
+		"tsgo",
+		"eslint-lsp",
+		"prettier",
+		"html-lsp",
+		"css-lsp",
+		"tailwindcss-language-server",
+		"astro-language-server",
+		"mdx-analyzer",
+
+		"dockerfile-language-server",
+		"docker-compose-language-service",
+		"taplo",
+		"json-lsp",
+		"yaml-language-server",
+		"lemminx",
+		"gradle-language-server",
+	}) do
+		local package = require("mason-registry").get_package(package_name)
+		if not package:is_installed() then
+			package:install()
+		end
+	end
+end)
 
 -- Icons
 require("mini.icons").setup()
@@ -321,8 +407,6 @@ require("blink.cmp").setup({
 	signature = { enabled = true },
 })
 
-require("mini.pairs").setup()
-
 require("mini.surround").setup({
 	silent = true,
 	n_lines = 1000,
@@ -353,20 +437,23 @@ require("snacks").setup({
 		formatters = {
 			file = { truncate = 999 },
 		},
-		layout = {
-			reverse = true,
-			layout = {
-				width = 0.8,
-				height = 0.8,
-				min_width = 120,
-				box = "vertical",
-				border = "rounded",
-				title = "{title} {live} {flags}",
-				{ win = "preview", height = 0.5, border = "bottom", title = "{preview}" },
-				{ win = "list", border = "none" },
-				{ win = "input", height = 1, border = "top" },
+		layouts = {
+			custom = {
+				reverse = true,
+				layout = {
+					width = 0.8,
+					height = 0.8,
+					min_width = 120,
+					box = "vertical",
+					border = true,
+					title = "{title} {live} {flags}",
+					{ win = "preview", height = 0.5, border = "bottom", title = "{preview}" },
+					{ win = "list", height = 0.5, border = "none" },
+					{ win = "input", height = 1, border = "top" },
+				},
 			},
 		},
+		layout = { preset = "custom" },
 		win = {
 			input = {
 				keys = {
@@ -441,47 +528,20 @@ require("diffview").setup({
 	file_panel = {
 		listing_style = "list",
 	},
+	keymaps = {
+		file_history_panel = {
+			["o"] = require("diffview.config").actions.open_in_diffview,
+		},
+	},
 })
 vim.keymap.set("n", "<space>c", "<cmd>DiffviewOpen<cr>")
-vim.keymap.set("n", "<space>hh", "<cmd>DiffviewFileHistory %<cr>")
-vim.keymap.set("n", "<space>hl", "<cmd>DiffviewFileHistory<cr>")
+vim.keymap.set("n", "<space>C", "<cmd>DiffviewOpen origin/HEAD...HEAD<cr>")
+vim.keymap.set("n", "<space>hh", "<cmd>DiffviewFileHistory<cr>")
+vim.keymap.set("n", "<space>hf", "<cmd>DiffviewFileHistory --follow %<cr>")
+vim.keymap.set("n", "<space>hl", "<cmd>.DiffviewFileHistory --follow<cr>")
+vim.keymap.set("v", "<space>hl", "<esc><cmd>'<,'>DiffviewFileHistory --follow<cr>")
 
 -- Treesitter
-require("nvim-treesitter").install({
-	"astro",
-	"bash",
-	"css",
-	"dockerfile",
-	"fish",
-	"git_config",
-	"git_rebase",
-	"gitattributes",
-	"gitcommit",
-	"gitignore",
-	"groovy",
-	"html",
-	"http",
-	"hurl",
-	"java",
-	"javadoc",
-	"javascript",
-	"json",
-	"just",
-	"lua",
-	"make",
-	"markdown",
-	"markdown_inline",
-	"python",
-	"rust",
-	"sql",
-	"tmux",
-	"toml",
-	"tsx",
-	"typesctipt",
-	"xml",
-	"yaml",
-})
-
 vim.api.nvim_create_autocmd("FileType", {
 	group = init_augroup,
 	callback = function(args)
@@ -494,9 +554,6 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.treesitter.start()
 		vim.wo.foldmethod = "expr"
 		vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-		if not vim.tbl_contains({ "yaml" }, lang) then
-			vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-		end
 	end,
 })
 
@@ -586,6 +643,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end
 	end,
 })
+vim.lsp.linked_editing_range.enable()
+vim.lsp.on_type_formatting.enable()
 
 require("lazydev").setup()
 vim.lsp.config("jdtls", {
@@ -603,24 +662,16 @@ vim.lsp.config("jdtls", {
 		},
 	},
 })
-vim.lsp.config("denols", {
-	root_markers = { "deno.json", "deno.jsonc" },
-	workspace_required = true,
-})
-vim.lsp.config("vtsls", {
-	root_markers = { "package.json" },
-	workspace_required = true,
-})
 
 vim.lsp.enable({
 	"lua_ls",
 	"bashls",
 	"rust_analyzer",
 	"jdtls",
-	"basedpyright",
+	"ty",
 
 	"denols",
-	"vtsls",
+	"tsgo",
 	"eslint",
 	"html",
 	"cssls",
@@ -644,25 +695,23 @@ require("conform").setup({
 		timeout_ms = 5000,
 	},
 	formatters_by_ft = {
-		rust = { "rustfmt" },
-		fish = { "fish_indent" },
 		lua = { "stylua" },
+		fish = { "fish_indent" },
+		rust = { "rustfmt" },
+		java = { "spotless_gradle", "spotless_maven" },
 		javascript = { "prettier" },
 		typescript = { "prettier" },
 		javascriptreact = { "prettier" },
 		typescriptreact = { "prettier" },
+		html = { "prettier" },
+		css = { "prettier" },
 		astro = { "prettier" },
 		markdown = { "prettier" },
 		mdx = { "prettier" },
-		html = { "prettier" },
-		css = { "prettier" },
 		json = { "prettier" },
 		yaml = { "prettier" },
-		java = { "spotless_gradle", "spotless_maven" },
 	},
 })
+
 vim.opt.formatexpr = "v:lua.require'conform'.formatexpr()"
 vim.keymap.set("n", "gqie", require("conform").format)
-vim.api.nvim_create_user_command("Format", function()
-	require("conform").format()
-end, {})
