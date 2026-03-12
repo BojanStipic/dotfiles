@@ -5,9 +5,10 @@ default-command = "log"
 diff-editor = ":builtin"
 conflict-marker-style = "snapshot"
 bookmark-list-sort-keys = ["committer-date-"]
+tag-list-sort-keys = ["committer-date-"]
 
 [remotes.origin]
-auto-track-bookmarks = "glob:*"
+auto-track-created-bookmarks = "glob:*"
 
 [colors]
 "diff token" = { underline = false }
@@ -21,3 +22,14 @@ tug = ["bookmark", "move", "--from", "heads(::@- & bookmarks())", "--to", "@-"]
 retrunk = ["rebase", "--onto", "trunk()"]
 fetch = ["git", "fetch"]
 push = ["git", "push"]
+setup-fork = ["util", "exec", "--", "bash", "-c", """
+    set -euo pipefail
+    jj config set --repo git.fetch '["upstream", "origin"]'
+    jj config set --repo git.push origin
+    jj bookmark track main
+    jj config set --repo 'revset-aliases."trunk()"' main@upstream
+""", ""]
+
+[merge-tools.nvim]
+program = "nvim"
+edit-args = ["-d", "$left", "$right"]
