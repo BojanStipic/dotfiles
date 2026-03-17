@@ -214,7 +214,7 @@ vim.pack.add({
 	"https://github.com/nvim-lualine/lualine.nvim",
 
 	"https://github.com/stevearc/oil.nvim",
-	{ src = "https://github.com/saghen/blink.cmp", version = vim.version.range("*") },
+	{ src = "https://github.com/saghen/blink.cmp", version = vim.version.range("^1") },
 	"https://github.com/nvim-mini/mini.surround",
 	"https://github.com/Wansmer/treesj",
 	"https://github.com/folke/snacks.nvim",
