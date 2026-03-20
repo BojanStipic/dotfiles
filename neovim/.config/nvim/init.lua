@@ -42,6 +42,7 @@ vim.opt.updatetime = 300
 vim.opt.mousescroll = { "ver:1", "hor:1" }
 vim.opt.shortmess:append({ A = true, c = true })
 vim.opt.winborder = "rounded"
+vim.opt.exrc = true
 
 vim.opt.swapfile = true
 vim.opt.undofile = true
