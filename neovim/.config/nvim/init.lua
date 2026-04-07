@@ -326,19 +326,17 @@ require("mini.icons").mock_nvim_web_devicons()
 
 -- Colorscheme
 require("catppuccin").setup({
-	integrations = {
-		native_lsp = {
-			underlines = {
-				errors = { "undercurl" },
-				hints = { "undercurl" },
-				warnings = { "undercurl" },
-				information = { "undercurl" },
-				ok = { "undercurl" },
-			},
+	lsp_styles = {
+		underlines = {
+			errors = { "undercurl" },
+			hints = { "undercurl" },
+			warnings = { "undercurl" },
+			information = { "undercurl" },
+			ok = { "undercurl" },
 		},
 	},
 })
-vim.cmd.colorscheme("catppuccin")
+vim.cmd.colorscheme("catppuccin-nvim")
 
 -- Statusline
 require("lualine").setup({
