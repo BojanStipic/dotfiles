@@ -44,6 +44,7 @@ vim.opt.shortmess:append({ A = true, c = true })
 vim.opt.winborder = "rounded"
 vim.opt.exrc = true
 vim.g.clipboard = "osc52"
+require("vim._core.ui2").enable()
 
 vim.opt.swapfile = true
 vim.opt.undofile = true
