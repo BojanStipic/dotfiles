@@ -619,6 +619,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "gy", require("snacks").picker.lsp_type_definitions, opts)
 		vim.keymap.set("n", "gr", require("snacks").picker.lsp_references, opts)
 		vim.keymap.set("n", "<space>s", require("snacks").picker.lsp_symbols, opts)
+		vim.keymap.set("n", "<space>t", require("snacks").picker.lsp_workspace_symbols, opts)
 
 		vim.keymap.set("n", "<space>r", vim.lsp.buf.rename, opts)
 		vim.keymap.set({ "n", "v" }, "<cr>", vim.lsp.buf.code_action, opts)
