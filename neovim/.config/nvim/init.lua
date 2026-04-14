@@ -431,6 +431,7 @@ require("snacks").setup({
 	statuscolumn = { enabled = true },
 	picker = {
 		enabled = true,
+		main = { current = true },
 		matcher = {
 			sort_empty = true,
 			frecency = true,
@@ -466,6 +467,11 @@ require("snacks").setup({
 		sources = {
 			files = { hidden = true, follow = true },
 			grep = { hidden = true, follow = true },
+			lsp_declarations = { jump = { reuse_win = false } },
+			lsp_definitions = { jump = { reuse_win = false } },
+			lsp_implementations = { jump = { reuse_win = false } },
+			lsp_type_definitions = { jump = { reuse_win = false } },
+			lsp_references = { jump = { reuse_win = false } },
 		},
 	},
 })
