@@ -226,7 +226,7 @@ vim.pack.add({
 	"https://github.com/tpope/vim-sleuth",
 
 	"https://github.com/lewis6991/gitsigns.nvim",
-	"https://github.com/sindrets/diffview.nvim",
+	"https://github.com/dlyongemallo/diffview.nvim",
 
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
