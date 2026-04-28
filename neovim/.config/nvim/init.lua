@@ -696,6 +696,7 @@ vim.lsp.enable({
 	"lua_ls",
 	"bashls",
 	"rust_analyzer",
+	"gopls",
 	"jdtls",
 	"ty",
 
