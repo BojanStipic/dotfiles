@@ -261,6 +261,7 @@ require("nvim-treesitter").install({
 	"gitattributes",
 	"gitcommit",
 	"gitignore",
+	"go",
 	"groovy",
 	"html",
 	"http",
@@ -292,6 +293,7 @@ require("mason-registry").refresh(function()
 		"stylua",
 		"bash-language-server",
 		"rust-analyzer",
+		"gopls",
 		"jdtls",
 		"ty",
 
