@@ -3,10 +3,12 @@ status is-interactive || exit 0
 fish_add_path --path --move \
     ~/.local/bin \
     ~/.local/share/cargo/bin \
+    ~/.local/share/go/bin \
     ~/.local/share/npm/bin
 set --global --export RUSTUP_HOME ~/.local/share/rustup
 set --global --export CARGO_HOME ~/.local/share/cargo
 set --global --export GRADLE_USER_HOME ~/.local/share/gradle
+set --global --export GOPATH ~/.local/share/go
 set --global --export npm_config_prefix ~/.local/share/npm
 set --global --export npm_config_cache ~/.cache/npm
 
