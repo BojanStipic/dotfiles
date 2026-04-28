@@ -232,7 +232,6 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
 
 	"https://github.com/neovim/nvim-lspconfig",
-	"https://github.com/folke/lazydev.nvim",
 	"https://github.com/mfussenegger/nvim-jdtls",
 
 	"https://github.com/stevearc/conform.nvim",
@@ -654,7 +653,27 @@ vim.api.nvim_create_autocmd("LspAttach", {
 vim.lsp.linked_editing_range.enable()
 vim.lsp.on_type_formatting.enable()
 
-require("lazydev").setup()
+vim.lsp.config("lua_ls", {
+	settings = {
+		Lua = {
+			runtime = {
+				version = "LuaJIT",
+				path = {
+					"lua/?.lua",
+					"lua/?/init.lua",
+				},
+			},
+			workspace = {
+				checkThirdParty = false,
+				library = {
+					vim.env.VIMRUNTIME,
+					vim.api.nvim_get_runtime_file("lua/lspconfig", false)[1],
+				},
+			},
+		},
+	},
+})
+
 vim.lsp.config("jdtls", {
 	cmd = {
 		"jdtls",
