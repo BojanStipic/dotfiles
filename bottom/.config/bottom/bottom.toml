@@ -1,6 +1,7 @@
 [flags]
 rate = "10s"
 group_processes = true
+process_command = true
 process_memory_as_value = true
 default_widget_type = "processes"
 
