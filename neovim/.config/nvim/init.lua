@@ -230,11 +230,8 @@ vim.pack.add({
 
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter" },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
-
 	"https://github.com/neovim/nvim-lspconfig",
 	"https://github.com/mfussenegger/nvim-jdtls",
-
-	"https://github.com/stevearc/conform.nvim",
 })
 
 vim.api.nvim_create_autocmd("PackChanged", {
@@ -299,7 +296,8 @@ require("mason-registry").refresh(function()
 
 		"tsgo",
 		"eslint-lsp",
-		"prettier",
+		"oxlint",
+		"oxfmt",
 		"html-lsp",
 		"css-lsp",
 		"tailwindcss-language-server",
@@ -612,8 +610,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		local bufnr = event.buf
 		local opts = { buffer = bufnr }
 
-		vim.bo[bufnr].formatexpr = nil
-
 		vim.keymap.set("n", "gD", require("snacks").picker.lsp_declarations, opts)
 		vim.keymap.set("n", "gd", require("snacks").picker.lsp_definitions, opts)
 		vim.keymap.set("n", "gi", require("snacks").picker.lsp_implementations, opts)
@@ -630,11 +626,12 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		vim.keymap.set("n", "<space>k", function()
 			vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
 		end, opts)
+		vim.keymap.set("n", "gqie", vim.lsp.buf.format, opts)
 
 		local lsp_augroup = vim.api.nvim_create_augroup("lsp", { clear = false })
 		vim.api.nvim_clear_autocmds({ group = lsp_augroup, buffer = bufnr })
 
-		if client:supports_method(vim.lsp.protocol.Methods.textDocument_documentHighlight) then
+		if client:supports_method("textDocument/documentHighlight") then
 			vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 				group = lsp_augroup,
 				buffer = bufnr,
@@ -692,8 +689,13 @@ vim.lsp.config("jdtls", {
 	},
 })
 
+vim.lsp.config("oxfmt", {
+	workspace_required = false,
+})
+
 vim.lsp.enable({
 	"lua_ls",
+	"stylua",
 	"bashls",
 	"rust_analyzer",
 	"gopls",
@@ -703,6 +705,8 @@ vim.lsp.enable({
 	"denols",
 	"tsgo",
 	"eslint",
+	"oxlint",
+	"oxfmt",
 	"html",
 	"cssls",
 	"tailwindcss",
@@ -717,31 +721,3 @@ vim.lsp.enable({
 	"lemminx",
 	"gradle_ls",
 })
-
--- Formatting
-require("conform").setup({
-	default_format_opts = {
-		lsp_format = "fallback",
-		timeout_ms = 5000,
-	},
-	formatters_by_ft = {
-		lua = { "stylua" },
-		fish = { "fish_indent" },
-		rust = { "rustfmt" },
-		java = { "spotless_gradle", "spotless_maven" },
-		javascript = { "prettier" },
-		typescript = { "prettier" },
-		javascriptreact = { "prettier" },
-		typescriptreact = { "prettier" },
-		html = { "prettier" },
-		css = { "prettier" },
-		astro = { "prettier" },
-		markdown = { "prettier" },
-		mdx = { "prettier" },
-		json = { "prettier" },
-		yaml = { "prettier" },
-	},
-})
-
-vim.opt.formatexpr = "v:lua.require'conform'.formatexpr()"
-vim.keymap.set("n", "gqie", require("conform").format)
