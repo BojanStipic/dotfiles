@@ -524,6 +524,7 @@ require("gitsigns").setup({
 })
 
 require("diffview").setup({
+	preferred_adapter = "jj",
 	view = {
 		default = {
 			winbar_info = true,
