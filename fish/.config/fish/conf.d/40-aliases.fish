@@ -52,7 +52,13 @@ complete --command mise-profile --no-files --arguments '(count mise.* >/dev/null
 alias aws-profile 'set --global --export AWS_PROFILE'
 complete --command aws-profile --no-files --arguments '(aws configure list-profiles)'
 
-alias kubectl-context 'kubectl config use-context'
+function kubectl-context --wraps='kubectl config use-context'
+    if [ (count $argv) -eq 0 ]
+        kubectl config unset current-context
+    else
+        kubectl config use-context $argv
+    end
+end
 alias kubectl-namespace 'kubectl config set-context --current --namespace'
 complete --command kubectl-namespace --no-files --arguments '(kubectl get namespaces --output custom-columns=":metadata.name")'
 abbr k kubectl
