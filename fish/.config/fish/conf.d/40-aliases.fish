@@ -3,7 +3,7 @@ status is-interactive || exit 0
 alias t='tmux new-session -A -s main'
 alias nvim='nvim -p'
 alias nview='nvim -R'
-alias ls='eza --group-directories-first --classify --header --modified --created --git --icons'
+alias ls='eza --group-directories-first --classify --header --modified --created --icons --git'
 alias tree='eza --tree --git-ignore'
 alias rg='rg --smart-case'
 alias diff='diff --color=auto'
