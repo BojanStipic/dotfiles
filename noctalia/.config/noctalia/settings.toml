@@ -1,0 +1,134 @@
+[bar.default]
+start = [ "launcher", "workspaces" ]
+center = [ "clock", "notifications", "spacer_1", "weather", "spacer_2", "privacy" ]
+end = [
+    "audio_visualizer",
+    "keyboard_layout",
+    "volume",
+    "brightness",
+    "battery",
+    "sysmon",
+    "ram",
+    "network",
+    "bluetooth",
+    "session"
+]
+margin_ends = 0
+radius = 0
+scale = 1.1
+thickness = 40
+widget_spacing = 10
+
+[brightness]
+enable_ddcutil = true
+
+[control_center]
+show_session_button = false
+sidebar = "full"
+sidebar_section = "none"
+
+    [control_center.calendar]
+    show_events_card = false
+
+    [[control_center.shortcuts]]
+    type = "wifi"
+
+    [[control_center.shortcuts]]
+    type = "bluetooth"
+
+    [[control_center.shortcuts]]
+    type = "notification"
+
+    [[control_center.shortcuts]]
+    type = "caffeine"
+
+    [[control_center.shortcuts]]
+    type = "nightlight"
+
+    [[control_center.shortcuts]]
+    type = "dark_mode"
+
+[desktop_widgets]
+enabled = false
+
+[idle]
+behavior_order = [ "lock", "screen-off", "lock-and-suspend" ]
+
+    [idle.behavior.lock]
+    action = "lock"
+    enabled = false
+    timeout = 600.0
+
+    [idle.behavior.screen-off]
+    action = "screen_off"
+    enabled = true
+    timeout = 900.0
+
+    [idle.behavior.lock-and-suspend]
+    action = "lock_and_suspend"
+    enabled = true
+    timeout = 1800.0
+
+[notification]
+history_retention_hours = 48
+position = "top_center"
+
+[osd]
+position = "top_right"
+
+[shell]
+clipboard_enabled = false
+font_family = "Atkinson Hyperlegible"
+settings_show_advanced = false
+
+    [shell.keyboard_layout.custom_labels]
+    "English (US)" = "EN"
+    Serbian = "SR (Cyrl)"
+    "Serbian (Latin)" = "SR (Latin)"
+
+    [shell.panel]
+    open_near_click_control_center = true
+    open_near_click_session = true
+
+[theme]
+builtin = "Catppuccin"
+source = "builtin"
+
+    [theme.templates]
+    enable_builtin_templates = false
+    enable_community_templates = false
+
+[wallpaper]
+directory = "~/.local/share/backgrounds"
+
+[widget.audio_visualizer.actions]
+left = "panel-toggle control-center media"
+
+[widget.clock]
+format = "{:%a %-d %b %R}"
+
+    [widget.clock.actions]
+    left = "panel-toggle control-center home"
+
+[widget.media]
+hide_when_no_media = true
+
+[widget.network]
+show_label = false
+vpn_status = "both"
+
+[widget.notifications]
+hide_when_no_unread = true
+
+[widget.privacy]
+active_color = "tertiary"
+hide_inactive = true
+
+[widget.spacer_1]
+type = "spacer"
+
+[widget.spacer_2]
+type = "spacer"
+
+[widget.workspaces]
+focused_output_only = true
