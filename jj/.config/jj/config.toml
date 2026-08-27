@@ -13,6 +13,9 @@ auto-track-created-bookmarks = "glob:*"
 [colors]
 "diff token" = { underline = false }
 
+[revsets]
+bookmark-advance-to = "@-"
+
 [templates]
 log = "builtin_log_comfortable"
 
