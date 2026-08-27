@@ -20,7 +20,6 @@ require("nvim-treesitter").install({
 	"gitattributes",
 	"gitcommit",
 	"gitignore",
-	"go",
 	"groovy",
 	"html",
 	"http",
@@ -52,7 +51,6 @@ require("mason-registry").refresh(function()
 		"bash-language-server",
 		"fish-lsp",
 		"rust-analyzer",
-		"gopls",
 		"jdtls",
 		"ty",
 
@@ -124,7 +122,6 @@ vim.lsp.enable({
 	"bashls",
 	"fish_lsp",
 	"rust_analyzer",
-	"gopls",
 	"jdtls",
 	"ty",
 
