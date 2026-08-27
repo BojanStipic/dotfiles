@@ -37,7 +37,6 @@ require("nvim-treesitter").install({
 	"python",
 	"rust",
 	"sql",
-	"tmux",
 	"toml",
 	"tsx",
 	"typescript",
@@ -57,7 +56,7 @@ require("mason-registry").refresh(function()
 		"jdtls",
 		"ty",
 
-		"tsgo",
+		"tsc",
 		"eslint-lsp",
 		"oxlint",
 		"oxfmt",
@@ -119,10 +118,6 @@ vim.lsp.config("jdtls", {
 	},
 })
 
-vim.lsp.config("oxfmt", {
-	workspace_required = false,
-})
-
 vim.lsp.enable({
 	"lua_ls",
 	"stylua",
@@ -133,8 +128,7 @@ vim.lsp.enable({
 	"jdtls",
 	"ty",
 
-	"denols",
-	"tsgo",
+	"tsc",
 	"eslint",
 	"oxlint",
 	"oxfmt",
