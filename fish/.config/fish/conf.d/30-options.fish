@@ -15,3 +15,4 @@ bind --mode insert ctrl-z 'fg 2>/dev/null; commandline -f repaint'
 
 fzf --fish | source
 starship init fish | source
+mise activate fish | source
