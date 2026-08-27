@@ -7,8 +7,6 @@ end = [
     "volume",
     "brightness",
     "battery",
-    "sysmon",
-    "ram",
     "network",
     "bluetooth",
     "session"
