@@ -1,7 +1,8 @@
 [bar.default]
 start = [ "launcher", "workspaces" ]
-center = [ "clock", "notifications", "spacer_1", "weather", "spacer_2", "privacy" ]
+center = [ "weather", "spacer_1", "clock", "spacer_2", "notifications" ]
 end = [
+    "privacy",
     "audio_visualizer",
     "keyboard_layout",
     "volume",
@@ -116,7 +117,7 @@ show_label = false
 vpn_status = "both"
 
 [widget.notifications]
-hide_when_no_unread = true
+hide_when_no_unread = false
 
 [widget.privacy]
 active_color = "tertiary"
@@ -124,9 +125,11 @@ hide_inactive = true
 
 [widget.spacer_1]
 type = "spacer"
+length = 10
 
 [widget.spacer_2]
 type = "spacer"
+length = 10
 
 [widget.workspaces]
 focused_output_only = true
