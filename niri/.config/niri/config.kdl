@@ -14,6 +14,7 @@ input {
 
     mouse {
         left-handed
+        natural-scroll
     }
 }
 
