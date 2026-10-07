@@ -8,7 +8,7 @@ bookmark-list-sort-keys = ["committer-date-"]
 tag-list-sort-keys = ["committer-date-"]
 
 [remotes.origin]
-auto-track-created-bookmarks = "glob:*"
+auto-track-created-bookmarks = "*"
 
 [colors]
 "diff token" = { underline = false }
