@@ -1,7 +1,7 @@
 [settings]
 color_theme = "catppuccin"
 status.missing_tools = "always"
-install_before = "7d"
+minimum_release_age = "7d"
 java.shorthand_vendor = "temurin"
 idiomatic_version_file_enable_tools = [
     "java",
