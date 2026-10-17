@@ -20,7 +20,7 @@ symbol = '●'
 threshold = 20
 
 [vcs]
-order = [ "jj", "git" ]
+order = ["jj", "git"]
 
 [git_metrics]
 disabled = false
