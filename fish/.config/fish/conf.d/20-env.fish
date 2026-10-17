@@ -23,5 +23,5 @@ set --global --export EDITOR nvim
 set --global --export VISUAL nvim
 set --global --export DIFFPROG 'nvim -d'
 set --global --export MANPAGER 'nvim +Man!'
-set --global --export BROWSER brave
+set --global --export BROWSER brave-origin
 set --global --export DO_NOT_TRACK true
