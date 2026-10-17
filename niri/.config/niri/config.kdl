@@ -33,6 +33,10 @@ output "HDMI-A-1" {
 layout {
     gaps 8
 
+    tab-indicator {
+        gap 0
+    }
+
     focus-ring {
         off
     }
@@ -59,6 +63,7 @@ clipboard {
 
 hotkey-overlay {
     skip-at-startup
+    hide-not-bound
 }
 
 window-rule {
