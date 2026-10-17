@@ -124,7 +124,7 @@ show_label = false
 vpn_status = "both"
 
 [widget.notifications]
-hide_when_no_unread = false
+hide_when_no_unread = true
 
 [widget.privacy]
 active_color = "tertiary"
