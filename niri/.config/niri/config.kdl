@@ -30,6 +30,19 @@ output "HDMI-A-1" {
     focus-at-startup
 }
 
+clipboard {
+    disable-primary
+}
+
+hotkey-overlay {
+    skip-at-startup
+    hide-not-bound
+}
+
+overview {
+    backdrop-color "#11111b"
+}
+
 layout {
     gaps 8
 
@@ -53,22 +66,32 @@ layout {
     }
 }
 
-overview {
-    backdrop-color "#11111b"
-}
-
-clipboard {
-    disable-primary
-}
-
-hotkey-overlay {
-    skip-at-startup
-    hide-not-bound
-}
-
 window-rule {
     geometry-corner-radius 16
     clip-to-geometry true
+}
+
+window-rule {
+    match is-window-cast-target=true
+
+    border {
+        width 2
+        active-color "#f38ba8"
+        inactive-color "#eba0ac"
+    }
+}
+
+window-rule {
+    match app-id="brave-origin"
+
+    open-maximized true
+}
+
+window-rule {
+    match app-id="brave-origin" title="Picture in picture"
+
+    open-floating true
+    default-floating-position x=8 y=8 relative-to="bottom-right"
 }
 
 binds {
