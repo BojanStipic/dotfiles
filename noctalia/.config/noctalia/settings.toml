@@ -76,6 +76,7 @@ position = "top_right"
 
 [shell]
 clipboard_enabled = false
+polkit_agent = true
 font_family = "Atkinson Hyperlegible"
 settings_show_advanced = false
 
