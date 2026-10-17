@@ -1,6 +1,6 @@
 [bar.default]
 start = [ "launcher", "workspaces" ]
-center = [ "weather", "spacer_1", "clock", "spacer_2", "notifications" ]
+center = [ "clock", "weather", "notifications" ]
 end = [
     "privacy",
     "audio_visualizer",
@@ -10,19 +10,18 @@ end = [
     "battery",
     "network",
     "bluetooth",
-    "session"
 ]
 margin_ends = 0
 radius = 0
 scale = 1.1
 thickness = 40
-widget_spacing = 10
+padding = 16
+widget_spacing = 16
 
 [brightness]
 enable_ddcutil = true
 
 [control_center]
-show_session_button = false
 sidebar = "full"
 sidebar_section = "none"
 
@@ -129,14 +128,6 @@ hide_when_no_unread = false
 [widget.privacy]
 active_color = "tertiary"
 hide_inactive = true
-
-[widget.spacer_1]
-type = "spacer"
-length = 10
-
-[widget.spacer_2]
-type = "spacer"
-length = 10
 
 [widget.workspaces]
 focused_output_only = true
