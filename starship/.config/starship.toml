@@ -19,6 +19,9 @@ symbol = '●'
 [[battery.display]]
 threshold = 20
 
+[vcs]
+order = [ "jj", "git" ]
+
 [git_metrics]
 disabled = false
 
