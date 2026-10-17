@@ -89,6 +89,13 @@ settings_show_advanced = false
     open_near_click_control_center = true
     open_near_click_session = true
 
+    [shell.launcher]
+    app_grid = true
+        [shell.launcher.providers.panels]
+        global = true
+        [shell.launcher.providers.session]
+        global = true
+
 [theme]
 builtin = "Catppuccin"
 source = "builtin"
