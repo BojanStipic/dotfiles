@@ -27,7 +27,7 @@ alias ls-udp='sudo ss --numeric --all --processes --udp'
 alias up='sudo pacman -Syuu && rustup update'
 alias rm-orphans='sudo pacman -Rns $(pacman -Qdtq)'
 alias rm-cache='sudo paccache -r; sudo paccache -ruk0'
-alias ls-modified-files='sudo pacman -Qii | sed -nE "s/^MODIFIED\s*(.*)/\1/p"'
+alias ls-modified-files='pacman -Qii | sed -nE "s/^[^/]*(.*) \[modified\]/\1/p"'
 
 alias rsync='rsync --archive --human-readable --partial --info=progress2,stats'
 alias rsync-size='rsync --size-only'
