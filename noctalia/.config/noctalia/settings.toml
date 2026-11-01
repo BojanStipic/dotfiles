@@ -23,7 +23,7 @@ widget_spacing = 16
 focused_output_only = true
 
 [widget.clock]
-format = "{:%a %-d %b %R}"
+format = "{:%R ∘ %a %-d %b}"
 
 [widget.clock.actions]
 left = "panel-toggle control-center home"
