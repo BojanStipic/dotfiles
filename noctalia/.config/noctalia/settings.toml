@@ -11,8 +11,9 @@ end = [
   "network",
   "bluetooth",
 ]
-margin_ends = 0
-radius = 0
+margin_ends = 8
+margin_edge = 8
+radius = 16
 scale = 1.1
 thickness = 40
 padding = 16
