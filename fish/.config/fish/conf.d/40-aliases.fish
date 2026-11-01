@@ -24,7 +24,7 @@ alias ls-log='journalctl --priority warning --boot'
 alias ls-tcp='sudo ss --numeric --all --processes --tcp'
 alias ls-udp='sudo ss --numeric --all --processes --udp'
 
-alias up='sudo pacman -Syuu && rustup update'
+alias up='sudo pacman -Syuu && fwupdmgr update && rustup update'
 alias rm-orphans='sudo pacman -Rns $(pacman -Qdtq)'
 alias rm-cache='sudo paccache -r; sudo paccache -ruk0'
 alias ls-modified-files='pacman -Qii | sed -nE "s/^[^/]*(.*) \[modified\]/\1/p"'
